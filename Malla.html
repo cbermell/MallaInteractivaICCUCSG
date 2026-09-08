@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malla Curricular Optimizada - Computación UCSG</title>
+  <!-- Librería para renderizado y descarga en alta calidad -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --c-fundamentos: #b8eedf;
+      --b-fundamentos: #439a84;
+      --c-contextos: #e8d7ef;
+      --b-contextos: #9d78a8;
+      --c-integracion: #fff3af;
+      --b-integracion: #c5b03d;
+      --line-color: #1e293b;
+      --line-pre: #059669;
+      --line-next: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 24px;
+      color: #0f172a;
+    }
+
+    .dashboard-card {
+      max-width: 1540px;
+      margin: 0 auto 20px;
+      background: #ffffff;
+      padding: 18px 24px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .dash-header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #0f172a;
+    }
+
+    .dash-header span {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-action {
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-action:active { transform: scale(0.98); }
+
+    .btn-export {
+      background: #2563eb;
+      color: white;
+    }
+    .btn-export:hover { background: #1d4ed8; }
+
+    .btn-reset {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-reset:hover { background: #dc2626; }
+
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-lbl {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .stat-num {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .progress-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    .progress-track {
+      background: #e2e8f0;
+      height: 14px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .malla-outer {
+      max-width: 1540px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      overflow-x: auto;
+    }
+
+    .malla-layout {
+      position: relative;
+      display: flex;
+      min-width: 1320px;
+    }
+
+    .ejes-sidebar {
+      display: flex;
+      flex-direction: column;
+      width: 34px;
+      margin-right: 14px;
+    }
+
+    .eje-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      border-radius: 8px;
+      border: 1.5px solid;
+      margin-bottom: 74px;
+    }
+
+    .eje-fund {
+      height: calc((74px + 74px) * 3 - 74px);
+      background: var(--c-fundamentos);
+      border-color: var(--b-fundamentos);
+      color: #064e3b;
+    }
+
+    .eje-cont {
+      height: calc((74px + 74px) * 2 - 74px);
+      background: var(--c-contextos);
+      border-color: var(--b-contextos);
+      color: #4c1d95;
+    }
+
+    .eje-integ {
+      height: calc((74px + 74px) * 3 - 74px);
+      background: var(--c-integracion);
+      border-color: var(--b-integracion);
+      color: #713f12;
+      margin-bottom: 0;
+    }
+
+    .grid-container {
+      position: relative;
+      flex: 1;
+    }
+
+    #svg-connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .semestres-grid {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 74px;
+    }
+
+    .semestre-row {
+      display: grid;
+      grid-template-columns: 42px repeat(5, 1fr) 156px 16px 88px;
+      gap: 20px;
+      height: 74px;
+      align-items: stretch;
+    }
+
+    .sem-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 1.5px solid #64748b;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #1e293b;
+    }
+
+    .vertical-divider {
+      border-left: 2px dashed #cbd5e1;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .sem-totales {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #475569;
+      background: #f8fafc;
+      gap: 3px;
+    }
+
+    .materia-box {
+      position: relative;
+      background: #ffffff;
+      border: 1.5px solid #1e293b;
+      border-radius: 10px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+    }
+
+    .materia-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+
+    .materia-box.bloqueada {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(25%);
+    }
+
+    .materia-box.bloqueada:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .fundamentos { background-color: var(--c-fundamentos); border-color: var(--b-fundamentos); }
+    .contextos { background-color: var(--c-contextos); border-color: var(--b-contextos); }
+    .integracion { background-color: var(--c-integracion); border-color: var(--b-integracion); }
+
+    .materia-top {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: #334155;
+      line-height: 1;
+    }
+
+    .materia-name {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.18;
+      color: #0f172a;
+      padding: 0 12px;
+      margin: auto 0;
+    }
+
+    .materia-footer {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: #475569;
+      text-align: right;
+      line-height: 1;
+    }
+
+    .check-circle {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1.5px solid #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .check-circle svg {
+      width: 10px;
+      height: 10px;
+      stroke: #ffffff;
+      stroke-width: 3.5;
+      display: none;
+    }
+
+    .materia-box.aprobada .check-circle {
+      background: #10b981;
+      border-color: #059669;
+      transform: scale(1.08);
+    }
+
+    .materia-box.aprobada .check-circle svg {
+      display: block;
+    }
+
+    .slot-empty {
+      border: 1px dashed transparent;
+    }
+
+    path.circuit-line {
+      fill: none;
+      stroke: var(--line-color);
+      stroke-width: 1.6;
+      stroke-linejoin: miter;
+      stroke-linecap: square;
+      transition: stroke 0.2s, stroke-width 0.2s, opacity 0.2s;
+    }
+
+    path.circuit-line.highlight-pre {
+      stroke: var(--line-pre) !important;
+      stroke-width: 2.6 !important;
+    }
+
+    path.circuit-line.highlight-post {
+      stroke: var(--line-next) !important;
+      stroke-width: 2.6 !important;
+    }
+
+    path.circuit-line.dimmed, .materia-box.dimmed {
+      opacity: 0.18;
+    }
+
+    .malla-footer-notes {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.78rem;
+      color: #475569;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    @keyframes shakeBox {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+    .shake {
+      animation: shakeBox 0.35s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="dashboard-card">
+    <div class="dash-header">
+      <div>
+        <h1>Malla Curricular - Ingeniería en Ciencias de la Computación</h1>
+        <span>Facultad de Ingeniería - Universidad Católica de Santiago de Guayaquil</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-action btn-export" id="btn-descargar" onclick="descargarImagenMalla()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Descargar Imagen HD
+        </button>
+        <button class="btn-action btn-reset" onclick="reiniciarProgreso()">Reiniciar Progreso</button>
+      </div>
+    </div>
+
+    <div class="dash-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">Materias Aprobadas</span>
+        <span class="stat-num"><span id="lbl-aprobadas">0</span> / <span id="lbl-total">0</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Créditos Aprobados</span>
+        <span class="stat-num"><span id="lbl-creditos">0</span> / 120</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Horas Académicas</span>
+        <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Práctica Comunitaria (*)</span>
+        <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos Pendientes</span>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-meta">
+        <span>AVANCE TOTAL DE LA CARRERA</span>
+        <span id="lbl-porcentaje">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="main-progress"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="malla-outer" id="malla-container-export">
+    <div class="malla-layout" id="malla-layout">
+      <div class="ejes-sidebar">
+        <div class="eje-badge eje-fund">FUNDAMENTOS</div>
+        <div class="eje-badge eje-cont">CONTEXTOS</div>
+        <div class="eje-badge eje-integ">INTEGRACIÓN</div>
+      </div>
+
+      <div class="grid-container" id="grid-container">
+        <svg id="svg-connections">
+          <defs>
+            <marker id="arrow-default" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="#1e293b" />
+            </marker>
+            <marker id="arrow-pre" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="#059669" />
+            </marker>
+            <marker id="arrow-post" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="#2563eb" />
+            </marker>
+          </defs>
+        </svg>
+        <div class="semestres-grid" id="semestres-grid"></div>
+      </div>
+    </div>
+
+    <div class="malla-footer-notes">
+      <div><strong>(*) Para tomar la "Práctica Comunitaria"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
+      <div><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Academia de Idiomas UCSG, Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
+    </div>
+  </main>
+
+  <script>
+    const estructuraMalla = [
+      {
+        ciclo: "I", crTotal: 14, hrTotal: 672,
+        materias: [
+          { id: "calc1", nombre: "Cálculo de una Variable", cr: 5, hr: 240, tipo: "fundamentos" },
+          null,
+          { id: "fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
+          { id: "res_prob", nombre: "Resolución de Problemas de Ingeniería", cr: 3, hr: 144, tipo: "fundamentos" },
+          null
+        ],
+        practica: { id: "leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos" }
+      },
+      {
+        ciclo: "II", crTotal: 14, hrTotal: 672,
+        materias: [
+          { id: "alg_lin", nombre: "Álgebra Lineal", cr: 3, hr: 144, tipo: "fundamentos" },
+          null,
+          { id: "calc2", nombre: "Cálculo de Varias Variables", cr: 3, hr: 144, tipo: "fundamentos" },
+          { id: "fund_prog", nombre: "Fundamentos de Programación", cr: 3, hr: 144, tipo: "fundamentos" },
+          { id: "hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos" }
+        ],
+        practica: { id: "leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos" }
+      },
+      {
+        ciclo: "III", crTotal: 14, hrTotal: 672,
+        materias: [
+          { id: "mat_disc", nombre: "Matemáticas Discretas", cr: 3, hr: 144, tipo: "fundamentos" },
+          null,
+          { id: "prob_est", nombre: "Probabilidad y Estadística", cr: 3, hr: 144, tipo: "fundamentos" },
+          { id: "poo", nombre: "Programación Orientada a Objetos", cr: 4, hr: 192, tipo: "fundamentos" },
+          { id: "hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos" }
+        ],
+        practica: { id: "cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos" }
+      },
+      {
+        ciclo: "IV", crTotal: 15, hrTotal: 720,
+        materias: [
+          { id: "sist_dig", nombre: "Sistemas Digitales", cr: 4, hr: 192, tipo: "contextos" },
+          { id: "org_arq", nombre: "Organización y Arquitectura de Computadores", cr: 3, hr: 144, tipo: "contextos" },
+          null,
+          { id: "prog_cap", nombre: "Programación en Capas", cr: 3, hr: 144, tipo: "contextos" },
+          { id: "bd", nombre: "Base de Datos", cr: 3, hr: 144, tipo: "contextos" }
+        ],
+        practica: { id: "prac_com", nombre: "Práctica Comunitaria (*)", cr: 2, hr: 96, tipo: "contextos" }
+      },
+      {
+        ciclo: "V", crTotal: 15, hrTotal: 720,
+        materias: [
+          { id: "so", nombre: "Sistemas Operativos", cr: 3, hr: 144, tipo: "contextos" },
+          { id: "redes", nombre: "Computación Centrada en Redes", cr: 5, hr: 240, tipo: "contextos" },
+          { id: "admin_bd", nombre: "Administración de Base de Datos", cr: 3, hr: 144, tipo: "contextos" },
+          { id: "ing_req", nombre: "Ingeniería de Requerimiento de Software", cr: 2, hr: 96, tipo: "contextos" },
+          { id: "org_gest", nombre: "Organización y Gestión Empresarial", cr: 2, hr: 96, tipo: "contextos" }
+        ],
+        practica: null
+      },
+      {
+        ciclo: "VI", crTotal: 15, hrTotal: 720,
+        materias: [
+          { id: "sist_dist", nombre: "Sistemas Distribuidos", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "cloud", nombre: "Computación en la Nube", cr: 2, hr: 96, tipo: "integracion" },
+          { id: "analisis_d", nombre: "Análisis de Datos", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "met_form", nombre: "Métodos Formales de Ingeniería de Software", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "ing_econ", nombre: "Ingeniería Económica", cr: 2, hr: 96, tipo: "integracion" }
+        ],
+        practica: { id: "comp_soc", nombre: "Computación y Sociedad", cr: 2, hr: 96, tipo: "integracion" }
+      },
+      {
+        ciclo: "VII", crTotal: 16, hrTotal: 768,
+        materias: [
+          { id: "dev_plat", nombre: "Desarrollo Basado en Plataformas", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "seg_sist", nombre: "Seguridad en Sistemas Informáticos", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "inv_oper", nombre: "Investigación de Operaciones", cr: 2, hr: 96, tipo: "integracion" },
+          { id: "met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "integracion" },
+          { id: "form_proy", nombre: "Formulación y Evaluación de Proyectos", cr: 3, hr: 144, tipo: "integracion" }
+        ],
+        practica: { id: "gest_proy", nombre: "Gestión de Proyectos Informáticos", cr: 3, hr: 144, tipo: "integracion" }
+      },
+      {
+        ciclo: "VIII", crTotal: 17, hrTotal: 816,
+        materias: [
+          { id: "tec_avanz", nombre: "Tecnologías Avanzadas", cr: 2, hr: 96, tipo: "integracion" },
+          { id: "gest_ti", nombre: "Gestión y Control en Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "cienc_d", nombre: "Ciencia de Datos", cr: 2, hr: 96, tipo: "integracion" },
+          { id: "proy_ti", nombre: "Proyecto de Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
+          { id: "emp_innov", nombre: "Emprendimiento e Innovación Tecnológica", cr: 2, hr: 96, tipo: "integracion" }
+        ],
+        practica: { id: "prac_prof", nombre: "Práctica Pre Profesional", cr: 5, hr: 240, tipo: "integracion" }
+      }
+    ];
+
+    const conexiones = [
+      { from: "calc1", to: "alg_lin" },
+      { from: "calc1", to: "calc2" },
+      { from: "fisica", to: "calc2" },
+      { from: "res_prob", to: "fund_prog" },
+      { from: "leng1", to: "leng2" },
+      { from: "leng2", to: "cult_cont" },
+      { from: "alg_lin", to: "mat_disc" },
+      { from: "calc2", to: "prob_est" },
+      { from: "fund_prog", to: "poo" },
+      { from: "hum_pers", to: "hum_soc" },
+      { from: "mat_disc", to: "sist_dig" },
+      { from: "mat_disc", to: "org_arq" },
+      { from: "sist_dig", to: "so" },
+      { from: "poo", to: "prog_cap" },
+      { from: "poo", to: "bd" },
+      { from: "org_arq", to: "redes" },
+      { from: "prog_cap", to: "ing_req" },
+      { from: "bd", to: "admin_bd" },
+      { from: "bd", to: "org_gest" },
+      { from: "so", to: "comp_soc" },
+      { from: "so", to: "sist_dist" },
+      { from: "redes", to: "cloud" },
+      { from: "ing_req", to: "met_form" },
+      { from: "org_gest", to: "ing_econ" },
+      { from: "prob_est", to: "analisis_d" },
+      { from: "admin_bd", to: "analisis_d" },
+      { from: "comp_soc", to: "gest_proy" },
+      { from: "cloud", to: "seg_sist" },
+      { from: "seg_sist", to: "gest_ti" },
+      { from: "sist_dist", to: "dev_plat" },
+      { from: "cloud", to: "dev_plat" },
+      { from: "ing_econ", to: "form_proy" },
+      { from: "form_proy", to: "emp_innov" },
+      { from: "met_form", to: "met_inv" },
+      { from: "met_inv", to: "proy_ti" },
+      { from: "analisis_d", to: "inv_oper" },
+      { from: "inv_oper", to: "cienc_d" },
+      { from: "dev_plat", to: "tec_avanz" }
+    ];
+
+    let aprobadas = new Set(JSON.parse(localStorage.getItem("malla_aprobadas_semibold_v1") || "[]"));
+
+    const prerequisitosMap = {};
+    conexiones.forEach(c => {
+      if (!prerequisitosMap[c.to]) prerequisitosMap[c.to] = [];
+      prerequisitosMap[c.to].push(c.from);
+    });
+
+    const hijosMap = {};
+    conexiones.forEach(c => {
+      if (!hijosMap[c.from]) hijosMap[c.from] = [];
+      hijosMap[c.from].push(c.to);
+    });
+
+    function estanRequisitosCompletos(id) {
+      if (id === "prac_com") {
+        let fundamentosCompletos = true;
+        estructuraMalla.slice(0, 3).forEach(sem => {
+          [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
+            if (!aprobadas.has(m.id)) fundamentosCompletos = false;
+          });
+        });
+        return fundamentosCompletos;
+      }
+
+      const reqs = prerequisitosMap[id] || [];
+      return reqs.every(reqId => aprobadas.has(reqId));
+    }
+
+    function desmarcarHijos(id) {
+      const hijos = hijosMap[id] || [];
+      hijos.forEach(hijoId => {
+        if (aprobadas.has(hijoId)) {
+          aprobadas.delete(hijoId);
+          desmarcarHijos(hijoId);
+        }
+      });
+      let esDeFundamentos = false;
+      estructuraMalla.slice(0, 3).forEach(sem => {
+        if ([...sem.materias, sem.practica].filter(Boolean).some(m => m.id === id)) {
+          esDeFundamentos = true;
+        }
+      });
+      if (esDeFundamentos && aprobadas.has("prac_com")) {
+        aprobadas.delete("prac_com");
+      }
+    }
+
+    function crearTarjetaMateria(mat) {
+      if (!mat) {
+        const empty = document.createElement("div");
+        empty.className = "slot-empty";
+        return empty;
+      }
+
+      const box = document.createElement("div");
+      const isAprobada = aprobadas.has(mat.id);
+      const isHabilitada = estanRequisitosCompletos(mat.id);
+
+      box.id = `mat-${mat.id}`;
+      box.className = `materia-box ${mat.tipo} ${isAprobada ? "aprobada" : ""} ${!isAprobada && !isHabilitada ? "bloqueada" : ""}`;
+      box.onclick = () => toggleMateria(mat.id);
+      box.onmouseenter = () => highlightDependencies(mat.id);
+      box.onmouseleave = () => resetDependencies();
+
+      box.innerHTML = `
+        <div class="materia-top">${mat.cr} CR</div>
+        <div class="check-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="materia-name">${mat.nombre}</div>
+        <div class="materia-footer">${mat.hr} HRS</div>
+      `;
+      return box;
+    }
+
+    function renderMalla() {
+      const grid = document.getElementById("semestres-grid");
+      grid.innerHTML = "";
+
+      estructuraMalla.forEach(sem => {
+        const row = document.createElement("div");
+        row.className = "semestre-row";
+
+        const badge = document.createElement("div");
+        badge.className = "sem-badge";
+        badge.textContent = sem.ciclo;
+        row.appendChild(badge);
+
+        sem.materias.forEach(mat => {
+          row.appendChild(crearTarjetaMateria(mat));
+        });
+
+        row.appendChild(crearTarjetaMateria(sem.practica));
+
+        const divider = document.createElement("div");
+        divider.className = "vertical-divider";
+        row.appendChild(divider);
+
+        const tot = document.createElement("div");
+        tot.className = "sem-totales";
+        tot.innerHTML = `<span>${sem.crTotal} Cr</span><span>${sem.hrTotal} Hrs</span>`;
+        row.appendChild(tot);
+
+        grid.appendChild(row);
+      });
+
+      actualizarMalla();
+      requestAnimationFrame(() => drawTreeLinesWithGutterRouting());
+    }
+
+    function toggleMateria(id) {
+      if (aprobadas.has(id)) {
+        aprobadas.delete(id);
+        desmarcarHijos(id);
+      } else {
+        if (!estanRequisitosCompletos(id)) {
+          const el = document.getElementById(`mat-${id}`);
+          if (el) {
+            el.classList.add("shake");
+            setTimeout(() => el.classList.remove("shake"), 350);
+          }
+          return;
+        }
+        aprobadas.add(id);
+      }
+      localStorage.setItem("malla_aprobadas_semibold_v1", JSON.stringify(Array.from(aprobadas)));
+      renderMalla();
+    }
+
+    function actualizarMalla() {
+      let totalMaterias = 0;
+      let totalCreditos = 0;
+      let totalHoras = 0;
+      let fundamentosCompletos = true;
+
+      estructuraMalla.forEach((sem, idx) => {
+        const todasDelSem = [...sem.materias, sem.practica].filter(Boolean);
+        todasDelSem.forEach(mat => {
+          totalMaterias++;
+          if (aprobadas.has(mat.id)) {
+            totalCreditos += mat.cr;
+            totalHoras += mat.hr;
+          } else if (idx < 3) {
+            fundamentosCompletos = false;
+          }
+        });
+      });
+
+      const pct = Math.round((totalCreditos / 120) * 100);
+
+      document.getElementById("lbl-aprobadas").textContent = aprobadas.size;
+      document.getElementById("lbl-total").textContent = totalMaterias;
+      document.getElementById("lbl-creditos").textContent = totalCreditos;
+      document.getElementById("lbl-horas").textContent = totalHoras;
+      document.getElementById("lbl-porcentaje").textContent = `${pct}%`;
+      document.getElementById("main-progress").style.width = `${pct}%`;
+
+      const comBadge = document.getElementById("lbl-comunitaria");
+      if (fundamentosCompletos) {
+        comBadge.textContent = "Habilitada ✓";
+        comBadge.style.color = "#10b981";
+      } else {
+        comBadge.textContent = "Fundamentos Pendientes";
+        comBadge.style.color = "#dc2626";
+      }
+    }
+
+    function isBoxObstructing(x, yMin, yMax, containerRect) {
+      const allBoxes = document.querySelectorAll(".materia-box");
+      for (const box of allBoxes) {
+        const b = box.getBoundingClientRect();
+        const bxMin = b.left - containerRect.left;
+        const bxMax = b.right - containerRect.left;
+        const byMin = b.top - containerRect.top;
+        const byMax = b.bottom - containerRect.top;
+
+        if (x >= bxMin - 3 && x <= bxMax + 3) {
+          if (Math.max(yMin, byMin) < Math.min(yMax, byMax)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function drawTreeLinesWithGutterRouting() {
+      const svg = document.getElementById("svg-connections");
+      const containerRect = document.getElementById("grid-container").getBoundingClientRect();
+
+      const defs = svg.querySelector("defs");
+      svg.innerHTML = "";
+      svg.appendChild(defs);
+
+      const outgoing = {};
+      conexiones.forEach(c => {
+        if (!outgoing[c.from]) outgoing[c.from] = [];
+        outgoing[c.from].push(c.to);
+      });
+
+      const incoming = {};
+      conexiones.forEach(c => {
+        if (!incoming[c.to]) incoming[c.to] = [];
+        incoming[c.to].push(c.from);
+      });
+
+      const linesData = [];
+      const verticalSegments = [];
+
+      const fromIds = Object.keys(outgoing);
+      fromIds.forEach((fromId, fIndex) => {
+        const elFrom = document.getElementById(`mat-${fromId}`);
+        if (!elFrom) return;
+
+        const r1 = elFrom.getBoundingClientRect();
+        const x1 = (r1.left + r1.right) / 2 - containerRect.left;
+        const y1 = r1.bottom - containerRect.top;
+
+        const dests = outgoing[fromId].map(toId => {
+          const elTo = document.getElementById(`mat-${toId}`);
+          if (!elTo) return null;
+          const r2 = elTo.getBoundingClientRect();
+
+          const totalIn = incoming[toId].length;
+          const inIndex = incoming[toId].indexOf(fromId) + 1;
+          const inOffset = totalIn > 1 ? (inIndex - (totalIn + 1) / 2) * 26 : 0;
+
+          return {
+            id: toId,
+            el: elTo,
+            r2,
+            x2: (r2.left + r2.right) / 2 + inOffset - containerRect.left,
+            y2: r2.top - containerRect.top
+          };
+        }).filter(Boolean);
+
+        if (dests.length === 0) return;
+
+        if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, containerRect)) {
+          verticalSegments.push({ x: x1, yMin: y1, yMax: dests[0].y2, owner: `${fromId}->${dests[0].id}` });
+          linesData.push({ type: "direct", x: x1, y1, y2: dests[0].y2, from: fromId, to: dests[0].id });
+          return;
+        }
+
+        const minY2 = Math.min(...dests.map(d => d.y2));
+        const laneOffset = (fIndex % 3) * 14;
+        const midY = y1 + 18 + laneOffset;
+
+        verticalSegments.push({ x: x1, yMin: y1, yMax: midY, owner: `${fromId}-stem` });
+        linesData.push({ type: "stem", x: x1, y1, y2: midY, from: fromId });
+
+        dests.forEach(d => {
+          const isBlocked = isBoxObstructing(d.x2, midY, d.y2, containerRect);
+
+          if (!isBlocked) {
+            verticalSegments.push({ x: d.x2, yMin: midY, yMax: d.y2, owner: `${fromId}->${d.id}` });
+            linesData.push({ type: "branch-standard", x1, midY, x2: d.x2, y2: d.y2, from: fromId, to: d.id });
+          } else {
+            let corridorX;
+            if (d.x2 >= x1) {
+              corridorX = r1.right - containerRect.left + 10;
+            } else {
+              corridorX = r1.left - containerRect.left - 10;
+            }
+            const preEntryY = d.y2 - 20;
+
+            verticalSegments.push({ x: corridorX, yMin: midY, yMax: preEntryY, owner: `${fromId}->${d.id}` });
+            verticalSegments.push({ x: d.x2, yMin: preEntryY, yMax: d.y2, owner: `${fromId}->${d.id}` });
+
+            linesData.push({
+              type: "branch-gutter",
+              x1, midY,
+              corridorX,
+              preEntryY,
+              x2: d.x2,
+              y2: d.y2,
+              from: fromId,
+              to: d.id
+            });
+          }
+        });
+      });
+
+      const R = 5;
+
+      linesData.forEach(item => {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+        if (item.type === "direct") {
+          path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2 - 2}`);
+          path.setAttribute("class", `circuit-line from-${item.from} to-${item.to}`);
+          path.setAttribute("data-from", item.from);
+          path.setAttribute("data-to", item.to);
+          path.setAttribute("marker-end", "url(#arrow-default)");
+        } else if (item.type === "stem") {
+          path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
+          path.setAttribute("class", `circuit-line stem from-${item.from}`);
+          path.setAttribute("data-from", item.from);
+        } else if (item.type === "branch-standard") {
+          const { x1, midY, x2, y2, from, to } = item;
+          const minX = Math.min(x1, x2);
+          const maxX = Math.max(x1, x2);
+
+          const collisions = [];
+          verticalSegments.forEach(v => {
+            if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
+            if (v.x > minX + 12 && v.x < maxX - 12) {
+              if (midY >= v.yMin + 2 && midY <= v.yMax - 2) {
+                collisions.push(v.x);
+              }
+            }
+          });
+
+          if (x1 < x2) collisions.sort((a, b) => a - b);
+          else collisions.sort((a, b) => b - a);
+
+          let d = `M ${x1} ${midY}`;
+          const dir = x2 > x1 ? 1 : -1;
+
+          collisions.forEach(cx => {
+            const startX = cx - dir * R;
+            const endX = cx + dir * R;
+            d += ` L ${startX} ${midY}`;
+            d += ` A ${R} ${R} 0 0 ${dir > 0 ? 1 : 0} ${endX} ${midY}`;
+          });
+
+          d += ` L ${x2} ${midY} L ${x2} ${y2 - 2}`;
+          path.setAttribute("d", d);
+          path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
+          path.setAttribute("data-from", from);
+          path.setAttribute("data-to", to);
+          path.setAttribute("marker-end", "url(#arrow-default)");
+        } else if (item.type === "branch-gutter") {
+          const { x1, midY, corridorX, preEntryY, x2, y2, from, to } = item;
+
+          let d = `M ${x1} ${midY}`;
+          const minX1 = Math.min(x1, corridorX);
+          const maxX1 = Math.max(x1, corridorX);
+          const coll1 = [];
+
+          verticalSegments.forEach(v => {
+            if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
+            if (v.x > minX1 + 12 && v.x < maxX1 - 12) {
+              if (midY >= v.yMin + 2 && midY <= v.yMax - 2) coll1.push(v.x);
+            }
+          });
+
+          if (x1 < corridorX) coll1.sort((a, b) => a - b);
+          else coll1.sort((a, b) => b - a);
+
+          const dir1 = corridorX > x1 ? 1 : -1;
+          coll1.forEach(cx => {
+            d += ` L ${cx - dir1 * R} ${midY} A ${R} ${R} 0 0 ${dir1 > 0 ? 1 : 0} ${cx + dir1 * R} ${midY}`;
+          });
+
+          d += ` L ${corridorX} ${midY} L ${corridorX} ${preEntryY}`;
+
+          const minX2 = Math.min(corridorX, x2);
+          const maxX2 = Math.max(corridorX, x2);
+          const coll2 = [];
+
+          verticalSegments.forEach(v => {
+            if (v.owner === `${from}->${to}`) return;
+            if (v.x > minX2 + 12 && v.x < maxX2 - 12) {
+              if (preEntryY >= v.yMin + 2 && preEntryY <= v.yMax - 2) coll2.push(v.x);
+            }
+          });
+
+          if (corridorX < x2) coll2.sort((a, b) => a - b);
+          else coll2.sort((a, b) => b - a);
+
+          const dir2 = x2 > corridorX ? 1 : -1;
+          coll2.forEach(cx => {
+            d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
+          });
+
+          d += ` L ${x2} ${preEntryY} L ${x2} ${y2 - 2}`;
+
+          path.setAttribute("d", d);
+          path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
+          path.setAttribute("data-from", from);
+          path.setAttribute("data-to", to);
+          path.setAttribute("marker-end", "url(#arrow-default)");
+        }
+
+        svg.appendChild(path);
+      });
+    }
+
+    function highlightDependencies(id) {
+      const boxes = document.querySelectorAll(".materia-box");
+      const lines = document.querySelectorAll("path.circuit-line");
+
+      boxes.forEach(b => b.classList.add("dimmed"));
+      lines.forEach(l => l.classList.add("dimmed"));
+
+      const target = document.getElementById(`mat-${id}`);
+      if (target) target.classList.remove("dimmed");
+
+      const directPreSources = new Set();
+      document.querySelectorAll(`path.to-${id}`).forEach(line => {
+        line.classList.remove("dimmed");
+        line.classList.add("highlight-pre");
+        line.setAttribute("marker-end", "url(#arrow-pre)");
+
+        const preId = line.getAttribute("data-from");
+        if (preId) {
+          directPreSources.add(preId);
+          const preBox = document.getElementById(`mat-${preId}`);
+          if (preBox) preBox.classList.remove("dimmed");
+        }
+      });
+
+      directPreSources.forEach(preId => {
+        document.querySelectorAll(`path.stem.from-${preId}`).forEach(stemLine => {
+          stemLine.classList.remove("dimmed");
+          stemLine.classList.add("highlight-pre");
+        });
+      });
+
+      document.querySelectorAll(`path.from-${id}`).forEach(line => {
+        line.classList.remove("dimmed");
+        line.classList.add("highlight-post");
+        if (line.getAttribute("marker-end")) {
+          line.setAttribute("marker-end", "url(#arrow-post)");
+        }
+
+        const toId = line.getAttribute("data-to");
+        if (toId) {
+          const postBox = document.getElementById(`mat-${toId}`);
+          if (postBox) postBox.classList.remove("dimmed");
+        }
+      });
+    }
+
+    function resetDependencies() {
+      document.querySelectorAll(".materia-box").forEach(b => b.classList.remove("dimmed"));
+      document.querySelectorAll("path.circuit-line").forEach(l => {
+        l.classList.remove("dimmed", "highlight-pre", "highlight-post");
+        if (l.getAttribute("marker-end")) {
+          l.setAttribute("marker-end", "url(#arrow-default)");
+        }
+      });
+    }
+
+    function reiniciarProgreso() {
+      if (confirm("¿Deseas restablecer el estado de todas las asignaturas?")) {
+        aprobadas.clear();
+        localStorage.removeItem("malla_aprobadas_semibold_v1");
+        renderMalla();
+      }
+    }
+
+    // Exportación en alta resolución (2x Retina scale)
+    async function descargarImagenMalla() {
+      const btn = document.getElementById("btn-descargar");
+      const originalText = btn.innerHTML;
+      btn.innerHTML = "Generando imagen...";
+      btn.style.opacity = "0.7";
+      btn.disabled = true;
+
+      // Limpiar cualquier resaltado temporal antes de capturar
+      resetDependencies();
+
+      const container = document.getElementById("malla-container-export");
+      const originalScrollLeft = container.scrollLeft;
+      container.scrollLeft = 0; // Asegura que se capture desde el origen
+
+      try {
+        const canvas = await html2canvas(container, {
+          scale: 2, // 2x para resolución HD nítida
+          useCORS: true,
+          logging: false,
+          backgroundColor: "#ffffff",
+          windowWidth: container.scrollWidth,
+          width: container.scrollWidth
+        });
+
+        // Crear enlace de descarga automática
+        const imageURL = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `Malla_Curricular_Computacion_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = imageURL;
+        link.click();
+      } catch (err) {
+        alert("Ocurrió un error al generar la imagen. Intenta de nuevo.");
+      } finally {
+        container.scrollLeft = originalScrollLeft;
+        btn.innerHTML = originalText;
+        btn.style.opacity = "1";
+        btn.disabled = false;
+      }
+    }
+
+    window.addEventListener("resize", drawTreeLinesWithGutterRouting);
+    renderMalla();
+  </script>
+</body>
+</html>
