@@ -103,15 +103,17 @@
 
     .btn-action {
       border: none;
-      padding: 8px 16px;
+      padding: 8px 14px;
       font-size: 0.8rem;
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
     }
     .btn-action:active { transform: scale(0.98); }
 
@@ -229,7 +231,6 @@
       flex-shrink: 0;
     }
 
-    /* Corrección del renderizado vertical para evitar distorsiones en pantalla y fotos */
     .eje-badge {
       display: flex;
       align-items: center;
@@ -898,6 +899,7 @@
       }
     }
 
+    /* Optimizaciones precisas para la barra de botones en dispositivos móviles */
     @media (max-width: 640px) {
       .dash-header {
         flex-direction: column;
@@ -906,11 +908,20 @@
 
       .header-actions {
         width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
       }
 
       .btn-action {
-        flex: 1;
-        justify-content: center;
+        width: 100%;
+        padding: 7px 8px;
+        font-size: 0.74rem;
+        gap: 4px;
+      }
+
+      .btn-photo {
+        grid-column: span 2;
       }
 
       .calc-grid {
@@ -1077,6 +1088,7 @@
       </div>
       <div class="modal-body">
         <div class="modal-specs">
+          <!-- Eliminada redundancia: Ahora solo muestra el número romano directamente -->
           <div><strong>Ciclo:</strong> <span id="modal-ciclo">I</span></div>
           <div><strong>Créditos:</strong> <span id="modal-cr">5</span> CR</div>
           <div><strong>Horas:</strong> <span id="modal-hr">240</span> HRS</div>
@@ -1622,7 +1634,7 @@
               corridorX,
               preEntryY,
               x2: d.x2,
-              y2: d.y2 - 2,
+              y2: d.y2,
               from: fromId,
               to: d.id
             });
@@ -1723,7 +1735,7 @@
             d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
           });
 
-          d += ` L ${x2} ${preEntryY} L ${x2} ${y2}`;
+          d += ` L ${x2} ${preEntryY} L ${x2} ${y2 - 2}`;
 
           path.setAttribute("d", d);
           path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
@@ -1812,7 +1824,9 @@
       tagEl.className = `modal-tag ${mat.tipo}`;
 
       document.getElementById("modal-title").textContent = mat.nombre;
-      document.getElementById("modal-ciclo").textContent = `Ciclo ${mat.ciclo}`;
+      
+      // Corrección de redundancia: solo muestra el número romano directamente
+      document.getElementById("modal-ciclo").textContent = mat.ciclo;
       document.getElementById("modal-cr").textContent = mat.cr;
       document.getElementById("modal-hr").textContent = mat.hr;
 
@@ -2020,11 +2034,11 @@
       adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
-    // Exportación directa y fiel sobre el elemento activo sin clones ciegos
+    // Exportación optimizada: sincroniza el viewport exacto para evitar desfases en móviles
     async function generarFotoMalla() {
       const btn = document.getElementById("btn-exportar-foto");
       const textoOriginal = btn.innerHTML;
-      btn.innerHTML = "Procesando imagen...";
+      btn.innerHTML = "Generando imagen...";
       btn.style.opacity = "0.7";
       btn.disabled = true;
 
@@ -2032,21 +2046,26 @@
 
       const contenedorPrincipal = document.getElementById("bloque-principal");
       const mallaOuter = document.getElementById("malla-container");
+      const layoutInterno = document.getElementById("malla-layout");
       const scrollOriginal = mallaOuter.scrollLeft;
 
-      // 1. Alinear al origen y asegurar ancho completo en pantalla real
+      // 1. Desplazar a cero el scroll horizontal
       mallaOuter.scrollLeft = 0;
-      const anchoCompletoRequerido = Math.max(mallaOuter.scrollWidth, 1440);
-      
+
+      // Calcular ancho intrínseco real del layout de asignaturas
+      const anchoExactoMalla = Math.max(layoutInterno.scrollWidth + 48, 1400);
+
+      // Guardar estilos previos
       const widthOriginalPrincipal = contenedorPrincipal.style.width;
       const maxWidthOriginalPrincipal = contenedorPrincipal.style.maxWidth;
       const overflowOriginalMalla = mallaOuter.style.overflowX;
 
-      contenedorPrincipal.style.width = `${anchoCompletoRequerido}px`;
+      // Expandir de manera simétrica para capturar sin cortes
+      contenedorPrincipal.style.width = `${anchoExactoMalla}px`;
       contenedorPrincipal.style.maxWidth = "none";
       mallaOuter.style.overflowX = "visible";
 
-      // Recalcular trayectorias completas en el elemento activo
+      // Recalcular el circuito SVG con las posiciones estáticas consolidadas
       drawTreeLinesWithGutterRouting();
 
       try {
@@ -2058,8 +2077,8 @@
           backgroundColor: "#f8fafc",
           scrollX: 0,
           scrollY: 0,
-          width: anchoCompletoRequerido,
-          windowWidth: anchoCompletoRequerido,
+          width: anchoExactoMalla,
+          windowWidth: anchoExactoMalla,
           ignoreElements: (el) => el.classList.contains("header-actions") || el.classList.contains("scroll-hint-bar")
         });
 
@@ -2070,9 +2089,9 @@
         link.click();
       } catch (err) {
         console.error("Error al exportar:", err);
-        alert("Ocurrió un error al generar la imagen. Si abres el archivo localmente, te recomendamos usar un servidor de desarrollo ligero como Live Server.");
+        alert("Ocurrió un error al generar la imagen. Si abres el archivo localmente, recuerda usar un servidor de desarrollo ligero como Live Server.");
       } finally {
-        // 2. Restaurar dimensiones y scroll originales
+        // 2. Restaurar inmediatamente el viewport dinámico del dispositivo
         contenedorPrincipal.style.width = widthOriginalPrincipal;
         contenedorPrincipal.style.maxWidth = maxWidthOriginalPrincipal;
         mallaOuter.style.overflowX = overflowOriginalMalla;
@@ -2086,7 +2105,7 @@
       }
     }
 
-    window.addEventListener("resize", drawTreeLinesWithGutterRouting);
+    window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
     renderMalla();
   </script>
 </body>
