@@ -229,18 +229,24 @@
       flex-shrink: 0;
     }
 
+    /* Corrección del renderizado vertical para evitar distorsiones en pantalla y fotos */
     .eje-badge {
       display: flex;
       align-items: center;
       justify-content: center;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 2px;
       border-radius: 8px;
       border: 1.5px solid;
       margin-bottom: 74px;
+      position: relative;
+    }
+
+    .eje-badge span {
+      display: inline-block;
+      transform: rotate(-90deg);
+      white-space: nowrap;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 2px;
     }
 
     .eje-fund {
@@ -1004,9 +1010,9 @@
 
       <div class="malla-layout" id="malla-layout">
         <div class="ejes-sidebar">
-          <div class="eje-badge eje-fund">FUNDAMENTOS</div>
-          <div class="eje-badge eje-cont">CONTEXTOS</div>
-          <div class="eje-badge eje-integ">INTEGRACIÓN</div>
+          <div class="eje-badge eje-fund"><span>FUNDAMENTOS</span></div>
+          <div class="eje-badge eje-cont"><span>CONTEXTOS</span></div>
+          <div class="eje-badge eje-integ"><span>INTEGRACIÓN</span></div>
         </div>
 
         <div class="grid-container" id="grid-container">
@@ -1525,7 +1531,6 @@
       return false;
     }
 
-    // Algoritmo de trazado con pasillos laterales y saltos de línea sobre obstáculos
     function drawTreeLinesWithGutterRouting() {
       const svg = document.getElementById("svg-connections");
       const gridContainer = document.getElementById("grid-container");
@@ -2015,11 +2020,11 @@
       adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
-    // Captura fotográfica sin clones fuera de pantalla: preserva todas las coordenadas y el trazado de pasillos laterales
+    // Exportación directa y fiel sobre el elemento activo sin clones ciegos
     async function generarFotoMalla() {
       const btn = document.getElementById("btn-exportar-foto");
       const textoOriginal = btn.innerHTML;
-      btn.innerHTML = "Generando imagen...";
+      btn.innerHTML = "Procesando imagen...";
       btn.style.opacity = "0.7";
       btn.disabled = true;
 
@@ -2029,7 +2034,7 @@
       const mallaOuter = document.getElementById("malla-container");
       const scrollOriginal = mallaOuter.scrollLeft;
 
-      // 1. Alinear el scroll a cero y permitir ancho completo temporal
+      // 1. Alinear al origen y asegurar ancho completo en pantalla real
       mallaOuter.scrollLeft = 0;
       const anchoCompletoRequerido = Math.max(mallaOuter.scrollWidth, 1440);
       
@@ -2041,7 +2046,7 @@
       contenedorPrincipal.style.maxWidth = "none";
       mallaOuter.style.overflowX = "visible";
 
-      // Recalcular trayectorias en reposo con el ancho completo
+      // Recalcular trayectorias completas en el elemento activo
       drawTreeLinesWithGutterRouting();
 
       try {
@@ -2067,7 +2072,7 @@
         console.error("Error al exportar:", err);
         alert("Ocurrió un error al generar la imagen. Si abres el archivo localmente, te recomendamos usar un servidor de desarrollo ligero como Live Server.");
       } finally {
-        // 2. Restaurar inmediatamente el layout adaptable original
+        // 2. Restaurar dimensiones y scroll originales
         contenedorPrincipal.style.width = widthOriginalPrincipal;
         contenedorPrincipal.style.maxWidth = maxWidthOriginalPrincipal;
         mallaOuter.style.overflowX = overflowOriginalMalla;
@@ -2081,7 +2086,7 @@
       }
     }
 
-    window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
+    window.addEventListener("resize", drawTreeLinesWithGutterRouting);
     renderMalla();
   </script>
 </body>
