@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malla Curricular Optimizada - Computación UCSG</title>
-  <!-- Librería para renderizado y descarga en alta calidad -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <title>Malla Curricular - Ingeniería en Ciencias de la Computación UCSG</title>
   <style>
     :root {
       --c-fundamentos: #b8eedf;
@@ -31,9 +29,17 @@
       color: #0f172a;
     }
 
-    .dashboard-card {
+    #bloque-principal {
       max-width: 1540px;
-      margin: 0 auto 20px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: #f8fafc;
+    }
+
+    .dashboard-card {
+      width: 100%;
       background: #ffffff;
       padding: 18px 24px;
       border-radius: 12px;
@@ -46,8 +52,28 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
       margin-bottom: 14px;
+    }
+
+    .brand-title-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .ucsg-logo-img {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .header-text-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
 
     .dash-header h1 {
@@ -85,11 +111,11 @@
     }
     .btn-action:active { transform: scale(0.98); }
 
-    .btn-export {
-      background: #2563eb;
+    .btn-calc-trigger {
+      background: #059669;
       color: white;
     }
-    .btn-export:hover { background: #1d4ed8; }
+    .btn-calc-trigger:hover { background: #047857; }
 
     .btn-reset {
       background: #ef4444;
@@ -156,8 +182,7 @@
     }
 
     .malla-outer {
-      max-width: 1540px;
-      margin: 0 auto;
+      width: 100%;
       background: #ffffff;
       padding: 24px;
       border-radius: 12px;
@@ -177,6 +202,7 @@
       flex-direction: column;
       width: 34px;
       margin-right: 14px;
+      flex-shrink: 0;
     }
 
     .eje-badge {
@@ -294,7 +320,7 @@
 
     .materia-box:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     }
 
     .materia-box.bloqueada {
@@ -312,11 +338,48 @@
     .contextos { background-color: var(--c-contextos); border-color: var(--b-contextos); }
     .integracion { background-color: var(--c-integracion); border-color: var(--b-integracion); }
 
+    .materia-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .materia-top-left {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
     .materia-top {
       font-size: 0.65rem;
       font-weight: 500;
       color: #334155;
       line-height: 1;
+    }
+
+    .btn-info-syllabus {
+      background: rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      color: #1e293b;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 800;
+      font-style: italic;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+      padding: 0;
+    }
+
+    .btn-info-syllabus:hover {
+      background: #0f172a;
+      color: #ffffff;
+      transform: scale(1.15);
     }
 
     .materia-name {
@@ -327,7 +390,7 @@
       text-align: center;
       line-height: 1.18;
       color: #0f172a;
-      padding: 0 12px;
+      padding: 0 8px;
       margin: auto 0;
     }
 
@@ -340,9 +403,6 @@
     }
 
     .check-circle {
-      position: absolute;
-      top: 4px;
-      right: 4px;
       width: 17px;
       height: 17px;
       border-radius: 50%;
@@ -351,7 +411,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -419,92 +479,608 @@
     .shake {
       animation: shakeBox 0.35s ease;
     }
+
+    /* Modales */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 480px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+      position: relative;
+      transform: translateY(12px);
+      transition: transform 0.2s ease;
+    }
+
+    .modal-content.modal-calc-wide {
+      max-width: 620px;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-close:hover { color: #0f172a; }
+
+    .modal-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .modal-tag.fundamentos { background: var(--c-fundamentos); color: #064e3b; }
+    .modal-tag.contextos { background: var(--c-contextos); color: #4c1d95; }
+    .modal-tag.integracion { background: var(--c-integracion); color: #713f12; }
+
+    .modal-header h2 {
+      margin: 0 0 14px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.3;
+      padding-right: 20px;
+    }
+
+    .modal-specs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.8rem;
+      color: #334155;
+      margin-bottom: 14px;
+    }
+
+    .modal-dependencies {
+      font-size: 0.82rem;
+      color: #475569;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-dependencies h4 {
+      margin: 0 0 4px;
+      font-size: 0.8rem;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .practica-notice {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      margin-top: 10px;
+      line-height: 1.35;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 14px;
+    }
+
+    .btn-syllabus {
+      background: #2563eb;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .btn-syllabus:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-modal-close-action {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-modal-close-action:hover {
+      background: #e2e8f0;
+    }
+
+    /* Calculadora */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .calc-parcial-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .calc-parcial-box h3 {
+      margin: 0 0 4px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #1e293b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+    }
+
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .calc-field label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    .calc-field input {
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      color: #0f172a;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .calc-field input:focus {
+      border-color: #2563eb;
+    }
+
+    .calc-subtotal-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #334155;
+      text-align: right;
+      padding-top: 4px;
+    }
+
+    .calc-mejora-box {
+      background: #fdf4ff;
+      border: 1px solid #f0abfc;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .calc-mejora-box h4 {
+      margin: 0;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #86198f;
+      text-transform: uppercase;
+    }
+
+    .calc-mejora-desc {
+      font-size: 0.72rem;
+      color: #701a75;
+      line-height: 1.3;
+    }
+
+    .calc-result-card {
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .calc-res-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .calc-res-status {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .status-aprobado { background: #10b981; color: #ffffff; }
+    .status-reprobado { background: #ef4444; color: #ffffff; }
+    .status-en-curso { background: #f59e0b; color: #ffffff; }
+
+    .calc-res-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .calc-target-advice {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    /* Footer Centrado */
+    .app-creator-footer {
+      max-width: 1540px;
+      margin: 24px auto 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding: 20px 24px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .creator-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .creator-text span {
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .creator-social-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-social {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      color: #ffffff;
+    }
+
+    .btn-social:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-github {
+      background-color: #24292e;
+    }
+    .btn-github:hover {
+      background-color: #0f1419;
+    }
+
+    .btn-linkedin {
+      background-color: #0a66c2;
+    }
+    .btn-linkedin:hover {
+      background-color: #004182;
+    }
+
+    .btn-instagram {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+    .btn-instagram:hover {
+      filter: brightness(1.08);
+    }
   </style>
 </head>
 <body>
 
-  <header class="dashboard-card">
-    <div class="dash-header">
-      <div>
-        <h1>Malla Curricular - Ingeniería en Ciencias de la Computación</h1>
-        <span>Facultad de Ingeniería - Universidad Católica de Santiago de Guayaquil</span>
+  <div id="bloque-principal">
+    <header class="dashboard-card">
+      <div class="dash-header">
+        <div class="brand-title-group">
+          <img 
+            class="ucsg-logo-img" 
+            src="logo_ucsg_fi.png" 
+            alt="UCSG Facultad de Ingeniería"
+          />
+
+          <div class="header-text-block">
+            <h1>Ingeniería en Ciencias de la Computación</h1>
+            <span>Universidad Católica de Santiago de Guayaquil</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-action btn-calc-trigger" onclick="abrirModalCalculadora()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+              <line x1="8" y1="6" x2="16" y2="6"></line>
+              <line x1="16" y1="14" x2="16" y2="18"></line>
+              <path d="M16 10h.01"></path>
+              <path d="M12 10h.01"></path>
+              <path d="M8 10h.01"></path>
+              <path d="M12 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 18h.01"></path>
+              <path d="M8 18h.01"></path>
+            </svg>
+            Calcular Promedio
+          </button>
+          <button class="btn-action btn-reset" onclick="reiniciarProgreso()">Reiniciar Progreso</button>
+        </div>
       </div>
-      <div class="header-actions">
-        <button class="btn-action btn-export" id="btn-descargar" onclick="descargarImagenMalla()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
+
+      <div class="dash-stats">
+        <div class="stat-item">
+          <span class="stat-lbl">Materias Aprobadas</span>
+          <span class="stat-num"><span id="lbl-aprobadas">0</span> / <span id="lbl-total">0</span></span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-lbl">Créditos Aprobados</span>
+          <span class="stat-num"><span id="lbl-creditos">0</span> / 120</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-lbl">Horas Académicas</span>
+          <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-lbl">Práctica Comunitaria (*)</span>
+          <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos Pendientes</span>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-meta">
+          <span>AVANCE TOTAL DE LA CARRERA</span>
+          <span id="lbl-porcentaje">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="main-progress"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="malla-outer" id="malla-container">
+      <div class="malla-layout" id="malla-layout">
+        <div class="ejes-sidebar">
+          <div class="eje-badge eje-fund">FUNDAMENTOS</div>
+          <div class="eje-badge eje-cont">CONTEXTOS</div>
+          <div class="eje-badge eje-integ">INTEGRACIÓN</div>
+        </div>
+
+        <div class="grid-container" id="grid-container">
+          <svg id="svg-connections">
+            <defs>
+              <marker id="arrow-default" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <polygon points="0 0, 6 3, 0 6" fill="#1e293b" />
+              </marker>
+              <marker id="arrow-pre" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <polygon points="0 0, 6 3, 0 6" fill="#059669" />
+              </marker>
+              <marker id="arrow-post" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <polygon points="0 0, 6 3, 0 6" fill="#2563eb" />
+              </marker>
+            </defs>
           </svg>
-          Descargar Imagen HD
-        </button>
-        <button class="btn-action btn-reset" onclick="reiniciarProgreso()">Reiniciar Progreso</button>
+          <div class="semestres-grid" id="semestres-grid"></div>
+        </div>
       </div>
+
+      <div class="malla-footer-notes">
+        <div><strong>(*) Para tomar la "Práctica Comunitaria"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
+        <div><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Academia de Idiomas UCSG, Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="app-creator-footer">
+    <div class="creator-text">
+      Desarrollado por <span>Carlos Bermello</span>
     </div>
-
-    <div class="dash-stats">
-      <div class="stat-item">
-        <span class="stat-lbl">Materias Aprobadas</span>
-        <span class="stat-num"><span id="lbl-aprobadas">0</span> / <span id="lbl-total">0</span></span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Créditos Aprobados</span>
-        <span class="stat-num"><span id="lbl-creditos">0</span> / 120</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Horas Académicas</span>
-        <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Práctica Comunitaria (*)</span>
-        <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos Pendientes</span>
-      </div>
-    </div>
-
-    <div class="progress-bar-wrap">
-      <div class="progress-meta">
-        <span>AVANCE TOTAL DE LA CARRERA</span>
-        <span id="lbl-porcentaje">0%</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="main-progress"></div>
-      </div>
-    </div>
-  </header>
-
-  <main class="malla-outer" id="malla-container-export">
-    <div class="malla-layout" id="malla-layout">
-      <div class="ejes-sidebar">
-        <div class="eje-badge eje-fund">FUNDAMENTOS</div>
-        <div class="eje-badge eje-cont">CONTEXTOS</div>
-        <div class="eje-badge eje-integ">INTEGRACIÓN</div>
-      </div>
-
-      <div class="grid-container" id="grid-container">
-        <svg id="svg-connections">
-          <defs>
-            <marker id="arrow-default" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <polygon points="0 0, 6 3, 0 6" fill="#1e293b" />
-            </marker>
-            <marker id="arrow-pre" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <polygon points="0 0, 6 3, 0 6" fill="#059669" />
-            </marker>
-            <marker id="arrow-post" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <polygon points="0 0, 6 3, 0 6" fill="#2563eb" />
-            </marker>
-          </defs>
+    <div class="creator-social-links">
+      <a href="https://github.com/CarlosBermello" target="_blank" rel="noopener noreferrer" class="btn-social btn-github">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
         </svg>
-        <div class="semestres-grid" id="semestres-grid"></div>
+        GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/carlos-bermello/" target="_blank" rel="noopener noreferrer" class="btn-social btn-linkedin">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+        LinkedIn
+      </a>
+      <a href="https://instagram.com/carlosbermello" target="_blank" rel="noopener noreferrer" class="btn-social btn-instagram">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+        Instagram
+      </a>
+    </div>
+  </footer>
+
+  <!-- Modal Emergente de Información y Visor de Syllabus -->
+  <div class="modal-overlay" id="modal-syllabus-overlay" onclick="cerrarModalExterno(event)">
+    <div class="modal-content">
+      <button class="modal-close" onclick="cerrarModalSyllabus()">&times;</button>
+      <div class="modal-header">
+        <span class="modal-tag" id="modal-tag">Fundamentos</span>
+        <h2 id="modal-title">Cálculo de una Variable</h2>
+      </div>
+      <div class="modal-body">
+        <div class="modal-specs">
+          <div><strong>Ciclo:</strong> <span id="modal-ciclo">I</span></div>
+          <div><strong>Créditos:</strong> <span id="modal-cr">5</span> CR</div>
+          <div><strong>Horas:</strong> <span id="modal-hr">240</span> HRS</div>
+          <div><strong>Estado:</strong> <span id="modal-estado">Pendiente</span></div>
+        </div>
+        <div class="modal-dependencies">
+          <h4>Prerrequisitos obligatorios:</h4>
+          <p id="modal-prereqs">Ninguno</p>
+          <div class="practica-notice" id="modal-practica-notice" style="display: none;">
+            Esta asignatura corresponde a prácticas formativas de vinculación y aplicación profesional. La aprobación y control se realiza mediante la Dirección de Carrera y tutorías institucionales.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" id="modal-footer-container"></div>
+    </div>
+  </div>
+
+  <!-- Modal de la Calculadora de Promedios UCSG -->
+  <div class="modal-overlay" id="modal-calc-overlay" onclick="cerrarModalCalcExterno(event)">
+    <div class="modal-content modal-calc-wide">
+      <button class="modal-close" onclick="cerrarModalCalculadora()">&times;</button>
+      <div class="modal-header">
+        <span class="modal-tag contextos">Escala Semestral /10</span>
+        <h2>Calculadora de Calificaciones</h2>
+      </div>
+      <div class="modal-body">
+        <div class="calc-grid">
+          <div class="calc-parcial-box">
+            <h3>Primer Parcial (50%)</h3>
+            <div class="calc-field">
+              <label for="p1-form">Componente Formativo (50%):</label>
+              <input type="number" id="p1-form" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+            </div>
+            <div class="calc-field">
+              <label for="p1-eval">Evaluación Parcial (50%):</label>
+              <input type="number" id="p1-eval" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+            </div>
+            <div class="calc-subtotal-badge">
+              Total P1: <span id="p1-total">0.00</span> / 10
+            </div>
+          </div>
+
+          <div class="calc-parcial-box">
+            <h3>Segundo Parcial (50%)</h3>
+            <div class="calc-field">
+              <label for="p2-form">Componente Formativo (50%):</label>
+              <input type="number" id="p2-form" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+            </div>
+            <div class="calc-field">
+              <label for="p2-eval">Evaluación Parcial (50%):</label>
+              <input type="number" id="p2-eval" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+            </div>
+            <div class="calc-subtotal-badge">
+              Total P2: <span id="p2-total">0.00</span> / 10
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-mejora-box">
+          <h4>Examen de Mejoramiento (Opcional)</h4>
+          <span class="calc-mejora-desc">Reemplaza automáticamente el promedio total del parcial con la nota más baja (si la nota del mejoramiento es superior).</span>
+          <div class="calc-field" style="margin-top: 6px;">
+            <input type="number" id="mejora-nota" min="0" max="10" step="0.01" placeholder="Ingresa nota del examen de mejoramiento (/10)" oninput="calcularNotas()">
+          </div>
+        </div>
+
+        <div class="calc-result-card">
+          <div class="calc-res-header">
+            <span>PROMEDIO FINAL OBTENIDO</span>
+            <span class="calc-res-status status-en-curso" id="calc-status-badge">En curso</span>
+          </div>
+          <div class="calc-res-num" id="calc-final-score">0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span></div>
+          <div class="calc-target-advice" id="calc-advice">
+            Ingresa las notas de tus parciales para proyectar cuánto necesitas para aprobar (Mínimo 7.00 / 10).
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-close-action" onclick="limpiarCalculadora()">Limpiar Campos</button>
+        <button class="btn-modal-close-action" onclick="cerrarModalCalculadora()">Cerrar</button>
       </div>
     </div>
-
-    <div class="malla-footer-notes">
-      <div><strong>(*) Para tomar la "Práctica Comunitaria"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
-      <div><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Academia de Idiomas UCSG, Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
-    </div>
-  </main>
+  </div>
 
   <script>
+    const SYLLABUS_FOLDER = "syllabi/";
+
     const estructuraMalla = [
       {
         ciclo: "I", crTotal: 14, hrTotal: 672,
@@ -548,7 +1124,7 @@
           { id: "prog_cap", nombre: "Programación en Capas", cr: 3, hr: 144, tipo: "contextos" },
           { id: "bd", nombre: "Base de Datos", cr: 3, hr: 144, tipo: "contextos" }
         ],
-        practica: { id: "prac_com", nombre: "Práctica Comunitaria (*)", cr: 2, hr: 96, tipo: "contextos" }
+        practica: { id: "prac_com", nombre: "Práctica Comunitaria (*)", cr: 2, hr: 96, tipo: "contextos", esPractica: true }
       },
       {
         ciclo: "V", crTotal: 15, hrTotal: 720,
@@ -592,7 +1168,7 @@
           { id: "proy_ti", nombre: "Proyecto de Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
           { id: "emp_innov", nombre: "Emprendimiento e Innovación Tecnológica", cr: 2, hr: 96, tipo: "integracion" }
         ],
-        practica: { id: "prac_prof", nombre: "Práctica Pre Profesional", cr: 5, hr: 240, tipo: "integracion" }
+        practica: { id: "prac_prof", nombre: "Práctica Pre Profesional", cr: 5, hr: 240, tipo: "integracion", esPractica: true }
       }
     ];
 
@@ -638,6 +1214,13 @@
     ];
 
     let aprobadas = new Set(JSON.parse(localStorage.getItem("malla_aprobadas_semibold_v1") || "[]"));
+
+    const materiasMap = {};
+    estructuraMalla.forEach(sem => {
+      [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
+        materiasMap[m.id] = { ...m, ciclo: sem.ciclo };
+      });
+    });
 
     const prerequisitosMap = {};
     conexiones.forEach(c => {
@@ -703,11 +1286,16 @@
       box.onmouseleave = () => resetDependencies();
 
       box.innerHTML = `
-        <div class="materia-top">${mat.cr} CR</div>
-        <div class="check-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
+        <div class="materia-header-row">
+          <div class="materia-top-left">
+            <span class="materia-top">${mat.cr} CR</span>
+            <button class="btn-info-syllabus" onclick="abrirModalSyllabus('${mat.id}', event)" title="Ver Información">i</button>
+          </div>
+          <div class="check-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
         </div>
         <div class="materia-name">${mat.nombre}</div>
         <div class="materia-footer">${mat.hr} HRS</div>
@@ -740,7 +1328,7 @@
 
         const tot = document.createElement("div");
         tot.className = "sem-totales";
-        tot.innerHTML = `<span>${sem.crTotal} Cr</span><span>${sem.hrTotal} Hrs</span>`;
+        tot.innerHTML = `<span>${sem.crTotal} CR</span><span>${sem.hrTotal} HRS</span>`;
         row.appendChild(tot);
 
         grid.appendChild(row);
@@ -798,7 +1386,10 @@
       document.getElementById("main-progress").style.width = `${pct}%`;
 
       const comBadge = document.getElementById("lbl-comunitaria");
-      if (fundamentosCompletos) {
+      if (aprobadas.has("prac_com")) {
+        comBadge.textContent = "Finalizada con éxito ✓";
+        comBadge.style.color = "#10b981";
+      } else if (fundamentosCompletos) {
         comBadge.textContent = "Habilitada ✓";
         comBadge.style.color = "#10b981";
       } else {
@@ -879,7 +1470,7 @@
 
         if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, containerRect)) {
           verticalSegments.push({ x: x1, yMin: y1, yMax: dests[0].y2, owner: `${fromId}->${dests[0].id}` });
-          linesData.push({ type: "direct", x: x1, y1, y2: dests[0].y2, from: fromId, to: dests[0].id });
+          linesData.push({ type: "direct", x: x1, y1, y2: dests[0].y2 - 2, from: fromId, to: dests[0].id });
           return;
         }
 
@@ -895,7 +1486,7 @@
 
           if (!isBlocked) {
             verticalSegments.push({ x: d.x2, yMin: midY, yMax: d.y2, owner: `${fromId}->${d.id}` });
-            linesData.push({ type: "branch-standard", x1, midY, x2: d.x2, y2: d.y2, from: fromId, to: d.id });
+            linesData.push({ type: "branch-standard", x1, midY, x2: d.x2, y2: d.y2 - 2, from: fromId, to: d.id });
           } else {
             let corridorX;
             if (d.x2 >= x1) {
@@ -914,7 +1505,7 @@
               corridorX,
               preEntryY,
               x2: d.x2,
-              y2: d.y2,
+              y2: d.y2 - 2,
               from: fromId,
               to: d.id
             });
@@ -928,7 +1519,7 @@
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
         if (item.type === "direct") {
-          path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2 - 2}`);
+          path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
           path.setAttribute("class", `circuit-line from-${item.from} to-${item.to}`);
           path.setAttribute("data-from", item.from);
           path.setAttribute("data-to", item.to);
@@ -965,7 +1556,7 @@
             d += ` A ${R} ${R} 0 0 ${dir > 0 ? 1 : 0} ${endX} ${midY}`;
           });
 
-          d += ` L ${x2} ${midY} L ${x2} ${y2 - 2}`;
+          d += ` L ${x2} ${midY} L ${x2} ${y2}`;
           path.setAttribute("d", d);
           path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
           path.setAttribute("data-from", from);
@@ -1015,7 +1606,7 @@
             d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
           });
 
-          d += ` L ${x2} ${preEntryY} L ${x2} ${y2 - 2}`;
+          d += ` L ${x2} ${preEntryY} L ${x2} ${y2}`;
 
           path.setAttribute("d", d);
           path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
@@ -1092,45 +1683,220 @@
       }
     }
 
-    // Exportación en alta resolución (2x Retina scale)
-    async function descargarImagenMalla() {
-      const btn = document.getElementById("btn-descargar");
-      const originalText = btn.innerHTML;
-      btn.innerHTML = "Generando imagen...";
-      btn.style.opacity = "0.7";
-      btn.disabled = true;
+    function abrirModalSyllabus(id, event) {
+      event.stopPropagation();
+      const mat = materiasMap[id];
+      if (!mat) return;
 
-      // Limpiar cualquier resaltado temporal antes de capturar
-      resetDependencies();
+      const overlay = document.getElementById("modal-syllabus-overlay");
+      const tagEl = document.getElementById("modal-tag");
 
-      const container = document.getElementById("malla-container-export");
-      const originalScrollLeft = container.scrollLeft;
-      container.scrollLeft = 0; // Asegura que se capture desde el origen
+      tagEl.textContent = mat.tipo;
+      tagEl.className = `modal-tag ${mat.tipo}`;
 
-      try {
-        const canvas = await html2canvas(container, {
-          scale: 2, // 2x para resolución HD nítida
-          useCORS: true,
-          logging: false,
-          backgroundColor: "#ffffff",
-          windowWidth: container.scrollWidth,
-          width: container.scrollWidth
-        });
+      document.getElementById("modal-title").textContent = mat.nombre;
+      document.getElementById("modal-ciclo").textContent = `Ciclo ${mat.ciclo}`;
+      document.getElementById("modal-cr").textContent = mat.cr;
+      document.getElementById("modal-hr").textContent = mat.hr;
 
-        // Crear enlace de descarga automática
-        const imageURL = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `Malla_Curricular_Computacion_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
-        link.href = imageURL;
-        link.click();
-      } catch (err) {
-        alert("Ocurrió un error al generar la imagen. Intenta de nuevo.");
-      } finally {
-        container.scrollLeft = originalScrollLeft;
-        btn.innerHTML = originalText;
-        btn.style.opacity = "1";
-        btn.disabled = false;
+      const isAprobada = aprobadas.has(mat.id);
+      const isHabilitada = estanRequisitosCompletos(mat.id);
+      const estadoEl = document.getElementById("modal-estado");
+
+      if (isAprobada) {
+        estadoEl.textContent = "Aprobada ✓";
+        estadoEl.style.color = "#10b981";
+      } else if (isHabilitada) {
+        estadoEl.textContent = "Habilitada para cursar";
+        estadoEl.style.color = "#2563eb";
+      } else {
+        estadoEl.textContent = "Bloqueada (Prerrequisitos pendientes)";
+        estadoEl.style.color = "#dc2626";
       }
+
+      const reqs = prerequisitosMap[id] || [];
+      const prereqsEl = document.getElementById("modal-prereqs");
+      const practicaNoticeEl = document.getElementById("modal-practica-notice");
+      const footerContainer = document.getElementById("modal-footer-container");
+
+      if (id === "prac_com") {
+        prereqsEl.textContent = "Aprobación completa de la organización curricular de Fundamentos (Ciclos I, II y III)";
+      } else if (reqs.length === 0) {
+        prereqsEl.textContent = "Ninguno (Materia de primer nivel o sin dependencias directas)";
+      } else {
+        const nombresReqs = reqs.map(rId => materiasMap[rId] ? materiasMap[rId].nombre : rId);
+        prereqsEl.textContent = nombresReqs.join(", ");
+      }
+
+      if (mat.esPractica) {
+        practicaNoticeEl.style.display = "block";
+        footerContainer.innerHTML = `
+          <button class="btn-modal-close-action" onclick="cerrarModalSyllabus()">Cerrar</button>
+        `;
+      } else {
+        practicaNoticeEl.style.display = "none";
+        const rutaArchivo = `${SYLLABUS_FOLDER}${mat.id}.pdf`;
+
+        footerContainer.innerHTML = `
+          <a href="${rutaArchivo}" target="_blank" rel="noopener noreferrer" class="btn-syllabus" id="btn-syllabus-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            Abrir Syllabus
+          </a>
+        `;
+      }
+
+      overlay.classList.add("active");
+    }
+
+    function cerrarModalSyllabus() {
+      document.getElementById("modal-syllabus-overlay").classList.remove("active");
+    }
+
+    function cerrarModalExterno(event) {
+      if (event.target.id === "modal-syllabus-overlay") {
+        cerrarModalSyllabus();
+      }
+    }
+
+    function abrirModalCalculadora() {
+      document.getElementById("modal-calc-overlay").classList.add("active");
+      calcularNotas();
+    }
+
+    function cerrarModalCalculadora() {
+      document.getElementById("modal-calc-overlay").classList.remove("active");
+    }
+
+    function cerrarModalCalcExterno(event) {
+      if (event.target.id === "modal-calc-overlay") {
+        cerrarModalCalculadora();
+      }
+    }
+
+    function limpiarCalculadora() {
+      document.getElementById("p1-form").value = "";
+      document.getElementById("p1-eval").value = "";
+      document.getElementById("p2-form").value = "";
+      document.getElementById("p2-eval").value = "";
+      document.getElementById("mejora-nota").value = "";
+      calcularNotas();
+    }
+
+    function parseInput(val) {
+      if (val === "" || val === null || isNaN(val)) return null;
+      const num = parseFloat(val);
+      if (num < 0) return 0;
+      if (num > 10) return 10;
+      return num;
+    }
+
+    function calcularNotas() {
+      const p1Form = parseInput(document.getElementById("p1-form").value);
+      const p1Eval = parseInput(document.getElementById("p1-eval").value);
+      const p2Form = parseInput(document.getElementById("p2-form").value);
+      const p2Eval = parseInput(document.getElementById("p2-eval").value);
+      const mejora = parseInput(document.getElementById("mejora-nota").value);
+
+      let p1Total = null;
+      if (p1Form !== null && p1Eval !== null) {
+        p1Total = (p1Form * 0.5) + (p1Eval * 0.5);
+        document.getElementById("p1-total").textContent = p1Total.toFixed(2);
+      } else if (p1Form !== null || p1Eval !== null) {
+        const val = ((p1Form || 0) * 0.5) + ((p1Eval || 0) * 0.5);
+        document.getElementById("p1-total").textContent = val.toFixed(2);
+      } else {
+        document.getElementById("p1-total").textContent = "0.00";
+      }
+
+      let p2Total = null;
+      if (p2Form !== null && p2Eval !== null) {
+        p2Total = (p2Form * 0.5) + (p2Eval * 0.5);
+        document.getElementById("p2-total").textContent = p2Total.toFixed(2);
+      } else if (p2Form !== null || p2Eval !== null) {
+        const val = ((p2Form || 0) * 0.5) + ((p2Eval || 0) * 0.5);
+        document.getElementById("p2-total").textContent = val.toFixed(2);
+      } else {
+        document.getElementById("p2-total").textContent = "0.00";
+      }
+
+      const scoreEl = document.getElementById("calc-final-score");
+      const statusBadge = document.getElementById("calc-status-badge");
+      const adviceEl = document.getElementById("calc-advice");
+
+      if (p1Total !== null && p2Total !== null) {
+        let finalP1 = p1Total;
+        let finalP2 = p2Total;
+        let reemplazoTexto = "";
+
+        if (mejora !== null) {
+          if (finalP1 <= finalP2 && mejora > finalP1) {
+            finalP1 = mejora;
+            reemplazoTexto = ` (Se reemplazó P1 con la nota de mejoramiento: ${mejora.toFixed(2)})`;
+          } else if (finalP2 < finalP1 && mejora > finalP2) {
+            finalP2 = mejora;
+            reemplazoTexto = ` (Se reemplazó P2 con la nota de mejoramiento: ${mejora.toFixed(2)})`;
+          }
+        }
+
+        const promedioFinal = (finalP1 + finalP2) / 2;
+        scoreEl.innerHTML = `${promedioFinal.toFixed(2)} <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+
+        if (promedioFinal >= 7.00) {
+          statusBadge.textContent = "Aprobado";
+          statusBadge.className = "calc-res-status status-aprobado";
+          adviceEl.innerHTML = `¡Felicidades! Superaste el puntaje mínimo de 7.00 con un promedio final de <strong>${promedioFinal.toFixed(2)}</strong>.${reemplazoTexto}`;
+        } else {
+          statusBadge.textContent = "Reprobado";
+          statusBadge.className = "calc-res-status status-reprobado";
+          if (mejora === null) {
+            const menor = Math.min(p1Total, p2Total);
+            const neededEnMejora = 14.00 - Math.max(p1Total, p2Total);
+            if (neededEnMejora <= 10.00) {
+              adviceEl.innerHTML = `Promedio insuficiente (${promedioFinal.toFixed(2)}). Para aprobar, necesitas rendir el examen de mejoramiento y obtener al menos <strong>${neededEnMejora.toFixed(2)} / 10</strong> para reemplazar el parcial más bajo (${menor.toFixed(2)}).`;
+            } else {
+              adviceEl.innerHTML = `Promedio insuficiente (${promedioFinal.toFixed(2)}). Aún con 10/10 en examen de mejoramiento no alcanzas el promedio mínimo de 7.00.`;
+            }
+          } else {
+            adviceEl.innerHTML = `Aun aplicando el examen de mejoramiento, el promedio final es de <strong>${promedioFinal.toFixed(2)}</strong> (Inferior al mínimo de 7.00).`;
+          }
+        }
+        return;
+      }
+
+      if (p1Total !== null && p2Total === null) {
+        scoreEl.innerHTML = `-- <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+        statusBadge.textContent = "En curso";
+        statusBadge.className = "calc-res-status status-en-curso";
+
+        const neededP2Total = 14.00 - p1Total;
+
+        if (p2Form !== null && p2Eval === null) {
+          const neededEval = (neededP2Total - (p2Form * 0.5)) / 0.5;
+          if (neededEval <= 0) {
+            adviceEl.innerHTML = `Con tu componente formativo de P2 (${p2Form.toFixed(2)}), ya aseguras la aprobación de la materia sin importar la nota del examen de segundo parcial.`;
+          } else if (neededEval <= 10) {
+            adviceEl.innerHTML = `Para aprobar directamente con 7.00/10, necesitas obtener al menos <strong>${neededEval.toFixed(2)} / 10</strong> en la Evaluación del Segundo Parcial.`;
+          } else {
+            adviceEl.innerHTML = `Con tu formativo de P2 (${p2Form.toFixed(2)}), necesitas más de 10 en el examen de P2. Deberás recurrir al examen de mejoramiento.`;
+          }
+        } else {
+          if (neededP2Total <= 10.00) {
+            adviceEl.innerHTML = `Tienes P1 completo con <strong>${p1Total.toFixed(2)}/10</strong>. Necesitas que el total de tu Segundo Parcial sea de al menos <strong>${neededP2Total.toFixed(2)} / 10</strong> para aprobar directamente.`;
+          } else {
+            adviceEl.innerHTML = `P1 es bajo (${p1Total.toFixed(2)}). Aunque saques 10 en P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
+          }
+        }
+        return;
+      }
+
+      scoreEl.innerHTML = `0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+      statusBadge.textContent = "En curso";
+      statusBadge.className = "calc-res-status status-en-curso";
+      adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
     window.addEventListener("resize", drawTreeLinesWithGutterRouting);
