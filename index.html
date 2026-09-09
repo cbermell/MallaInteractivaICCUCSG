@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Malla Curricular - Ingeniería en Ciencias de la Computación UCSG</title>
+  <!-- Librería html2canvas para captura de alta resolución -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
       --c-fundamentos: #b8eedf;
@@ -112,6 +114,12 @@
       transition: background 0.2s, transform 0.1s;
     }
     .btn-action:active { transform: scale(0.98); }
+
+    .btn-photo {
+      background: #2563eb;
+      color: white;
+    }
+    .btn-photo:hover { background: #1d4ed8; }
 
     .btn-calc-trigger {
       background: #059669;
@@ -497,7 +505,7 @@
       animation: shakeBox 0.35s ease;
     }
 
-    /* Modales Adaptativos */
+    /* Modales */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -664,7 +672,7 @@
       background: #e2e8f0;
     }
 
-    /* Calculadora Responsiva */
+    /* Calculadora */
     .calc-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -878,7 +886,6 @@
       filter: brightness(1.08);
     }
 
-    /* Consultas de Medios para Móviles y Tablets */
     @media (max-width: 1024px) {
       .scroll-hint-bar {
         display: flex;
@@ -931,6 +938,13 @@
         </div>
 
         <div class="header-actions">
+          <button class="btn-action btn-photo" id="btn-exportar-foto" onclick="generarFotoMalla()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            Foto de Avance HD
+          </button>
           <button class="btn-action btn-calc-trigger" onclick="abrirModalCalculadora()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <rect x="4" y="2" width="16" height="20" rx="2"></rect>
@@ -1014,8 +1028,8 @@
       </div>
 
       <div class="malla-footer-notes">
-        <div><strong>(*) Para tomar la "Práctica Comunitaria"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III)[cite: 4].</div>
-        <div><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Academia de Idiomas UCSG, Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG[cite: 4].</div>
+        <div><strong>(*) Para tomar la "Práctica Comunitaria"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
+        <div><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Academia de Idiomas UCSG, Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
       </div>
     </main>
   </div>
@@ -1048,7 +1062,6 @@
     </div>
   </footer>
 
-  <!-- Modal Emergente de Información y Visor de Syllabus -->
   <div class="modal-overlay" id="modal-syllabus-overlay" onclick="cerrarModalExterno(event)">
     <div class="modal-content">
       <button class="modal-close" onclick="cerrarModalSyllabus()">&times;</button>
@@ -1075,7 +1088,6 @@
     </div>
   </div>
 
-  <!-- Modal de la Calculadora de Promedios UCSG -->
   <div class="modal-overlay" id="modal-calc-overlay" onclick="cerrarModalCalcExterno(event)">
     <div class="modal-content modal-calc-wide">
       <button class="modal-close" onclick="cerrarModalCalculadora()">&times;</button>
@@ -1513,13 +1525,16 @@
       return false;
     }
 
+    // Algoritmo de trazado con pasillos laterales y saltos de línea sobre obstáculos
     function drawTreeLinesWithGutterRouting() {
       const svg = document.getElementById("svg-connections");
-      const containerRect = document.getElementById("grid-container").getBoundingClientRect();
+      const gridContainer = document.getElementById("grid-container");
+      if (!svg || !gridContainer) return;
 
+      const containerRect = gridContainer.getBoundingClientRect();
       const defs = svg.querySelector("defs");
       svg.innerHTML = "";
-      svg.appendChild(defs);
+      if (defs) svg.appendChild(defs);
 
       const outgoing = {};
       conexiones.forEach(c => {
@@ -1819,9 +1834,9 @@
       if (id === "hum_pers") {
         prereqsEl.textContent = "Aprobación de al menos una asignatura del Ciclo I para avanzar a segundo nivel.";
       } else if (id === "prac_com") {
-        prereqsEl.textContent = "Aprobación completa de la organización curricular de Fundamentos (Ciclos I, II y III)[cite: 4].";
+        prereqsEl.textContent = "Aprobación completa de la organización curricular de Fundamentos (Ciclos I, II y III).";
       } else if (id === "prac_prof") {
-        prereqsEl.textContent = "Aprobación de la Práctica Comunitaria (*)[cite: 4].";
+        prereqsEl.textContent = "Aprobación de la Práctica Comunitaria (*).";
       } else if (reqs.length === 0) {
         prereqsEl.textContent = "Ninguno (Materia de primer nivel o sin dependencias directas)";
       } else {
@@ -2000,7 +2015,73 @@
       adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
-    window.addEventListener("resize", drawTreeLinesWithGutterRouting);
+    // Captura fotográfica sin clones fuera de pantalla: preserva todas las coordenadas y el trazado de pasillos laterales
+    async function generarFotoMalla() {
+      const btn = document.getElementById("btn-exportar-foto");
+      const textoOriginal = btn.innerHTML;
+      btn.innerHTML = "Generando imagen...";
+      btn.style.opacity = "0.7";
+      btn.disabled = true;
+
+      resetDependencies();
+
+      const contenedorPrincipal = document.getElementById("bloque-principal");
+      const mallaOuter = document.getElementById("malla-container");
+      const scrollOriginal = mallaOuter.scrollLeft;
+
+      // 1. Alinear el scroll a cero y permitir ancho completo temporal
+      mallaOuter.scrollLeft = 0;
+      const anchoCompletoRequerido = Math.max(mallaOuter.scrollWidth, 1440);
+      
+      const widthOriginalPrincipal = contenedorPrincipal.style.width;
+      const maxWidthOriginalPrincipal = contenedorPrincipal.style.maxWidth;
+      const overflowOriginalMalla = mallaOuter.style.overflowX;
+
+      contenedorPrincipal.style.width = `${anchoCompletoRequerido}px`;
+      contenedorPrincipal.style.maxWidth = "none";
+      mallaOuter.style.overflowX = "visible";
+
+      // Recalcular trayectorias en reposo con el ancho completo
+      drawTreeLinesWithGutterRouting();
+
+      try {
+        const canvas = await html2canvas(contenedorPrincipal, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: false,
+          backgroundColor: "#f8fafc",
+          scrollX: 0,
+          scrollY: 0,
+          width: anchoCompletoRequerido,
+          windowWidth: anchoCompletoRequerido,
+          ignoreElements: (el) => el.classList.contains("header-actions") || el.classList.contains("scroll-hint-bar")
+        });
+
+        const imageURL = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `Malla_Avance_Computacion_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = imageURL;
+        link.click();
+      } catch (err) {
+        console.error("Error al exportar:", err);
+        alert("Ocurrió un error al generar la imagen. Si abres el archivo localmente, te recomendamos usar un servidor de desarrollo ligero como Live Server.");
+      } finally {
+        // 2. Restaurar inmediatamente el layout adaptable original
+        contenedorPrincipal.style.width = widthOriginalPrincipal;
+        contenedorPrincipal.style.maxWidth = maxWidthOriginalPrincipal;
+        mallaOuter.style.overflowX = overflowOriginalMalla;
+        mallaOuter.scrollLeft = scrollOriginal;
+
+        drawTreeLinesWithGutterRouting();
+
+        btn.innerHTML = textoOriginal;
+        btn.style.opacity = "1";
+        btn.disabled = false;
+      }
+    }
+
+    window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
     renderMalla();
   </script>
 </body>
