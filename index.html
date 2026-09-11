@@ -323,15 +323,15 @@
       align-items: stretch;
     }
 
-    .grid-computacion .semestre-row {
-      grid-template-columns: 42px repeat(5, 1fr) 156px 16px 88px;
-      gap: 20px;
-    }
+.grid-computacion .semestre-row {
+  grid-template-columns: 42px repeat(6, 1fr) 16px 88px;
+  gap: 20px;
+}
 
-    .grid-datos-ia .semestre-row {
-      grid-template-columns: 42px repeat(5, 1fr) 156px 16px 88px;
-      gap: 20px;
-    }
+.grid-datos-ia .semestre-row {
+  grid-template-columns: 42px repeat(6, 1fr) 16px 88px;
+  gap: 20px;
+}
 
     .sem-badge {
       display: flex;
@@ -2338,86 +2338,92 @@
     }
 
 async function generarFotoMalla() {
-      const btn = document.getElementById("btn-exportar-foto");
-      const textoOriginal = btn.innerHTML;
-      btn.innerHTML = "Generando imagen...";
-      btn.style.opacity = "0.7";
-      btn.disabled = true;
+  const btn = document.getElementById("btn-exportar-foto");
+  const textoOriginal = btn.innerHTML;
+  btn.innerHTML = "Generando imagen...";
+  btn.style.opacity = "0.7";
+  btn.disabled = true;
 
-      resetDependencies();
+  resetDependencies();
 
-      const contenedorPrincipal = document.getElementById("bloque-principal");
-      
-      // Tomar el ancho real actual del contenedor en pantalla para evitar estiramientos forzados
-      const anchoReal = contenedorPrincipal.offsetWidth || 1540;
+  const contenedorPrincipal = document.getElementById("bloque-principal");
+  // Ancho fijo canónico de escritorio para garantizar proporciones idénticas en cualquier pantalla
+  const ANCHO_CANONICO = 1540;
 
-      try {
-        const canvas = await html2canvas(contenedorPrincipal, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          logging: false,
-          backgroundColor: "#f8fafc",
-          width: anchoReal,
-          windowWidth: anchoReal,
-          onclone: (clonedDoc) => {
-            const clonedPrincipal = clonedDoc.getElementById("bloque-principal");
-            if (clonedPrincipal) {
-              clonedPrincipal.style.width = `${anchoReal}px`;
-              clonedPrincipal.style.maxWidth = "none";
-            }
+  try {
+    const canvas = await html2canvas(contenedorPrincipal, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      backgroundColor: "#f8fafc",
+      width: ANCHO_CANONICO,
+      windowWidth: ANCHO_CANONICO,
+      onclone: (clonedDoc) => {
+        // 1. Forzar el viewport virtual clonado al ancho de escritorio
+        clonedDoc.documentElement.style.width = `${ANCHO_CANONICO}px`;
+        clonedDoc.body.style.width = `${ANCHO_CANONICO}px`;
+        clonedDoc.body.style.minWidth = `${ANCHO_CANONICO}px`;
 
-            const clonedMallaOuter = clonedDoc.getElementById("malla-container");
-            if (clonedMallaOuter) {
-              clonedMallaOuter.style.overflow = "visible";
-              clonedMallaOuter.style.width = "100%";
-              clonedMallaOuter.scrollLeft = 0;
-            }
+        const clonedPrincipal = clonedDoc.getElementById("bloque-principal");
+        if (clonedPrincipal) {
+          clonedPrincipal.style.width = `${ANCHO_CANONICO}px`;
+          clonedPrincipal.style.minWidth = `${ANCHO_CANONICO}px`;
+          clonedPrincipal.style.maxWidth = `${ANCHO_CANONICO}px`;
+        }
 
-            const actions = clonedDoc.querySelector(".header-actions");
-            if (actions) actions.style.display = "none";
-            const hint = clonedDoc.querySelector(".scroll-hint-bar");
-            if (hint) hint.style.display = "none";
+        const clonedMallaOuter = clonedDoc.getElementById("malla-container");
+        if (clonedMallaOuter) {
+          clonedMallaOuter.style.overflow = "visible";
+          clonedMallaOuter.style.width = "100%";
+          clonedMallaOuter.scrollLeft = 0;
+        }
 
-            const clonedSvg = clonedDoc.getElementById("svg-connections");
-            const clonedGrid = clonedDoc.getElementById("grid-container");
+        // Ocultar botones y avisos que no deben salir en la imagen
+        const actions = clonedDoc.querySelector(".header-actions");
+        if (actions) actions.style.display = "none";
+        const hint = clonedDoc.querySelector(".scroll-hint-bar");
+        if (hint) hint.style.display = "none";
 
-            if (clonedSvg && clonedGrid) {
-              drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
+        const clonedSvg = clonedDoc.getElementById("svg-connections");
+        const clonedGrid = clonedDoc.getElementById("grid-container");
 
-              const polygons = clonedSvg.querySelectorAll("polygon");
-              polygons.forEach(poly => {
-                poly.setAttribute("fill", "#1e293b");
-              });
+        if (clonedSvg && clonedGrid) {
+          drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
 
-              const paths = clonedSvg.querySelectorAll("path");
-              paths.forEach(p => {
-                p.style.fill = "none";
-                p.setAttribute("fill", "none");
-                p.style.stroke = "#1e293b";
-                p.setAttribute("stroke", "#1e293b");
-                p.style.strokeWidth = "1.5px";
-                p.setAttribute("stroke-width", "1.5");
-              });
-            }
-          }
-        });
+          const polygons = clonedSvg.querySelectorAll("polygon");
+          polygons.forEach(poly => {
+            poly.setAttribute("fill", "#1e293b");
+          });
 
-        const imageURL = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
-        link.href = imageURL;
-        link.click();
-      } catch (err) {
-        console.error("Error al exportar:", err);
-        alert("Ocurrió un error al generar la imagen.");
-      } finally {
-        drawTreeLinesWithGutterRouting();
-        btn.innerHTML = textoOriginal;
-        btn.style.opacity = "1";
-        btn.disabled = false;
+          const paths = clonedSvg.querySelectorAll("path");
+          paths.forEach(p => {
+            p.style.fill = "none";
+            p.setAttribute("fill", "none");
+            p.style.stroke = "#1e293b";
+            p.setAttribute("stroke", "#1e293b");
+            p.style.strokeWidth = "1.5px";
+            p.setAttribute("stroke-width", "1.5");
+          });
+        }
       }
-    }
+    });
+
+    const imageURL = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.download = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
+    link.href = imageURL;
+    link.click();
+  } catch (err) {
+    console.error("Error al exportar:", err);
+    alert("Ocurrió un error al generar la imagen.");
+  } finally {
+    drawTreeLinesWithGutterRouting();
+    btn.innerHTML = textoOriginal;
+    btn.style.opacity = "1";
+    btn.disabled = false;
+  }
+}
 
     window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
 
