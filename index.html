@@ -2347,7 +2347,9 @@ async function generarFotoMalla() {
       resetDependencies();
 
       const contenedorPrincipal = document.getElementById("bloque-principal");
-      const anchoVirtual = 1540;
+      
+      // Tomar el ancho real actual del contenedor en pantalla para evitar estiramientos forzados
+      const anchoReal = contenedorPrincipal.offsetWidth || 1540;
 
       try {
         const canvas = await html2canvas(contenedorPrincipal, {
@@ -2356,15 +2358,12 @@ async function generarFotoMalla() {
           allowTaint: true,
           logging: false,
           backgroundColor: "#f8fafc",
-          width: anchoVirtual,
-          windowWidth: anchoVirtual,
+          width: anchoReal,
+          windowWidth: anchoReal,
           onclone: (clonedDoc) => {
-            clonedDoc.documentElement.style.width = `${anchoVirtual}px`;
-            clonedDoc.body.style.width = `${anchoVirtual}px`;
-
             const clonedPrincipal = clonedDoc.getElementById("bloque-principal");
             if (clonedPrincipal) {
-              clonedPrincipal.style.width = `${anchoVirtual}px`;
+              clonedPrincipal.style.width = `${anchoReal}px`;
               clonedPrincipal.style.maxWidth = "none";
             }
 
@@ -2384,10 +2383,8 @@ async function generarFotoMalla() {
             const clonedGrid = clonedDoc.getElementById("grid-container");
 
             if (clonedSvg && clonedGrid) {
-              // Redibujar las líneas en el clon para mantener la posición centrada exacta
               drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
 
-              // Estilizar los marcadores de flecha para que html2canvas los pinte limpios sin errores
               const polygons = clonedSvg.querySelectorAll("polygon");
               polygons.forEach(poly => {
                 poly.setAttribute("fill", "#1e293b");
