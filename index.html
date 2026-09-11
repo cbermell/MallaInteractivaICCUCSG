@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malla Curricular - Ingeniería en Ciencias de la Computación UCSG</title>
+  <title>Facultad de Ingeniería - UCSG</title>
+
+  <!-- favicon -->
+  <link rel="icon" href="logo_ucsg.png" type="image/png">
   <!-- Librería html2canvas para captura de alta resolución -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -76,16 +79,33 @@
     .header-text-block {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
-    .dash-header h1 {
-      margin: 0;
-      font-size: clamp(1rem, 1.8vw, 1.25rem);
+    .carrera-selector-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .carrera-select {
+      font-size: clamp(0.92rem, 1.5vw, 1.15rem);
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #0f172a;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .carrera-select:focus {
+      border-color: #2563eb;
+      background: #ffffff;
     }
 
     .dash-header span {
@@ -201,7 +221,9 @@
       border: 1.5px solid #cbd5e1;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
       overflow-x: auto;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
+      position: relative;
     }
 
     .scroll-hint-bar {
@@ -220,7 +242,7 @@
     .malla-layout {
       position: relative;
       display: flex;
-      min-width: 1320px;
+      min-width: 1340px;
     }
 
     .ejes-sidebar {
@@ -297,10 +319,18 @@
 
     .semestre-row {
       display: grid;
-      grid-template-columns: 42px repeat(5, 1fr) 156px 16px 88px;
-      gap: 20px;
       height: 74px;
       align-items: stretch;
+    }
+
+    .grid-computacion .semestre-row {
+      grid-template-columns: 42px repeat(5, 1fr) 156px 16px 88px;
+      gap: 20px;
+    }
+
+    .grid-datos-ia .semestre-row {
+      grid-template-columns: 42px repeat(5, 1fr) 156px 16px 88px;
+      gap: 20px;
     }
 
     .sem-badge {
@@ -341,6 +371,7 @@
       border: 1.5px solid #1e293b;
       border-radius: 10px;
       padding: 6px 8px;
+      height: 74px; /* Altura fija idéntica a la fila del grid */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -348,6 +379,7 @@
       user-select: none;
       transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
       touch-action: manipulation;
+      overflow: hidden; /* Evita que textos largos rompan la caja */
     }
 
     .materia-box:hover {
@@ -415,15 +447,19 @@
     }
 
     .materia-name {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 600;
-      letter-spacing: 0.15px;
+      letter-spacing: 0.1px;
       text-transform: uppercase;
       text-align: center;
-      line-height: 1.18;
+      line-height: 1.15;
       color: #0f172a;
-      padding: 0 8px;
+      padding: 0 2px;
       margin: auto 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* Limita el texto a máximo 2 líneas de forma limpia */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .materia-footer {
@@ -899,7 +935,6 @@
       }
     }
 
-    /* Optimizaciones precisas para la barra de botones en dispositivos móviles */
     @media (max-width: 640px) {
       .dash-header {
         flex-direction: column;
@@ -949,8 +984,13 @@
           />
 
           <div class="header-text-block">
-            <h1>Ingeniería en Ciencias de la Computación</h1>
-            <span>Universidad Católica de Santiago de Guayaquil</span>
+            <div class="carrera-selector-wrap">
+              <select id="select-carrera" class="carrera-select" onchange="cambiarCarrera(this.value)">
+                <option value="computacion">Ingeniería en Ciencias de la Computación</option>
+                <option value="datos_ia">Ingeniería en Ciencia de Datos e Inteligencia Artificial</option>
+              </select>
+            </div>
+            <span id="txt-facultad-institucional">MALLA CURRICULAR</span>
           </div>
         </div>
 
@@ -1011,7 +1051,7 @@
       </div>
     </header>
 
-    <main class="malla-outer" id="malla-container">
+    <main class="malla-outer grid-computacion" id="malla-container">
       <div class="scroll-hint-bar">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="9 18 15 12 9 6"></polyline>
@@ -1044,9 +1084,9 @@
         </div>
       </div>
 
-      <div class="malla-footer-notes">
-        <div><strong>(*) Para tomar la "Práctica Comunitaria"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
-        <div><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Academia de Idiomas UCSG, Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
+      <div class="malla-footer-notes" id="malla-footer-notes">
+        <div><strong>(*) Para tomar las "Prácticas Comunitarias"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
+        <div id="txt-resolucion-requisitos"><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
       </div>
     </main>
   </div>
@@ -1062,7 +1102,7 @@
         </svg>
         GitHub
       </a>
-      <a href="https://www.linkedin.com/in/carlosbermello/" target="_blank" rel="noopener noreferrer" class="btn-social btn-linkedin">
+      <a href="https://www.linkedin.com/in/carlos-bermello/" target="_blank" rel="noopener noreferrer" class="btn-social btn-linkedin">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
         </svg>
@@ -1088,7 +1128,6 @@
       </div>
       <div class="modal-body">
         <div class="modal-specs">
-          <!-- Eliminada redundancia: Ahora solo muestra el número romano directamente -->
           <div><strong>Ciclo:</strong> <span id="modal-ciclo">I</span></div>
           <div><strong>Créditos:</strong> <span id="modal-cr">5</span> CR</div>
           <div><strong>Horas:</strong> <span id="modal-hr">240</span> HRS</div>
@@ -1175,174 +1214,377 @@
   <script>
     const SYLLABUS_FOLDER = "syllabi/";
 
-    const estructuraMalla = [
-      {
-        ciclo: "I", crTotal: 14, hrTotal: 672,
-        materias: [
-          { id: "calc1", nombre: "Cálculo de una Variable", cr: 5, hr: 240, tipo: "fundamentos" },
-          null,
-          { id: "fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
-          { id: "res_prob", nombre: "Resolución de Problemas de Ingeniería", cr: 3, hr: 144, tipo: "fundamentos" },
-          null
+    const carrerasData = {
+      computacion: {
+        id: "computacion",
+        nombre: "Ingeniería en Ciencias de la Computación",
+        storageKey: "malla_aprobadas_computacion_v1",
+        gridClass: "grid-computacion",
+        resolucion: "Certificado B1 en idioma inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.",
+        estructura: [
+          {
+            ciclo: "I", crTotal: 14, hrTotal: 672,
+            materias: [
+              { id: "calc1", nombre: "Cálculo de una Variable", cr: 5, hr: 240, tipo: "fundamentos" },
+              null,
+              { id: "fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "res_prob", nombre: "Resolución de Problemas de Ingeniería", cr: 3, hr: 144, tipo: "fundamentos" },
+              null
+            ],
+            practica: { id: "leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos" }
+          },
+          {
+            ciclo: "II", crTotal: 14, hrTotal: 672,
+            materias: [
+              { id: "alg_lin", nombre: "Álgebra Lineal", cr: 3, hr: 144, tipo: "fundamentos" },
+              null,
+              { id: "calc2", nombre: "Cálculo de Varias Variables", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "fund_prog", nombre: "Fundamentos de Programación", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos" }
+            ],
+            practica: { id: "leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos" }
+          },
+          {
+            ciclo: "III", crTotal: 14, hrTotal: 672,
+            materias: [
+              { id: "mat_disc", nombre: "Matemáticas Discretas", cr: 3, hr: 144, tipo: "fundamentos" },
+              null,
+              { id: "prob_est", nombre: "Probabilidad y Estadística", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "poo", nombre: "Programación Orientada a Objetos", cr: 4, hr: 192, tipo: "fundamentos" },
+              { id: "hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos" }
+            ],
+            practica: { id: "cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos" }
+          },
+          {
+            ciclo: "IV", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "sist_dig", nombre: "Sistemas Digitales", cr: 4, hr: 192, tipo: "contextos" },
+              { id: "org_arq", nombre: "Organización y Arquitectura de Computadores", cr: 3, hr: 144, tipo: "contextos" },
+              null,
+              { id: "prog_cap", nombre: "Programación en Capas", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "bd", nombre: "Base de Datos", cr: 3, hr: 144, tipo: "contextos" }
+            ],
+            practica: { id: "prac_com", nombre: "Práctica Comunitaria (*)", cr: 2, hr: 96, tipo: "contextos", esPractica: true }
+          },
+          {
+            ciclo: "V", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "so", nombre: "Sistemas Operativos", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "redes", nombre: "Computación Centrada en Redes", cr: 5, hr: 240, tipo: "contextos" },
+              { id: "admin_bd", nombre: "Administración de Base de Datos", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ing_req", nombre: "Ingeniería de Requerimiento de Software", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "org_gest", nombre: "Organización y Gestión Empresarial", cr: 2, hr: 96, tipo: "contextos" },
+              null
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VI", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "sist_dist", nombre: "Sistemas Distribuidos", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "cloud", nombre: "Computación en la Nube", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "analisis_d", nombre: "Análisis de Datos", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "met_form", nombre: "Métodos Formales de Ingeniería de Software", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ing_econ", nombre: "Ingeniería Económica", cr: 2, hr: 96, tipo: "integracion" }
+            ],
+            practica: { id: "comp_soc", nombre: "Computación y Sociedad", cr: 2, hr: 96, tipo: "integracion" }
+          },
+          {
+            ciclo: "VII", crTotal: 16, hrTotal: 768,
+            materias: [
+              { id: "dev_plat", nombre: "Desarrollo Basado en Plataformas", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "seg_sist", nombre: "Seguridad en Sistemas Informáticos", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "inv_oper", nombre: "Investigación de Operaciones", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "form_proy", nombre: "Formulación y Evaluación de Proyectos", cr: 3, hr: 144, tipo: "integracion" }
+            ],
+            practica: { id: "gest_proy", nombre: "Gestión de Proyectos Informáticos", cr: 3, hr: 144, tipo: "integracion" }
+          },
+          {
+            ciclo: "VIII", crTotal: 17, hrTotal: 816,
+            materias: [
+              { id: "tec_avanz", nombre: "Tecnologías Avanzadas", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "gest_ti", nombre: "Gestión y Control en Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "cienc_d", nombre: "Ciencia de Datos", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "proy_ti", nombre: "Proyecto de Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "emp_innov", nombre: "Emprendimiento e Innovación Tecnológica", cr: 2, hr: 96, tipo: "integracion" }
+            ],
+            practica: { id: "prac_prof", nombre: "Práctica Pre Profesional", cr: 5, hr: 240, tipo: "integracion", esPractica: true }
+          }
         ],
-        practica: { id: "leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos" }
+        conexiones: [
+          { from: "calc1", to: "alg_lin" },
+          { from: "calc1", to: "calc2" },
+          { from: "fisica", to: "calc2" },
+          { from: "res_prob", to: "fund_prog" },
+          { from: "leng1", to: "leng2" },
+          { from: "leng2", to: "cult_cont" },
+          { from: "alg_lin", to: "mat_disc" },
+          { from: "calc2", to: "prob_est" },
+          { from: "fund_prog", to: "poo" },
+          { from: "hum_pers", to: "hum_soc" },
+          { from: "mat_disc", to: "sist_dig" },
+          { from: "mat_disc", to: "org_arq" },
+          { from: "sist_dig", to: "so" },
+          { from: "poo", to: "prog_cap" },
+          { from: "poo", to: "bd" },
+          { from: "org_arq", to: "redes" },
+          { from: "prog_cap", to: "ing_req" },
+          { from: "bd", to: "admin_bd" },
+          { from: "bd", to: "org_gest" },
+          { from: "so", to: "comp_soc" },
+          { from: "so", to: "sist_dist" },
+          { from: "redes", to: "cloud" },
+          { from: "ing_req", to: "met_form" },
+          { from: "org_gest", to: "ing_econ" },
+          { from: "prob_est", to: "analisis_d", side: "left" },
+          { from: "admin_bd", to: "analisis_d" },
+          { from: "comp_soc", to: "gest_proy" },
+          { from: "cloud", to: "seg_sist" },
+          { from: "seg_sist", to: "gest_ti" },
+          { from: "sist_dist", to: "dev_plat" },
+          { from: "cloud", to: "dev_plat" },
+          { from: "ing_econ", to: "form_proy" },
+          { from: "form_proy", to: "emp_innov" },
+          { from: "met_form", to: "met_inv" },
+          { from: "met_inv", to: "proy_ti" },
+          { from: "analisis_d", to: "inv_oper" },
+          { from: "inv_oper", to: "cienc_d" },
+          { from: "dev_plat", to: "tec_avanz" }
+        ]
       },
-      {
-        ciclo: "II", crTotal: 14, hrTotal: 672,
-        materias: [
-          { id: "alg_lin", nombre: "Álgebra Lineal", cr: 3, hr: 144, tipo: "fundamentos" },
-          null,
-          { id: "calc2", nombre: "Cálculo de Varias Variables", cr: 3, hr: 144, tipo: "fundamentos" },
-          { id: "fund_prog", nombre: "Fundamentos de Programación", cr: 3, hr: 144, tipo: "fundamentos" },
-          { id: "hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos" }
+      datos_ia: {
+        id: "datos_ia",
+        nombre: "Ingeniería en Ciencia de Datos e Inteligencia Artificial",
+        storageKey: "malla_aprobadas_datos_ia_v1",
+        gridClass: "grid-datos-ia",
+        resolucion: "Certificado B1 en idioma inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.",
+        estructura: [
+          {
+            ciclo: "I", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_calc1", nombre: "Cálculo I", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_mat_disc", nombre: "Matemáticas Discretas", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_fund_prog", nombre: "Fundamentos de Programación", cr: 3, hr: 144, tipo: "fundamentos" },
+              null,
+              { id: "ia_leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos" }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "II", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_calc2", nombre: "Cálculo II", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "ia_eda", nombre: "Estructura de Datos y Algoritmos", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "ia_poo", nombre: "Programación Orientada a Objetos", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "ia_leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos" },
+            ],
+            practica: null
+          },
+          {
+            ciclo: "III", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_prob_est", nombre: "Probabilidad y Estadística", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_alg_lin", nombre: "Álgebra Lineal", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_arq_so", nombre: "Arquitectura y Sistemas Operativos", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "ia_bd", nombre: "Bases de Datos", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "ia_cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos" }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "IV", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_est_inf", nombre: "Estadística Inferencial", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_ing_soft", nombre: "Ingeniería de Software", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_hci", nombre: "Interacción Persona Computador", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_bd_avanz", nombre: "Bases de Datos Avanzadas", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_int_art", nombre: "Inteligencia Artificial", cr: 3, hr: 144, tipo: "contextos" }
+            ],
+            practica: { id: "ia_prac_com", nombre: "Práctica Comunitaria (*)", cr: 2, hr: 96, tipo: "contextos", esPractica: true }
+          },
+          {
+            ciclo: "V", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_inv_oper", nombre: "Investigación de Operaciones", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "ia_prog_web", nombre: "Programación Web y Móvil", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_redes", nombre: "Redes de Datos", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "ia_miner_d", nombre: "Minería de Datos", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_ml", nombre: "Aprendizaje Automático", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "ia_org_gest", nombre: "Organización y Gestión Empresarial", cr: 2, hr: 96, tipo: "contextos" }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VI", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_mod_sim", nombre: "Modelos y Simulación", cr: 3, hr: 144, tipo: "integracion" },
+              null,
+              { id: "ia_cloud", nombre: "Computación en la Nube", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_seg_inf", nombre: "Seguridad de la Información", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "ia_deep_l", nombre: "Aprendizaje Profundo", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_bi", nombre: "Inteligencia de Negocios", cr: 2, hr: 96, tipo: "integracion" }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VII", crTotal: 15, hrTotal: 720,
+            materias: [
+              null,
+              { id: "ia_nlp", nombre: "Procesamiento de Lenguaje Natural", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_big_data", nombre: "Gestión de Datos a Gran Escala", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_vision", nombre: "Análisis Computacional de Imágenes", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_trans_dig", nombre: "Transformación Digital", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_form_proy", nombre: "Formulación y Evaluación de Proyectos", cr: 3, hr: 144, tipo: "integracion" }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VIII", crTotal: 15, hrTotal: 720,
+            materias: [
+              { id: "ia_emp_innov", nombre: "Emprendimiento e Innovación Tecnológica", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "ia_proy_int", nombre: "Proyecto de Integración Curricular", cr: 3, hr: 144, tipo: "integracion" },
+              null,
+              { id: "ia_aplicada", nombre: "Ciencia de Datos e IA Aplicada", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "ia_etica", nombre: "Ética, Legislación y Gobernanza de Datos", cr: 2, hr: 96, tipo: "integracion" }
+            ],
+            practica: { id: "ia_prac_prof", nombre: "Práctica Pre Profesional", cr: 5, hr: 240, tipo: "integracion", esPractica: true }
+          }
         ],
-        practica: { id: "leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos" }
-      },
-      {
-        ciclo: "III", crTotal: 14, hrTotal: 672,
-        materias: [
-          { id: "mat_disc", nombre: "Matemáticas Discretas", cr: 3, hr: 144, tipo: "fundamentos" },
-          null,
-          { id: "prob_est", nombre: "Probabilidad y Estadística", cr: 3, hr: 144, tipo: "fundamentos" },
-          { id: "poo", nombre: "Programación Orientada a Objetos", cr: 4, hr: 192, tipo: "fundamentos" },
-          { id: "hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos" }
-        ],
-        practica: { id: "cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos" }
-      },
-      {
-        ciclo: "IV", crTotal: 15, hrTotal: 720,
-        materias: [
-          { id: "sist_dig", nombre: "Sistemas Digitales", cr: 4, hr: 192, tipo: "contextos" },
-          { id: "org_arq", nombre: "Organización y Arquitectura de Computadores", cr: 3, hr: 144, tipo: "contextos" },
-          null,
-          { id: "prog_cap", nombre: "Programación en Capas", cr: 3, hr: 144, tipo: "contextos" },
-          { id: "bd", nombre: "Base de Datos", cr: 3, hr: 144, tipo: "contextos" }
-        ],
-        practica: { id: "prac_com", nombre: "Práctica Comunitaria (*)", cr: 2, hr: 96, tipo: "contextos", esPractica: true }
-      },
-      {
-        ciclo: "V", crTotal: 15, hrTotal: 720,
-        materias: [
-          { id: "so", nombre: "Sistemas Operativos", cr: 3, hr: 144, tipo: "contextos" },
-          { id: "redes", nombre: "Computación Centrada en Redes", cr: 5, hr: 240, tipo: "contextos" },
-          { id: "admin_bd", nombre: "Administración de Base de Datos", cr: 3, hr: 144, tipo: "contextos" },
-          { id: "ing_req", nombre: "Ingeniería de Requerimiento de Software", cr: 2, hr: 96, tipo: "contextos" },
-          { id: "org_gest", nombre: "Organización y Gestión Empresarial", cr: 2, hr: 96, tipo: "contextos" }
-        ],
-        practica: null
-      },
-      {
-        ciclo: "VI", crTotal: 15, hrTotal: 720,
-        materias: [
-          { id: "sist_dist", nombre: "Sistemas Distribuidos", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "cloud", nombre: "Computación en la Nube", cr: 2, hr: 96, tipo: "integracion" },
-          { id: "analisis_d", nombre: "Análisis de Datos", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "met_form", nombre: "Métodos Formales de Ingeniería de Software", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "ing_econ", nombre: "Ingeniería Económica", cr: 2, hr: 96, tipo: "integracion" }
-        ],
-        practica: { id: "comp_soc", nombre: "Computación y Sociedad", cr: 2, hr: 96, tipo: "integracion" }
-      },
-      {
-        ciclo: "VII", crTotal: 16, hrTotal: 768,
-        materias: [
-          { id: "dev_plat", nombre: "Desarrollo Basado en Plataformas", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "seg_sist", nombre: "Seguridad en Sistemas Informáticos", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "inv_oper", nombre: "Investigación de Operaciones", cr: 2, hr: 96, tipo: "integracion" },
-          { id: "met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "integracion" },
-          { id: "form_proy", nombre: "Formulación y Evaluación de Proyectos", cr: 3, hr: 144, tipo: "integracion" }
-        ],
-        practica: { id: "gest_proy", nombre: "Gestión de Proyectos Informáticos", cr: 3, hr: 144, tipo: "integracion" }
-      },
-      {
-        ciclo: "VIII", crTotal: 17, hrTotal: 816,
-        materias: [
-          { id: "tec_avanz", nombre: "Tecnologías Avanzadas", cr: 2, hr: 96, tipo: "integracion" },
-          { id: "gest_ti", nombre: "Gestión y Control en Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "cienc_d", nombre: "Ciencia de Datos", cr: 2, hr: 96, tipo: "integracion" },
-          { id: "proy_ti", nombre: "Proyecto de Tecnologías de la Información", cr: 3, hr: 144, tipo: "integracion" },
-          { id: "emp_innov", nombre: "Emprendimiento e Innovación Tecnológica", cr: 2, hr: 96, tipo: "integracion" }
-        ],
-        practica: { id: "prac_prof", nombre: "Práctica Pre Profesional", cr: 5, hr: 240, tipo: "integracion", esPractica: true }
+        conexiones: [
+          // 1. Cadena continua de cálculo y estadística
+          { from: "ia_calc1", to: "ia_calc2" },
+          { from: "ia_calc2", to: "ia_prob_est" },
+          { from: "ia_prob_est", to: "ia_est_inf" },
+          { from: "ia_est_inf", to: "ia_inv_oper" },
+          { from: "ia_inv_oper", to: "ia_mod_sim" },
+
+          // 2. Metodología de la Investigación: Cálculo I (desde el centro) y Matemáticas Discretas
+          { from: "ia_calc1", to: "ia_met_inv", targetOffset: -18 },
+          { from: "ia_mat_disc", to: "ia_met_inv", targetOffset: 18 },
+
+          // Metodología de la Investigación abre Álgebra Lineal
+          { from: "ia_met_inv", to: "ia_alg_lin" },
+
+          // Álgebra Lineal abre Ingeniería de Software e Interacción Persona Computador
+          { from: "ia_alg_lin", to: "ia_ing_soft" },
+          { from: "ia_alg_lin", to: "ia_hci" },
+
+          // Ingeniería de Software abre Programación Web y Móvil
+          { from: "ia_ing_soft", to: "ia_prog_web" },
+
+          // Programación Web y Móvil abre Procesamiento del Lenguaje Natural
+          { from: "ia_prog_web", to: "ia_nlp" },
+
+          // Procesamiento de Lenguaje Natural abre el Proyecto de Integración Curricular
+          { from: "ia_nlp", to: "ia_proy_int" },
+
+          // Interacción Persona Computador abre Redes de Datos
+          { from: "ia_hci", to: "ia_redes" },
+
+          // Redes de Datos abre Computación en la Nube
+          { from: "ia_redes", to: "ia_cloud" },
+
+          // Computación en la Nube abre Gestión de Datos a Gran Escala y NLP
+          { from: "ia_cloud", to: "ia_big_data" },
+          { from: "ia_cloud", to: "ia_nlp" },
+
+          // 3. Fundamentos solo abre POO; POO solo abre Bases de Datos
+          { from: "ia_fund_prog", to: "ia_poo" },
+          { from: "ia_poo", to: "ia_bd" },
+
+          // Bases de Datos abre Bases de Datos Avanzadas e Inteligencia Artificial
+          { from: "ia_bd", to: "ia_bd_avanz" },
+          { from: "ia_bd", to: "ia_int_art" },
+
+          // Bases de Datos Avanzadas abre Minería de Datos y Organización y Gestión Empresarial
+          { from: "ia_bd_avanz", to: "ia_miner_d" },
+          { from: "ia_bd_avanz", to: "ia_org_gest" },
+
+          // Organización y Gestión Empresarial abre Inteligencia de Negocios
+          { from: "ia_org_gest", to: "ia_bi" },
+
+          // Minería de Datos abre Computación en la Nube y Seguridad de la Información
+          { from: "ia_miner_d", to: "ia_cloud" },
+          { from: "ia_miner_d", to: "ia_seg_inf" },
+
+          // Seguridad de la Información abre Análisis Computacional de Imágenes
+          { from: "ia_seg_inf", to: "ia_vision" },
+
+          // Análisis Computacional de Imágenes abre Ciencia de Datos e IA Aplicada
+          { from: "ia_vision", to: "ia_aplicada" },
+
+          // Aprendizaje Automático abre Aprendizaje Profundo
+          { from: "ia_ml", to: "ia_deep_l" },
+
+          // Aprendizaje Profundo ÚNICAMENTE abre Transformación Digital y Formulación y Evaluación de Proyectos
+          { from: "ia_deep_l", to: "ia_trans_dig" },
+          { from: "ia_deep_l", to: "ia_form_proy" },
+
+          // Inteligencia de Negocios abre Formulación y Evaluación de Proyectos
+          { from: "ia_bi", to: "ia_form_proy" },
+
+          // Formulación y Evaluación de Proyectos abre Emprendimiento e Innovación Tecnológica Y Ética
+          { from: "ia_form_proy", to: "ia_emp_innov" },
+          { from: "ia_form_proy", to: "ia_etica" },
+
+          // 4. Humanismo, Lenguaje y Culturas
+          { from: "ia_leng1", to: "ia_leng2" },
+          { from: "ia_hum_pers", to: "ia_hum_soc" },
+          { from: "ia_leng2", to: "ia_cult_cont" }
+        ]
       }
-    ];
+    };
 
-    const conexiones = [
-      { from: "calc1", to: "alg_lin" },
-      { from: "calc1", to: "calc2" },
-      { from: "fisica", to: "calc2" },
-      { from: "res_prob", to: "fund_prog" },
-      { from: "leng1", to: "leng2" },
-      { from: "leng2", to: "cult_cont" },
-      { from: "alg_lin", to: "mat_disc" },
-      { from: "calc2", to: "prob_est" },
-      { from: "fund_prog", to: "poo" },
-      { from: "hum_pers", to: "hum_soc" },
-      { from: "mat_disc", to: "sist_dig" },
-      { from: "mat_disc", to: "org_arq" },
-      { from: "sist_dig", to: "so" },
-      { from: "poo", to: "prog_cap" },
-      { from: "poo", to: "bd" },
-      { from: "org_arq", to: "redes" },
-      { from: "prog_cap", to: "ing_req" },
-      { from: "bd", to: "admin_bd" },
-      { from: "bd", to: "org_gest" },
-      { from: "so", to: "comp_soc" },
-      { from: "so", to: "sist_dist" },
-      { from: "redes", to: "cloud" },
-      { from: "ing_req", to: "met_form" },
-      { from: "org_gest", to: "ing_econ" },
-      { from: "prob_est", to: "analisis_d" },
-      { from: "admin_bd", to: "analisis_d" },
-      { from: "comp_soc", to: "gest_proy" },
-      { from: "cloud", to: "seg_sist" },
-      { from: "seg_sist", to: "gest_ti" },
-      { from: "sist_dist", to: "dev_plat" },
-      { from: "cloud", to: "dev_plat" },
-      { from: "ing_econ", to: "form_proy" },
-      { from: "form_proy", to: "emp_innov" },
-      { from: "met_form", to: "met_inv" },
-      { from: "met_inv", to: "proy_ti" },
-      { from: "analisis_d", to: "inv_oper" },
-      { from: "inv_oper", to: "cienc_d" },
-      { from: "dev_plat", to: "tec_avanz" }
-    ];
+    let carreraActualId = localStorage.getItem("malla_carrera_seleccionada") || "computacion";
+    if (!carrerasData[carreraActualId]) carreraActualId = "computacion";
 
-    let aprobadas = new Set(JSON.parse(localStorage.getItem("malla_aprobadas_semibold_v1") || "[]"));
+    let datosActivos = carrerasData[carreraActualId];
+    let aprobadas = new Set(JSON.parse(localStorage.getItem(datosActivos.storageKey) || "[]"));
 
-    const materiasMap = {};
-    estructuraMalla.forEach(sem => {
-      [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
-        materiasMap[m.id] = { ...m, ciclo: sem.ciclo };
+    let materiasMap = {};
+    let prerequisitosMap = {};
+    let hijosMap = {};
+
+    function indexarMallaActiva() {
+      materiasMap = {};
+      prerequisitosMap = {};
+      hijosMap = {};
+
+      datosActivos.estructura.forEach((sem, idx) => {
+        const todas = [...sem.materias];
+        if (sem.practica) todas.push(sem.practica);
+        todas.filter(Boolean).forEach(m => {
+          materiasMap[m.id] = { ...m, ciclo: sem.ciclo, cicloIndex: idx };
+        });
       });
-    });
 
-    const prerequisitosMap = {};
-    conexiones.forEach(c => {
-      if (!prerequisitosMap[c.to]) prerequisitosMap[c.to] = [];
-      prerequisitosMap[c.to].push(c.from);
-    });
+      datosActivos.conexiones.forEach(c => {
+        if (!prerequisitosMap[c.to]) prerequisitosMap[c.to] = [];
+        prerequisitosMap[c.to].push(c.from);
 
-    const hijosMap = {};
-    conexiones.forEach(c => {
-      if (!hijosMap[c.from]) hijosMap[c.from] = [];
-      hijosMap[c.from].push(c.to);
-    });
+        if (!hijosMap[c.from]) hijosMap[c.from] = [];
+        hijosMap[c.from].push(c.to);
+      });
+    }
 
-    function tieneAlMenosUnaEnPrimerCiclo() {
-      const ciclo1Ids = [...estructuraMalla[0].materias, estructuraMalla[0].practica]
-        .filter(Boolean)
-        .map(m => m.id);
-      return ciclo1Ids.some(id => aprobadas.has(id));
+    function tieneAlMenosUnaEnCicloAnterior(materiaId) {
+      const mat = materiasMap[materiaId];
+      if (!mat || mat.cicloIndex === 0) return true;
+
+      const cicloAnterior = datosActivos.estructura[mat.cicloIndex - 1];
+      const cicloAnteriorIds = [...cicloAnterior.materias, cicloAnterior.practica].filter(Boolean).map(m => m.id);
+      return cicloAnteriorIds.some(id => aprobadas.has(id));
     }
 
     function estanRequisitosCompletos(id) {
-      if (id === "hum_pers") {
-        return tieneAlMenosUnaEnPrimerCiclo();
-      }
-
-      if (id === "prac_com") {
+      if (id === "prac_com" || id === "ia_prac_com") {
         let fundamentosCompletos = true;
-        estructuraMalla.slice(0, 3).forEach(sem => {
+        datosActivos.estructura.slice(0, 3).forEach(sem => {
           [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
             if (!aprobadas.has(m.id)) fundamentosCompletos = false;
           });
@@ -1350,11 +1592,13 @@
         return fundamentosCompletos;
       }
 
-      if (id === "prac_prof") {
-        return aprobadas.has("prac_com");
-      }
+      if (id === "prac_prof") return aprobadas.has("prac_com");
+      if (id === "ia_prac_prof") return aprobadas.has("ia_prac_com");
 
       const reqs = prerequisitosMap[id] || [];
+      if (reqs.length === 0) {
+        return tieneAlMenosUnaEnCicloAnterior(id);
+      }
       return reqs.every(reqId => aprobadas.has(reqId));
     }
 
@@ -1367,30 +1611,43 @@
         }
       });
 
-      if (id === "prac_com" && aprobadas.has("prac_prof")) {
-        aprobadas.delete("prac_prof");
-      }
+      if (id === "prac_com" && aprobadas.has("prac_prof")) aprobadas.delete("prac_prof");
+      if (id === "ia_prac_com" && aprobadas.has("ia_prac_prof")) aprobadas.delete("ia_prac_prof");
 
-      const ciclo1Ids = [...estructuraMalla[0].materias, estructuraMalla[0].practica]
-        .filter(Boolean)
-        .map(m => m.id);
-      if (ciclo1Ids.includes(id)) {
-        if (!tieneAlMenosUnaEnPrimerCiclo() && aprobadas.has("hum_pers")) {
-          aprobadas.delete("hum_pers");
-          desmarcarHijos("hum_pers");
+      const mat = materiasMap[id];
+      if (mat) {
+        const cicloActual = datosActivos.estructura[mat.cicloIndex];
+        const cicloActualIds = [...cicloActual.materias, cicloActual.practica].filter(Boolean).map(m => m.id);
+        const quedanAprobadasEnCiclo = cicloActualIds.some(mId => aprobadas.has(mId));
+
+        if (!quedanAprobadasEnCiclo && mat.cicloIndex + 1 < datosActivos.estructura.length) {
+          const cicloSiguiente = datosActivos.estructura[mat.cicloIndex + 1];
+          const cicloSiguienteIds = [...cicloSiguiente.materias, cicloSiguiente.practica].filter(Boolean).map(m => m.id);
+
+          cicloSiguienteIds.forEach(sigId => {
+            const reqs = prerequisitosMap[sigId] || [];
+            if (reqs.length === 0 && aprobadas.has(sigId)) {
+              aprobadas.delete(sigId);
+              desmarcarHijos(sigId);
+            }
+          });
         }
       }
 
       let esDeFundamentos = false;
-      estructuraMalla.slice(0, 3).forEach(sem => {
+      datosActivos.estructura.slice(0, 3).forEach(sem => {
         if ([...sem.materias, sem.practica].filter(Boolean).some(m => m.id === id)) {
           esDeFundamentos = true;
         }
       });
-      if (esDeFundamentos && aprobadas.has("prac_com")) {
-        aprobadas.delete("prac_com");
-        if (aprobadas.has("prac_prof")) {
-          aprobadas.delete("prac_prof");
+      if (esDeFundamentos) {
+        if (aprobadas.has("prac_com")) {
+          aprobadas.delete("prac_com");
+          if (aprobadas.has("prac_prof")) aprobadas.delete("prac_prof");
+        }
+        if (aprobadas.has("ia_prac_com")) {
+          aprobadas.delete("ia_prac_com");
+          if (aprobadas.has("ia_prac_prof")) aprobadas.delete("ia_prac_prof");
         }
       }
     }
@@ -1434,7 +1691,11 @@
       const grid = document.getElementById("semestres-grid");
       grid.innerHTML = "";
 
-      estructuraMalla.forEach(sem => {
+      const container = document.getElementById("malla-container");
+      container.classList.remove("grid-computacion", "grid-datos-ia");
+      container.classList.add(datosActivos.gridClass);
+
+      datosActivos.estructura.forEach(sem => {
         const row = document.createElement("div");
         row.className = "semestre-row";
 
@@ -1446,8 +1707,9 @@
         sem.materias.forEach(mat => {
           row.appendChild(crearTarjetaMateria(mat));
         });
-
-        row.appendChild(crearTarjetaMateria(sem.practica));
+        if (sem.practica) {
+          row.appendChild(crearTarjetaMateria(sem.practica));
+        }
 
         const divider = document.createElement("div");
         divider.className = "vertical-divider";
@@ -1480,7 +1742,7 @@
         }
         aprobadas.add(id);
       }
-      localStorage.setItem("malla_aprobadas_semibold_v1", JSON.stringify(Array.from(aprobadas)));
+      localStorage.setItem(datosActivos.storageKey, JSON.stringify(Array.from(aprobadas)));
       renderMalla();
     }
 
@@ -1490,9 +1752,11 @@
       let totalHoras = 0;
       let fundamentosCompletos = true;
 
-      estructuraMalla.forEach((sem, idx) => {
-        const todasDelSem = [...sem.materias, sem.practica].filter(Boolean);
-        todasDelSem.forEach(mat => {
+      datosActivos.estructura.forEach((sem, idx) => {
+        const todas = [...sem.materias];
+        if (sem.practica) todas.push(sem.practica);
+
+        todas.filter(Boolean).forEach(mat => {
           totalMaterias++;
           if (aprobadas.has(mat.id)) {
             totalCreditos += mat.cr;
@@ -1513,7 +1777,9 @@
       document.getElementById("main-progress").style.width = `${pct}%`;
 
       const comBadge = document.getElementById("lbl-comunitaria");
-      if (aprobadas.has("prac_com")) {
+      const tieneComunitaria = aprobadas.has("prac_com") || aprobadas.has("ia_prac_com");
+
+      if (tieneComunitaria) {
         comBadge.textContent = "Finalizada con éxito ✓";
         comBadge.style.color = "#10b981";
       } else if (fundamentosCompletos) {
@@ -1525,17 +1791,43 @@
       }
     }
 
-    function isBoxObstructing(x, yMin, yMax, containerRect) {
-      const allBoxes = document.querySelectorAll(".materia-box");
-      for (const box of allBoxes) {
-        const b = box.getBoundingClientRect();
-        const bxMin = b.left - containerRect.left;
-        const bxMax = b.right - containerRect.left;
-        const byMin = b.top - containerRect.top;
-        const byMax = b.bottom - containerRect.top;
+    function cambiarCarrera(nuevoId) {
+      if (!carrerasData[nuevoId]) return;
+      carreraActualId = nuevoId;
+      localStorage.setItem("malla_carrera_seleccionada", nuevoId);
+      datosActivos = carrerasData[nuevoId];
 
-        if (x >= bxMin - 3 && x <= bxMax + 3) {
-          if (Math.max(yMin, byMin) < Math.min(yMax, byMax)) {
+      aprobadas = new Set(JSON.parse(localStorage.getItem(datosActivos.storageKey) || "[]"));
+      document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
+
+      indexarMallaActiva();
+      renderMalla();
+    }
+
+    function getBoxCoords(el, container) {
+      let cur = el;
+      let top = 0;
+      let left = 0;
+      while (cur && cur !== container) {
+        top += cur.offsetTop || 0;
+        left += cur.offsetLeft || 0;
+        cur = cur.offsetParent;
+      }
+      return {
+        centerX: left + el.offsetWidth / 2,
+        top: top,
+        bottom: top + el.offsetHeight,
+        left: left,
+        right: left + el.offsetWidth
+      };
+    }
+
+    function isBoxObstructing(x, yMin, yMax, container, docContext = document) {
+      const allBoxes = container.querySelectorAll(".materia-box");
+      for (const box of allBoxes) {
+        const coords = getBoxCoords(box, container);
+        if (x >= coords.left - 4 && x <= coords.right + 4) {
+          if (Math.max(yMin, coords.top) < Math.min(yMax, coords.bottom)) {
             return true;
           }
         }
@@ -1543,24 +1835,24 @@
       return false;
     }
 
-    function drawTreeLinesWithGutterRouting() {
-      const svg = document.getElementById("svg-connections");
-      const gridContainer = document.getElementById("grid-container");
+    function drawTreeLinesWithGutterRouting(customSvg = null, customGrid = null) {
+      const svg = customSvg || document.getElementById("svg-connections");
+      const gridContainer = customGrid || document.getElementById("grid-container");
       if (!svg || !gridContainer) return;
 
-      const containerRect = gridContainer.getBoundingClientRect();
+      const docContext = svg.ownerDocument || document;
+
       const defs = svg.querySelector("defs");
       svg.innerHTML = "";
       if (defs) svg.appendChild(defs);
 
       const outgoing = {};
-      conexiones.forEach(c => {
-        if (!outgoing[c.from]) outgoing[c.from] = [];
-        outgoing[c.from].push(c.to);
-      });
-
       const incoming = {};
-      conexiones.forEach(c => {
+
+      datosActivos.conexiones.forEach(c => {
+        if (!outgoing[c.from]) outgoing[c.from] = [];
+        outgoing[c.from].push(c);
+
         if (!incoming[c.to]) incoming[c.to] = [];
         incoming[c.to].push(c.from);
       });
@@ -1570,58 +1862,68 @@
 
       const fromIds = Object.keys(outgoing);
       fromIds.forEach((fromId, fIndex) => {
-        const elFrom = document.getElementById(`mat-${fromId}`);
+        const elFrom = docContext.getElementById(`mat-${fromId}`);
         if (!elFrom) return;
 
-        const r1 = elFrom.getBoundingClientRect();
-        const x1 = (r1.left + r1.right) / 2 - containerRect.left;
-        const y1 = r1.bottom - containerRect.top;
+        const c1 = getBoxCoords(elFrom, gridContainer);
+        let x1 = c1.centerX;
+        const y1 = c1.bottom;
 
-        const dests = outgoing[fromId].map(toId => {
-          const elTo = document.getElementById(`mat-${toId}`);
+        if (outgoing[fromId].some(conn => conn.side === "left")) {
+          x1 = c1.left + 16;
+        }
+
+        const dests = outgoing[fromId].map(conn => {
+          const elTo = docContext.getElementById(`mat-${conn.to}`);
           if (!elTo) return null;
-          const r2 = elTo.getBoundingClientRect();
+          const c2 = getBoxCoords(elTo, gridContainer);
 
-          const totalIn = incoming[toId].length;
-          const inIndex = incoming[toId].indexOf(fromId) + 1;
-          const inOffset = totalIn > 1 ? (inIndex - (totalIn + 1) / 2) * 26 : 0;
+          const totalIn = incoming[conn.to].length;
+          const inIdx = incoming[conn.to].indexOf(fromId);
+          let portOffset = conn.targetOffset || 0;
+          if (totalIn > 1 && portOffset === 0) {
+            portOffset = (inIdx - (totalIn - 1) / 2) * 28;
+          }
 
           return {
-            id: toId,
+            id: conn.to,
             el: elTo,
-            r2,
-            x2: (r2.left + r2.right) / 2 + inOffset - containerRect.left,
-            y2: r2.top - containerRect.top
+            conn: conn,
+            x2: c2.centerX + portOffset,
+            y2: c2.top
           };
         }).filter(Boolean);
 
         if (dests.length === 0) return;
 
-        if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, containerRect)) {
+        if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, gridContainer, docContext) && !dests[0].conn.side) {
           verticalSegments.push({ x: x1, yMin: y1, yMax: dests[0].y2, owner: `${fromId}->${dests[0].id}` });
-          linesData.push({ type: "direct", x: x1, y1, y2: dests[0].y2 - 2, from: fromId, to: dests[0].id });
+          linesData.push({ type: "direct", x: x1, y1, y2: dests[0].y2 - 6, from: fromId, to: dests[0].id });
           return;
         }
 
-        const minY2 = Math.min(...dests.map(d => d.y2));
-        const laneOffset = (fIndex % 3) * 14;
-        const midY = y1 + 18 + laneOffset;
+        const laneOffset = (fIndex % 3) * 8;
+        const midY = y1 + 22 + laneOffset;
 
         verticalSegments.push({ x: x1, yMin: y1, yMax: midY, owner: `${fromId}-stem` });
         linesData.push({ type: "stem", x: x1, y1, y2: midY, from: fromId });
 
         dests.forEach(d => {
-          const isBlocked = isBoxObstructing(d.x2, midY, d.y2, containerRect);
+          const isBlocked = isBoxObstructing(d.x2, midY, d.y2, gridContainer, docContext);
 
-          if (!isBlocked) {
+          if (!isBlocked && !d.conn.side) {
             verticalSegments.push({ x: d.x2, yMin: midY, yMax: d.y2, owner: `${fromId}->${d.id}` });
-            linesData.push({ type: "branch-standard", x1, midY, x2: d.x2, y2: d.y2 - 2, from: fromId, to: d.id });
+            linesData.push({ type: "branch-standard", x1, midY, x2: d.x2, y2: d.y2 - 6, from: fromId, to: d.id });
           } else {
             let corridorX;
-            if (d.x2 >= x1) {
-              corridorX = r1.right - containerRect.left + 10;
+            if (d.conn.side === "left") {
+              corridorX = c1.left - 12;
+            } else if (d.conn.side === "right") {
+              corridorX = c1.right + 12;
+            } else if (d.x2 >= x1) {
+              corridorX = c1.right + 10;
             } else {
-              corridorX = r1.left - containerRect.left - 10;
+              corridorX = c1.left - 10;
             }
             const preEntryY = d.y2 - 20;
 
@@ -1634,7 +1936,7 @@
               corridorX,
               preEntryY,
               x2: d.x2,
-              y2: d.y2,
+              y2: d.y2 - 6,
               from: fromId,
               to: d.id
             });
@@ -1645,7 +1947,7 @@
       const R = 5;
 
       linesData.forEach(item => {
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const path = docContext.createElementNS("http://www.w3.org/2000/svg", "path");
 
         if (item.type === "direct") {
           path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
@@ -1735,7 +2037,7 @@
             d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
           });
 
-          d += ` L ${x2} ${preEntryY} L ${x2} ${y2 - 2}`;
+          d += ` L ${x2} ${preEntryY} L ${x2} ${y2}`;
 
           path.setAttribute("d", d);
           path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
@@ -1805,9 +2107,9 @@
     }
 
     function reiniciarProgreso() {
-      if (confirm("¿Deseas restablecer el estado de todas las asignaturas?")) {
+      if (confirm(`¿Deseas restablecer el estado de las asignaturas para ${datosActivos.nombre}?`)) {
         aprobadas.clear();
-        localStorage.removeItem("malla_aprobadas_semibold_v1");
+        localStorage.removeItem(datosActivos.storageKey);
         renderMalla();
       }
     }
@@ -1824,8 +2126,6 @@
       tagEl.className = `modal-tag ${mat.tipo}`;
 
       document.getElementById("modal-title").textContent = mat.nombre;
-      
-      // Corrección de redundancia: solo muestra el número romano directamente
       document.getElementById("modal-ciclo").textContent = mat.ciclo;
       document.getElementById("modal-cr").textContent = mat.cr;
       document.getElementById("modal-hr").textContent = mat.hr;
@@ -1850,14 +2150,17 @@
       const practicaNoticeEl = document.getElementById("modal-practica-notice");
       const footerContainer = document.getElementById("modal-footer-container");
 
-      if (id === "hum_pers") {
-        prereqsEl.textContent = "Aprobación de al menos una asignatura del Ciclo I para avanzar a segundo nivel.";
-      } else if (id === "prac_com") {
+      if (id === "prac_com" || id === "ia_prac_com") {
         prereqsEl.textContent = "Aprobación completa de la organización curricular de Fundamentos (Ciclos I, II y III).";
-      } else if (id === "prac_prof") {
-        prereqsEl.textContent = "Aprobación de la Práctica Comunitaria (*).";
+      } else if (id === "prac_prof" || id === "ia_prac_prof") {
+        prereqsEl.textContent = "Aprobación previa de las Prácticas Comunitarias (*).";
       } else if (reqs.length === 0) {
-        prereqsEl.textContent = "Ninguno (Materia de primer nivel o sin dependencias directas)";
+        if (mat.cicloIndex > 0) {
+          const cicloAnteriorNombre = datosActivos.estructura[mat.cicloIndex - 1].ciclo;
+          prereqsEl.textContent = `Aprobación de al menos una asignatura del Ciclo ${cicloAnteriorNombre} para avanzar a este nivel.`;
+        } else {
+          prereqsEl.textContent = "Ninguno (Materia de primer nivel)";
+        }
       } else {
         const nombresReqs = reqs.map(rId => materiasMap[rId] ? materiasMap[rId].nombre : rId);
         prereqsEl.textContent = nombresReqs.join(", ");
@@ -2022,7 +2325,7 @@
           if (neededP2Total <= 10.00) {
             adviceEl.innerHTML = `Tienes P1 completo con <strong>${p1Total.toFixed(2)}/10</strong>. Necesitas que el total de tu Segundo Parcial sea de al menos <strong>${neededP2Total.toFixed(2)} / 10</strong> para aprobar directamente.`;
           } else {
-            adviceEl.innerHTML = `P1 es bajo (${p1Total.toFixed(2)}). Aunque saques 10 en P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
+            adviceEl.innerHTML = `P1 is bajo (${p1Total.toFixed(2)}). Aunque saques 10 в P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
           }
         }
         return;
@@ -2034,8 +2337,7 @@
       adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
-    // Exportación optimizada: sincroniza el viewport exacto para evitar desfases en móviles
-    async function generarFotoMalla() {
+async function generarFotoMalla() {
       const btn = document.getElementById("btn-exportar-foto");
       const textoOriginal = btn.innerHTML;
       btn.innerHTML = "Generando imagen...";
@@ -2045,28 +2347,7 @@
       resetDependencies();
 
       const contenedorPrincipal = document.getElementById("bloque-principal");
-      const mallaOuter = document.getElementById("malla-container");
-      const layoutInterno = document.getElementById("malla-layout");
-      const scrollOriginal = mallaOuter.scrollLeft;
-
-      // 1. Desplazar a cero el scroll horizontal
-      mallaOuter.scrollLeft = 0;
-
-      // Calcular ancho intrínseco real del layout de asignaturas
-      const anchoExactoMalla = Math.max(layoutInterno.scrollWidth + 48, 1400);
-
-      // Guardar estilos previos
-      const widthOriginalPrincipal = contenedorPrincipal.style.width;
-      const maxWidthOriginalPrincipal = contenedorPrincipal.style.maxWidth;
-      const overflowOriginalMalla = mallaOuter.style.overflowX;
-
-      // Expandir de manera simétrica para capturar sin cortes
-      contenedorPrincipal.style.width = `${anchoExactoMalla}px`;
-      contenedorPrincipal.style.maxWidth = "none";
-      mallaOuter.style.overflowX = "visible";
-
-      // Recalcular el circuito SVG con las posiciones estáticas consolidadas
-      drawTreeLinesWithGutterRouting();
+      const anchoVirtual = 1540;
 
       try {
         const canvas = await html2canvas(contenedorPrincipal, {
@@ -2075,30 +2356,66 @@
           allowTaint: true,
           logging: false,
           backgroundColor: "#f8fafc",
-          scrollX: 0,
-          scrollY: 0,
-          width: anchoExactoMalla,
-          windowWidth: anchoExactoMalla,
-          ignoreElements: (el) => el.classList.contains("header-actions") || el.classList.contains("scroll-hint-bar")
+          width: anchoVirtual,
+          windowWidth: anchoVirtual,
+          onclone: (clonedDoc) => {
+            clonedDoc.documentElement.style.width = `${anchoVirtual}px`;
+            clonedDoc.body.style.width = `${anchoVirtual}px`;
+
+            const clonedPrincipal = clonedDoc.getElementById("bloque-principal");
+            if (clonedPrincipal) {
+              clonedPrincipal.style.width = `${anchoVirtual}px`;
+              clonedPrincipal.style.maxWidth = "none";
+            }
+
+            const clonedMallaOuter = clonedDoc.getElementById("malla-container");
+            if (clonedMallaOuter) {
+              clonedMallaOuter.style.overflow = "visible";
+              clonedMallaOuter.style.width = "100%";
+              clonedMallaOuter.scrollLeft = 0;
+            }
+
+            const actions = clonedDoc.querySelector(".header-actions");
+            if (actions) actions.style.display = "none";
+            const hint = clonedDoc.querySelector(".scroll-hint-bar");
+            if (hint) hint.style.display = "none";
+
+            const clonedSvg = clonedDoc.getElementById("svg-connections");
+            const clonedGrid = clonedDoc.getElementById("grid-container");
+
+            if (clonedSvg && clonedGrid) {
+              // Redibujar las líneas en el clon para mantener la posición centrada exacta
+              drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
+
+              // Estilizar los marcadores de flecha para que html2canvas los pinte limpios sin errores
+              const polygons = clonedSvg.querySelectorAll("polygon");
+              polygons.forEach(poly => {
+                poly.setAttribute("fill", "#1e293b");
+              });
+
+              const paths = clonedSvg.querySelectorAll("path");
+              paths.forEach(p => {
+                p.style.fill = "none";
+                p.setAttribute("fill", "none");
+                p.style.stroke = "#1e293b";
+                p.setAttribute("stroke", "#1e293b");
+                p.style.strokeWidth = "1.5px";
+                p.setAttribute("stroke-width", "1.5");
+              });
+            }
+          }
         });
 
         const imageURL = canvas.toDataURL("image/png");
         const link = document.createElement("a");
-        link.download = `Malla_Avance_Computacion_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
+        link.download = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
         link.href = imageURL;
         link.click();
       } catch (err) {
         console.error("Error al exportar:", err);
-        alert("Ocurrió un error al generar la imagen. Si abres el archivo localmente, recuerda usar un servidor de desarrollo ligero como Live Server.");
+        alert("Ocurrió un error al generar la imagen.");
       } finally {
-        // 2. Restaurar inmediatamente el viewport dinámico del dispositivo
-        contenedorPrincipal.style.width = widthOriginalPrincipal;
-        contenedorPrincipal.style.maxWidth = maxWidthOriginalPrincipal;
-        mallaOuter.style.overflowX = overflowOriginalMalla;
-        mallaOuter.scrollLeft = scrollOriginal;
-
         drawTreeLinesWithGutterRouting();
-
         btn.innerHTML = textoOriginal;
         btn.style.opacity = "1";
         btn.disabled = false;
@@ -2106,6 +2423,10 @@
     }
 
     window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
+
+    document.getElementById("select-carrera").value = carreraActualId;
+    document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
+    indexarMallaActiva();
     renderMalla();
   </script>
 </body>
