@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Facultad de Ingeniería - UCSG</title>
 
-  <!-- favicon -->
+  <!-- Favicon -->
   <link rel="icon" href="logo_ucsg.png" type="image/png">
   <!-- Librería html2canvas para captura de alta resolución -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
   <style>
     :root {
       --c-fundamentos: #b8eedf;
@@ -80,35 +81,35 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      min-width: 0;
     }
 
-.carrera-selector-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;            /* Ocupa el ancho disponible */
-  max-width: 100%;
-}
+    .carrera-selector-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 100%;
+    }
 
-.carrera-select {
-  width: 100%;            /* Se adapta al contenedor */
-  max-width: 100%;        /* Evita que sobrepase la pantalla */
-  font-size: clamp(0.82rem, 1.4vw, 1.15rem);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #0f172a;
-  background: #f1f5f9;
-  border: 1.5px solid #cbd5e1;
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  outline: none;
-  transition: border-color 0.2s, background 0.2s;
-  text-overflow: ellipsis; /* Si el nombre es muy largo en pantallas angostas, no rompe la vista */
-  white-space: nowrap;
-  overflow: hidden;
-}
+    .carrera-select {
+      font-size: clamp(0.85rem, 1.4vw, 1.15rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #0f172a;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
 
     .carrera-select:focus {
       border-color: #2563eb;
@@ -155,6 +156,12 @@
       color: white;
     }
     .btn-calc-trigger:hover { background: #047857; }
+
+    .btn-horario-trigger {
+      background: #0f172a;
+      color: white;
+    }
+    .btn-horario-trigger:hover { background: #1e293b; }
 
     .btn-reset {
       background: #ef4444;
@@ -249,7 +256,7 @@
     .malla-layout {
       position: relative;
       display: flex;
-      min-width: 1340px;
+      min-width: 1400px;
     }
 
     .ejes-sidebar {
@@ -330,15 +337,11 @@
       align-items: stretch;
     }
 
-.grid-computacion .semestre-row {
-  grid-template-columns: 42px repeat(6, 1fr) 16px 88px;
-  gap: 20px;
-}
-
-.grid-datos-ia .semestre-row {
-  grid-template-columns: 42px repeat(6, 1fr) 16px 88px;
-  gap: 20px;
-}
+    .grid-computacion .semestre-row,
+    .grid-datos-ia .semestre-row {
+      grid-template-columns: 42px repeat(6, 1fr) 16px 88px;
+      gap: 16px;
+    }
 
     .sem-badge {
       display: flex;
@@ -376,9 +379,12 @@
       position: relative;
       background: #ffffff;
       border: 1.5px solid #1e293b;
-      border-radius: 10px;
-      padding: 6px 8px;
-      height: 76px; /* Altura fija idéntica a la fila del grid */
+      border-radius: 8px;
+      padding: 5px 6px;
+      height: 74px;
+      width: 100%;
+      max-width: 172px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -386,7 +392,7 @@
       user-select: none;
       transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
       touch-action: manipulation;
-      overflow: hidden; /* Evita que textos largos rompan la caja */
+      overflow: hidden;
     }
 
     .materia-box:hover {
@@ -414,17 +420,18 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      line-height: 1;
     }
 
     .materia-top-left {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .materia-top {
-      font-size: 0.65rem;
-      font-weight: 500;
+      font-size: 0.60rem;
+      font-weight: 700;
       color: #334155;
       line-height: 1;
     }
@@ -433,13 +440,13 @@
       background: rgba(15, 23, 42, 0.08);
       border: 1px solid rgba(15, 23, 42, 0.18);
       color: #1e293b;
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.62rem;
+      font-size: 0.55rem;
       font-weight: 800;
       font-style: italic;
       cursor: pointer;
@@ -453,33 +460,33 @@
       transform: scale(1.15);
     }
 
-.materia-name {
-  font-size: 0.65rem;  /* Reducido ligeramente de 0.65rem para máxima legibilidad */
-  font-weight: 700;
-  letter-spacing: 0.05px;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 1.12;
-  color: #0f172a;
-  padding: 0 1px;
-  margin: auto 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 4; /* Permite hasta 4 líneas en vez de cortarlo a 2 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+    .materia-name {
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      text-align: center;
+      line-height: 1.15;
+      color: #0f172a;
+      padding: 0 2px;
+      margin: auto 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
     .materia-footer {
-      font-size: 0.65rem;
-      font-weight: 500;
+      font-size: 0.58rem;
+      font-weight: 600;
       color: #475569;
       text-align: right;
       line-height: 1;
     }
 
     .check-circle {
-      width: 17px;
-      height: 17px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       background: #ffffff;
       border: 1.5px solid #94a3b8;
@@ -491,8 +498,8 @@
     }
 
     .check-circle svg {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       stroke: #ffffff;
       stroke-width: 3.5;
       display: none;
@@ -509,6 +516,10 @@
     }
 
     .slot-empty {
+      width: 100%;
+      max-width: 172px;
+      height: 74px;
+      margin: 0 auto;
       border: 1px dashed transparent;
     }
 
@@ -555,7 +566,7 @@
       animation: shakeBox 0.35s ease;
     }
 
-    /* Modales */
+    /* Modales Generales */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -595,6 +606,11 @@
 
     .modal-content.modal-calc-wide {
       max-width: 620px;
+    }
+
+    .modal-content.modal-horario-wide {
+      max-width: 1100px;
+      width: 95vw;
     }
 
     .modal-overlay.active .modal-content {
@@ -701,10 +717,7 @@
       transition: background 0.15s;
       cursor: pointer;
     }
-
-    .btn-syllabus:hover {
-      background: #1d4ed8;
-    }
+    .btn-syllabus:hover { background: #1d4ed8; }
 
     .btn-modal-close-action {
       background: #f1f5f9;
@@ -717,10 +730,7 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-
-    .btn-modal-close-action:hover {
-      background: #e2e8f0;
-    }
+    .btn-modal-close-action:hover { background: #e2e8f0; }
 
     /* Calculadora */
     .calc-grid {
@@ -773,10 +783,7 @@
       outline: none;
       transition: border-color 0.15s;
     }
-
-    .calc-field input:focus {
-      border-color: #2563eb;
-    }
+    .calc-field input:focus { border-color: #2563eb; }
 
     .calc-subtotal-badge {
       font-size: 0.75rem;
@@ -857,6 +864,174 @@
       line-height: 1.35;
     }
 
+    /* Horario Estilo Excel UCSG */
+    .horario-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      background: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .horario-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      width: 100%;
+      align-items: end;
+    }
+
+    .horario-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .horario-field label {
+      font-size: 0.70rem;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .horario-field select,
+    .horario-field input {
+      padding: 7px 8px;
+      font-size: 0.78rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .horario-field select:focus,
+    .horario-field input:focus {
+      border-color: #2563eb;
+    }
+
+    /* Input bloqueado con prefijo "Paralelo" */
+    .paralelo-input-group {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      background: #ffffff;
+      overflow: hidden;
+      height: 33px;
+    }
+
+    .paralelo-prefix {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0 8px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-right: 1px solid #cbd5e1;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .paralelo-input-field {
+      border: none !important;
+      border-radius: 0 !important;
+      height: 100%;
+      width: 100%;
+      padding: 0 8px !important;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .horario-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      background: #ffffff;
+      border: 1.5px solid #0f172a;
+      border-radius: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Tabla con anchos fijos y estrictos */
+    .tabla-horario-excel {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* Clave: Ancho de columnas estricto e inmutable */
+      min-width: 860px;
+      font-size: 0.72rem;
+      background: #ffffff;
+    }
+
+    .tabla-horario-excel thead th {
+      background-color: #0c2340;
+      color: #ffffff;
+      padding: 8px 4px;
+      font-weight: 700;
+      text-align: center;
+      border: 1px solid #334155;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Definición milimétrica de anchos por columna */
+    .col-hora { width: 100px; background-color: #1e293b !important; }
+    .col-dia { width: calc((100% - 100px) / 6); }
+
+    .tabla-horario-excel tbody td {
+      border: 1px solid #cbd5e1;
+      height: 32px;
+      max-height: 32px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 2px 4px;
+      box-sizing: border-box;
+    }
+
+    .td-hora {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #334155;
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+
+    .td-clase {
+      font-weight: 600;
+      color: #0f172a;
+      padding: 4px 6px;
+      border: 1.5px solid rgba(15, 23, 42, 0.4) !important;
+      cursor: pointer;
+      transition: filter 0.15s;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+    }
+
+    .td-clase:hover {
+      filter: brightness(0.92);
+    }
+
+    .td-clase-title {
+      font-weight: 800;
+      font-size: 0.69rem;
+      line-height: 1.15;
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    .td-clase-sub {
+      font-size: 0.62rem;
+      color: #1e293b;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
     /* Footer Centrado */
     .app-creator-footer {
       max-width: 1540px;
@@ -915,88 +1090,69 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     }
 
-    .btn-github {
-      background-color: #24292e;
-    }
-    .btn-github:hover {
-      background-color: #0f1419;
-    }
-
-    .btn-linkedin {
-      background-color: #0a66c2;
-    }
-    .btn-linkedin:hover {
-      background-color: #004182;
-    }
-
-    .btn-instagram {
-      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-    }
-    .btn-instagram:hover {
-      filter: brightness(1.08);
-    }
+    .btn-github { background-color: #24292e; }
+    .btn-github:hover { background-color: #0f1419; }
+    .btn-linkedin { background-color: #0a66c2; }
+    .btn-linkedin:hover { background-color: #004182; }
+    .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+    .btn-instagram:hover { filter: brightness(1.08); }
 
     @media (max-width: 1024px) {
-      .scroll-hint-bar {
-        display: flex;
-      }
+      .scroll-hint-bar { display: flex; }
     }
 
-@media (max-width: 640px) {
-  .dash-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    @media (max-width: 640px) {
+      .dash-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-  /* Asegura que el grupo de logo + título tome el 100% */
-  .brand-title-group {
-    width: 100%;
-    gap: 12px;
-  }
+      .brand-title-group {
+        width: 100%;
+        gap: 12px;
+      }
 
-  /* El bloque de texto y selector ocupa todo el ancho */
-  .header-text-block {
-    width: 100%;
-    min-width: 0; /* Clave en flexbox para permitir que los hijos respeten el ancho */
-  }
+      .header-text-block {
+        width: 100%;
+      }
 
-  .carrera-selector-wrap {
-    width: 100%;
-  }
+      .carrera-selector-wrap {
+        width: 100%;
+      }
 
-  .carrera-select {
-    font-size: 0.82rem; /* Tamaño cómodo para leer sin desbordar */
-    width: 100%;
-  }
+      .carrera-select {
+        font-size: 0.82rem;
+        width: 100%;
+      }
 
-  .header-actions {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
+      .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
 
-  .btn-action {
-    width: 100%;
-    padding: 7px 8px;
-    font-size: 0.74rem;
-    gap: 4px;
-  }
+      .btn-action {
+        width: 100%;
+        padding: 7px 8px;
+        font-size: 0.74rem;
+        gap: 4px;
+      }
 
-  .btn-photo {
-    grid-column: span 2;
-  }
+      .btn-photo {
+        grid-column: span 2;
+      }
 
-  .calc-grid {
-    grid-template-columns: 1fr;
-  }
+      .calc-grid {
+        grid-template-columns: 1fr;
+      }
 
-  .modal-footer button,
-  .modal-footer a {
-    width: 100%;
-    justify-content: center;
-  }
-}
+      .modal-footer button,
+      .modal-footer a {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1030,6 +1186,17 @@
             </svg>
             Foto de Avance HD
           </button>
+          
+          <button class="btn-action btn-horario-trigger" onclick="abrirModalHorario()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Mi Horario
+          </button>
+
           <button class="btn-action btn-calc-trigger" onclick="abrirModalCalculadora()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <rect x="4" y="2" width="16" height="20" rx="2"></rect>
@@ -1045,6 +1212,7 @@
             </svg>
             Calcular Promedio
           </button>
+
           <button class="btn-action btn-reset" onclick="reiniciarProgreso()">Reiniciar Progreso</button>
         </div>
       </div>
@@ -1130,7 +1298,7 @@
         </svg>
         GitHub
       </a>
-      <a href="https://www.linkedin.com/in/carlosbermello/" target="_blank" rel="noopener noreferrer" class="btn-social btn-linkedin">
+      <a href="https://linkedin.com/in/carlosbermello/" target="_blank" rel="noopener noreferrer" class="btn-social btn-linkedin">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
         </svg>
@@ -1147,6 +1315,7 @@
     </div>
   </footer>
 
+  <!-- Modal Syllabus -->
   <div class="modal-overlay" id="modal-syllabus-overlay" onclick="cerrarModalExterno(event)">
     <div class="modal-content">
       <button class="modal-close" onclick="cerrarModalSyllabus()">&times;</button>
@@ -1173,6 +1342,7 @@
     </div>
   </div>
 
+  <!-- Modal Calculadora -->
   <div class="modal-overlay" id="modal-calc-overlay" onclick="cerrarModalCalcExterno(event)">
     <div class="modal-content modal-calc-wide">
       <button class="modal-close" onclick="cerrarModalCalculadora()">&times;</button>
@@ -1235,6 +1405,95 @@
       <div class="modal-footer">
         <button class="btn-modal-close-action" onclick="limpiarCalculadora()">Limpiar Campos</button>
         <button class="btn-modal-close-action" onclick="cerrarModalCalculadora()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Horario Universitario -->
+  <div class="modal-overlay" id="modal-horario-overlay" onclick="cerrarModalHorarioExterno(event)">
+    <div class="modal-content modal-horario-wide">
+      <button class="modal-close" onclick="cerrarModalHorario()">&times;</button>
+      
+      <div class="modal-header">
+        <span class="modal-tag contextos">Planificador Semestral</span>
+        <h2>Horario de Clases Semanal</h2>
+      </div>
+
+      <div class="modal-body">
+        <div class="horario-toolbar">
+          <div class="horario-form">
+            <div class="horario-field" style="grid-column: span 2;">
+              <label for="horario-materia-sel">Materia:</label>
+              <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
+              <input type="text" id="horario-materia-custom" placeholder="Nombre de materia" style="display:none; margin-top:4px;">
+            </div>
+
+            <!-- Paralelo protegido -->
+            <div class="horario-field">
+              <label>Paralelo:</label>
+              <div class="paralelo-input-group">
+                <span class="paralelo-prefix">Paralelo</span>
+                <input type="text" id="horario-paralelo-letra" class="paralelo-input-field" maxlength="4" value="A" placeholder="A, B...">
+              </div>
+            </div>
+
+            <div class="horario-field">
+              <label for="horario-aula">Aula / Lab:</label>
+              <input type="text" id="horario-aula" placeholder="Ej: LAB 203" value="LAB 203">
+            </div>
+
+            <div class="horario-field">
+              <label for="horario-dia">Día:</label>
+              <select id="horario-dia">
+                <option value="1">Lunes</option>
+                <option value="2">Martes</option>
+                <option value="3">Miércoles</option>
+                <option value="4">Jueves</option>
+                <option value="5">Viernes</option>
+                <option value="6">Sábado</option>
+              </select>
+            </div>
+
+            <div class="horario-field">
+              <label for="horario-inicio">Inicio:</label>
+              <select id="horario-inicio" onchange="actualizarHoraFinAutomatica()"></select>
+            </div>
+
+            <div class="horario-field">
+              <label for="horario-fin">Fin:</label>
+              <select id="horario-fin"></select>
+            </div>
+
+            <div class="horario-field">
+              <button class="btn-action btn-photo" style="height: 33px; width: 100%;" onclick="agregarBloqueHorario()">+ Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="horario-table-wrap" id="contenedor-captura-horario">
+          <table class="tabla-horario-excel">
+            <thead>
+              <tr>
+                <th class="col-hora">Hora</th>
+                <th class="col-dia">Lunes</th>
+                <th class="col-dia">Martes</th>
+                <th class="col-dia">Miércoles</th>
+                <th class="col-dia">Jueves</th>
+                <th class="col-dia">Viernes</th>
+                <th class="col-dia">Sábado</th>
+              </tr>
+            </thead>
+            <tbody id="horario-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button class="btn-action btn-reset" onclick="limpiarTodoHorario()">Borrar Todo el Horario</button>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-action btn-photo" onclick="descargarFotoHorario()">Descargar Horario HD</button>
+          <button class="btn-modal-close-action" onclick="cerrarModalHorario()">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1484,83 +1743,53 @@
           }
         ],
         conexiones: [
-          // 1. Cadena continua de cálculo y estadística
           { from: "ia_calc1", to: "ia_calc2" },
           { from: "ia_calc2", to: "ia_prob_est" },
           { from: "ia_prob_est", to: "ia_est_inf" },
           { from: "ia_est_inf", to: "ia_inv_oper" },
           { from: "ia_inv_oper", to: "ia_mod_sim" },
 
-          // 2. Metodología de la Investigación: Cálculo I (desde el centro) y Matemáticas Discretas
           { from: "ia_calc1", to: "ia_met_inv", targetOffset: -18 },
           { from: "ia_mat_disc", to: "ia_met_inv", targetOffset: 18 },
 
-          // Metodología de la Investigación abre Álgebra Lineal
           { from: "ia_met_inv", to: "ia_alg_lin" },
-
-          // Álgebra Lineal abre Ingeniería de Software e Interacción Persona Computador
           { from: "ia_alg_lin", to: "ia_ing_soft" },
           { from: "ia_alg_lin", to: "ia_hci" },
 
-          // Ingeniería de Software abre Programación Web y Móvil
           { from: "ia_ing_soft", to: "ia_prog_web" },
-
-          // Programación Web y Móvil abre Procesamiento del Lenguaje Natural
           { from: "ia_prog_web", to: "ia_nlp" },
-
-          // Procesamiento de Lenguaje Natural abre el Proyecto de Integración Curricular
           { from: "ia_nlp", to: "ia_proy_int" },
 
-          // Interacción Persona Computador abre Redes de Datos
           { from: "ia_hci", to: "ia_redes" },
-
-          // Redes de Datos abre Computación en la Nube
           { from: "ia_redes", to: "ia_cloud" },
-
-          // Computación en la Nube abre Gestión de Datos a Gran Escala y NLP
           { from: "ia_cloud", to: "ia_big_data" },
           { from: "ia_cloud", to: "ia_nlp" },
 
-          // 3. Fundamentos solo abre POO; POO solo abre Bases de Datos
           { from: "ia_fund_prog", to: "ia_poo" },
           { from: "ia_poo", to: "ia_bd" },
 
-          // Bases de Datos abre Bases de Datos Avanzadas e Inteligencia Artificial
           { from: "ia_bd", to: "ia_bd_avanz" },
           { from: "ia_bd", to: "ia_int_art" },
 
-          // Bases de Datos Avanzadas abre Minería de Datos y Organización y Gestión Empresarial
           { from: "ia_bd_avanz", to: "ia_miner_d" },
           { from: "ia_bd_avanz", to: "ia_org_gest" },
 
-          // Organización y Gestión Empresarial abre Inteligencia de Negocios
           { from: "ia_org_gest", to: "ia_bi" },
 
-          // Minería de Datos abre Computación en la Nube y Seguridad de la Información
           { from: "ia_miner_d", to: "ia_cloud" },
           { from: "ia_miner_d", to: "ia_seg_inf" },
 
-          // Seguridad de la Información abre Análisis Computacional de Imágenes
           { from: "ia_seg_inf", to: "ia_vision" },
-
-          // Análisis Computacional de Imágenes abre Ciencia de Datos e IA Aplicada
           { from: "ia_vision", to: "ia_aplicada" },
 
-          // Aprendizaje Automático abre Aprendizaje Profundo
           { from: "ia_ml", to: "ia_deep_l" },
-
-          // Aprendizaje Profundo ÚNICAMENTE abre Transformación Digital y Formulación y Evaluación de Proyectos
           { from: "ia_deep_l", to: "ia_trans_dig" },
           { from: "ia_deep_l", to: "ia_form_proy" },
 
-          // Inteligencia de Negocios abre Formulación y Evaluación de Proyectos
           { from: "ia_bi", to: "ia_form_proy" },
-
-          // Formulación y Evaluación de Proyectos abre Emprendimiento e Innovación Tecnológica Y Ética
           { from: "ia_form_proy", to: "ia_emp_innov" },
           { from: "ia_form_proy", to: "ia_etica" },
 
-          // 4. Humanismo, Lenguaje y Culturas
           { from: "ia_leng1", to: "ia_leng2" },
           { from: "ia_hum_pers", to: "ia_hum_soc" },
           { from: "ia_leng2", to: "ia_cult_cont" }
@@ -2353,7 +2582,7 @@
           if (neededP2Total <= 10.00) {
             adviceEl.innerHTML = `Tienes P1 completo con <strong>${p1Total.toFixed(2)}/10</strong>. Necesitas que el total de tu Segundo Parcial sea de al menos <strong>${neededP2Total.toFixed(2)} / 10</strong> para aprobar directamente.`;
           } else {
-            adviceEl.innerHTML = `P1 is bajo (${p1Total.toFixed(2)}). Aunque saques 10 в P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
+            adviceEl.innerHTML = `P1 es bajo (${p1Total.toFixed(2)}). Aunque saques 10 en P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
           }
         }
         return;
@@ -2365,96 +2594,379 @@
       adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
-async function generarFotoMalla() {
-  const btn = document.getElementById("btn-exportar-foto");
-  const textoOriginal = btn.innerHTML;
-  btn.innerHTML = "Generando imagen...";
-  btn.style.opacity = "0.7";
-  btn.disabled = true;
+    async function generarFotoMalla() {
+      const btn = document.getElementById("btn-exportar-foto");
+      const textoOriginal = btn.innerHTML;
+      btn.innerHTML = "Generando imagen...";
+      btn.style.opacity = "0.7";
+      btn.disabled = true;
 
-  resetDependencies();
+      resetDependencies();
 
-  const contenedorPrincipal = document.getElementById("bloque-principal");
-  // Ancho fijo canónico de escritorio para garantizar proporciones idénticas en cualquier pantalla
-  const ANCHO_CANONICO = 1540;
+      const contenedorPrincipal = document.getElementById("bloque-principal");
+      const ANCHO_CANONICO = 1540;
+
+      try {
+        const canvas = await html2canvas(contenedorPrincipal, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: false,
+          backgroundColor: "#f8fafc",
+          width: ANCHO_CANONICO,
+          windowWidth: ANCHO_CANONICO,
+          onclone: (clonedDoc) => {
+            clonedDoc.documentElement.style.width = `${ANCHO_CANONICO}px`;
+            clonedDoc.body.style.width = `${ANCHO_CANONICO}px`;
+            clonedDoc.body.style.minWidth = `${ANCHO_CANONICO}px`;
+
+            const clonedPrincipal = clonedDoc.getElementById("bloque-principal");
+            if (clonedPrincipal) {
+              clonedPrincipal.style.width = `${ANCHO_CANONICO}px`;
+              clonedPrincipal.style.minWidth = `${ANCHO_CANONICO}px`;
+              clonedPrincipal.style.maxWidth = `${ANCHO_CANONICO}px`;
+            }
+
+            const clonedMallaOuter = clonedDoc.getElementById("malla-container");
+            if (clonedMallaOuter) {
+              clonedMallaOuter.style.overflow = "visible";
+              clonedMallaOuter.style.width = "100%";
+              clonedMallaOuter.scrollLeft = 0;
+            }
+
+            const actions = clonedDoc.querySelector(".header-actions");
+            if (actions) actions.style.display = "none";
+            const hint = clonedDoc.querySelector(".scroll-hint-bar");
+            if (hint) hint.style.display = "none";
+
+            const clonedSvg = clonedDoc.getElementById("svg-connections");
+            const clonedGrid = clonedDoc.getElementById("grid-container");
+
+            if (clonedSvg && clonedGrid) {
+              drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
+
+              const polygons = clonedSvg.querySelectorAll("polygon");
+              polygons.forEach(poly => {
+                poly.setAttribute("fill", "#1e293b");
+              });
+
+              const paths = clonedSvg.querySelectorAll("path");
+              paths.forEach(p => {
+                p.style.fill = "none";
+                p.setAttribute("fill", "none");
+                p.style.stroke = "#1e293b";
+                p.setAttribute("stroke", "#1e293b");
+                p.style.strokeWidth = "1.5px";
+                p.setAttribute("stroke-width", "1.5");
+              });
+            }
+          }
+        });
+
+        const imageURL = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = imageURL;
+        link.click();
+      } catch (err) {
+        console.error("Error al exportar:", err);
+        alert("Ocurrió un error al generar la imagen.");
+      } finally {
+        drawTreeLinesWithGutterRouting();
+        btn.innerHTML = textoOriginal;
+        btn.style.opacity = "1";
+        btn.disabled = false;
+      }
+    }
+
+    // --- LÓGICA DEL HORARIO ESTILO EXCEL UCSG ---
+    const DIAS_HORARIO = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+
+    // Paleta de 16 colores pastel distintivos
+    const PALETA_HORARIO = [
+      { bg: "#fde2d2", bdr: "#f5a87e" }, // Durazno / Coral pastel
+      { bg: "#fef9c3", bdr: "#facc15" }, // Amarillo cálido
+      { bg: "#dcfce7", bdr: "#86efac" }, // Menta / Verde pastel
+      { bg: "#e9d5ff", bdr: "#c084fc" }, // Violeta suave
+      { bg: "#e0f2fe", bdr: "#7dd3fc" }, // Azul cielo
+      { bg: "#fce7f3", bdr: "#f472b6" }, // Rosa pastel
+      { bg: "#ccfbf1", bdr: "#5eead4" }, // Aguamarina
+      { bg: "#ffedd5", bdr: "#fdba74" }, // Naranja pastel
+      { bg: "#ecfccb", bdr: "#a3e635" }, // Lima suave
+      { bg: "#fee2e2", bdr: "#fca5a5" }, // Rojo suave / Salmón
+      { bg: "#f3e8ff", bdr: "#d8b4fe" }, // Lavanda
+      { bg: "#e0e7ff", bdr: "#818cf8" }, // Índigo claro
+      { bg: "#d1fae5", bdr: "#34d399" }, // Esmeralda suave
+      { bg: "#fef08a", bdr: "#eab308" }, // Amarillo mostaza pastel
+      { bg: "#e2e8f0", bdr: "#94a3b8" }, // Gris plata azulado
+      { bg: "#fed7aa", bdr: "#fb923c" }  // Ámbar pastel
+    ];
+
+    let horarioBloques = JSON.parse(localStorage.getItem("horario_universitario_ucsg") || "[]");
+
+    function generarSlots() {
+      const slots = [];
+      let h = 7, m = 0;
+      while (h < 21 || (h === 21 && m <= 30)) {
+        const hStr = h.toString().padStart(2, "0");
+        const mStr = m.toString().padStart(2, "0");
+        const tInicio = `${hStr}:${mStr}`;
+        
+        m += 30;
+        if (m === 60) { h++; m = 0; }
+        
+        const hFinStr = h.toString().padStart(2, "0");
+        const mFinStr = m.toString().padStart(2, "0");
+        const tFin = `${hFinStr}:${mFinStr}`;
+
+        slots.push({ inicio: tInicio, fin: tFin, label: `${tInicio} - ${tFin}` });
+      }
+      return slots;
+    }
+
+    const SLOTS_HORARIO = generarSlots();
+
+    function poblarSelectoresTiempo() {
+      const selIni = document.getElementById("horario-inicio");
+      const selFin = document.getElementById("horario-fin");
+      selIni.innerHTML = "";
+      selFin.innerHTML = "";
+
+      SLOTS_HORARIO.forEach(slot => {
+        selIni.innerHTML += `<option value="${slot.inicio}">${slot.inicio}</option>`;
+        selFin.innerHTML += `<option value="${slot.fin}">${slot.fin}</option>`;
+      });
+
+      selIni.value = "07:00";
+      actualizarHoraFinAutomatica();
+    }
+
+    // Actualiza automáticamente la hora de fin sumando 2 horas (4 slots de 30 mins)
+    function actualizarHoraFinAutomatica() {
+      const horaIni = document.getElementById("horario-inicio").value;
+      const indexIni = SLOTS_HORARIO.findIndex(s => s.inicio === horaIni);
+      if (indexIni !== -1) {
+        const targetFinIndex = Math.min(indexIni + 3, SLOTS_HORARIO.length - 1);
+        document.getElementById("horario-fin").value = SLOTS_HORARIO[targetFinIndex].fin;
+      }
+    }
+
+    function poblarMateriasDisponibles() {
+      const sel = document.getElementById("horario-materia-sel");
+      sel.innerHTML = "";
+
+      const materiasUnicas = new Set();
+      datosActivos.estructura.forEach(sem => {
+        [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
+          materiasUnicas.add(m.nombre);
+        });
+      });
+
+      Array.from(materiasUnicas).sort().forEach(nombre => {
+        sel.innerHTML += `<option value="${nombre}">${nombre}</option>`;
+      });
+      sel.innerHTML += `<option value="__custom__">-- Escribir otra materia --</option>`;
+      verificarMateriaCustom();
+    }
+
+    function verificarMateriaCustom() {
+      const sel = document.getElementById("horario-materia-sel");
+      const custom = document.getElementById("horario-materia-custom");
+      custom.style.display = sel.value === "__custom__" ? "block" : "none";
+    }
+
+    // Hash DJB2 con salto primo para dispersar colores y evitar que materias del mismo ciclo compartan color
+    function obtenerColorMateria(nombreMateria) {
+      let hash = 5381;
+      for (let i = 0; i < nombreMateria.length; i++) {
+        hash = ((hash << 5) + hash) + nombreMateria.charCodeAt(i);
+      }
+      const index = Math.abs(hash * 31) % PALETA_HORARIO.length;
+      return PALETA_HORARIO[index];
+    }
+
+    function agregarBloqueHorario() {
+      const selMateria = document.getElementById("horario-materia-sel");
+      const customMateria = document.getElementById("horario-materia-custom");
+      const materia = selMateria.value === "__custom__" ? customMateria.value.trim() : selMateria.value;
+      
+      const letraParalelo = document.getElementById("horario-paralelo-letra").value.trim().toUpperCase() || "A";
+      const paralelo = `Paralelo ${letraParalelo}`;
+      const aula = document.getElementById("horario-aula").value.trim();
+      const dia = parseInt(document.getElementById("horario-dia").value);
+      const inicio = document.getElementById("horario-inicio").value;
+      const fin = document.getElementById("horario-fin").value;
+
+      if (!materia) {
+        alert("Por favor selecciona o ingresa un nombre para la asignatura.");
+        return;
+      }
+
+      if (inicio >= fin) {
+        alert("La hora de inicio debe ser anterior a la hora de finalización.");
+        return;
+      }
+
+      const nuevoBloque = {
+        id: "b_" + Date.now(),
+        materia,
+        paralelo,
+        aula,
+        dia,
+        inicio,
+        fin
+      };
+
+      horarioBloques.push(nuevoBloque);
+      guardarYRenderizarHorario();
+    }
+
+    function eliminarBloqueHorario(id) {
+      if (confirm("¿Deseas quitar esta clase de tu horario?")) {
+        horarioBloques = horarioBloques.filter(b => b.id !== id);
+        guardarYRenderizarHorario();
+      }
+    }
+
+    function limpiarTodoHorario() {
+      if (confirm("¿Estás seguro de que deseas eliminar todo tu horario?")) {
+        horarioBloques = [];
+        guardarYRenderizarHorario();
+      }
+    }
+
+    function guardarYRenderizarHorario() {
+      localStorage.setItem("horario_universitario_ucsg", JSON.stringify(horarioBloques));
+      renderizarTablaHorario();
+    }
+
+    function renderizarTablaHorario() {
+      const tbody = document.getElementById("horario-tbody");
+      tbody.innerHTML = "";
+
+      const occupied = {};
+
+      SLOTS_HORARIO.forEach((slot, sIdx) => {
+        const tr = document.createElement("tr");
+
+        const tdHora = document.createElement("td");
+        tdHora.className = "td-hora";
+        tdHora.textContent = slot.label;
+        tr.appendChild(tdHora);
+
+        for (let dia = 1; dia <= 6; dia++) {
+          const key = `${sIdx}-${dia}`;
+          if (occupied[key]) continue;
+
+          const bloque = horarioBloques.find(b => b.dia === dia && b.inicio === slot.inicio);
+
+          if (bloque) {
+            const startIdx = SLOTS_HORARIO.findIndex(s => s.inicio === bloque.inicio);
+            let endIdx = SLOTS_HORARIO.findIndex(s => s.fin === bloque.fin);
+            if (endIdx === -1) endIdx = startIdx;
+            const span = (endIdx - startIdx) + 1;
+
+            for (let r = 0; r < span; r++) {
+              occupied[`${startIdx + r}-${dia}`] = true;
+            }
+
+            const col = obtenerColorMateria(bloque.materia);
+
+            const td = document.createElement("td");
+            td.className = "td-clase";
+            td.rowSpan = span;
+            td.style.backgroundColor = col.bg;
+            td.style.borderColor = col.bdr;
+            td.title = "Haz clic para eliminar este bloque de clase";
+            td.onclick = () => eliminarBloqueHorario(bloque.id);
+
+            td.innerHTML = `
+              <div class="td-clase-title">${bloque.materia}</div>
+              ${bloque.paralelo ? `<div class="td-clase-sub">${bloque.paralelo}</div>` : ""}
+              ${bloque.aula ? `<div class="td-clase-sub">Aula: ${bloque.aula}</div>` : ""}
+            `;
+            tr.appendChild(td);
+          } else {
+            const td = document.createElement("td");
+            tr.appendChild(td);
+          }
+        }
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function abrirModalHorario() {
+      poblarMateriasDisponibles();
+      poblarSelectoresTiempo();
+      renderizarTablaHorario();
+      document.getElementById("modal-horario-overlay").classList.add("active");
+    }
+
+    function cerrarModalHorario() {
+      document.getElementById("modal-horario-overlay").classList.remove("active");
+    }
+
+    function cerrarModalHorarioExterno(event) {
+      if (event.target.id === "modal-horario-overlay") {
+        cerrarModalHorario();
+      }
+    }
+
+async function descargarFotoHorario() {
+  const contenedor = document.getElementById("contenedor-captura-horario");
+  if (!contenedor) return;
+
+  if (horarioBloques.length === 0) {
+    alert("Agrega al menos una materia a tu horario antes de descargar la imagen.");
+    return;
+  }
+
+  // 1. Encontrar la hora de finalización más tardía de todas las clases agregadas
+  let maxFin = "07:00";
+  horarioBloques.forEach(b => {
+    if (b.fin > maxFin) maxFin = b.fin;
+  });
+
+  // Encontrar el índice del slot correspondiente en SLOTS_HORARIO
+  let maxSlotIdx = SLOTS_HORARIO.findIndex(s => s.fin === maxFin);
+  if (maxSlotIdx === -1) maxSlotIdx = SLOTS_HORARIO.length - 1;
+
+  // Dejamos un margen visual limpio (+1 fila de 30 mins) si no excede el total
+  const limiteCorteIdx = Math.min(maxSlotIdx + 1, SLOTS_HORARIO.length - 1);
 
   try {
-    const canvas = await html2canvas(contenedorPrincipal, {
+    const canvas = await html2canvas(contenedor, {
       scale: 2,
+      backgroundColor: "#ffffff",
       useCORS: true,
-      allowTaint: true,
-      logging: false,
-      backgroundColor: "#f8fafc",
-      width: ANCHO_CANONICO,
-      windowWidth: ANCHO_CANONICO,
       onclone: (clonedDoc) => {
-        // 1. Forzar el viewport virtual clonado al ancho de escritorio
-        clonedDoc.documentElement.style.width = `${ANCHO_CANONICO}px`;
-        clonedDoc.body.style.width = `${ANCHO_CANONICO}px`;
-        clonedDoc.body.style.minWidth = `${ANCHO_CANONICO}px`;
-
-        const clonedPrincipal = clonedDoc.getElementById("bloque-principal");
-        if (clonedPrincipal) {
-          clonedPrincipal.style.width = `${ANCHO_CANONICO}px`;
-          clonedPrincipal.style.minWidth = `${ANCHO_CANONICO}px`;
-          clonedPrincipal.style.maxWidth = `${ANCHO_CANONICO}px`;
-        }
-
-        const clonedMallaOuter = clonedDoc.getElementById("malla-container");
-        if (clonedMallaOuter) {
-          clonedMallaOuter.style.overflow = "visible";
-          clonedMallaOuter.style.width = "100%";
-          clonedMallaOuter.scrollLeft = 0;
-        }
-
-        // Ocultar botones y avisos que no deben salir en la imagen
-        const actions = clonedDoc.querySelector(".header-actions");
-        if (actions) actions.style.display = "none";
-        const hint = clonedDoc.querySelector(".scroll-hint-bar");
-        if (hint) hint.style.display = "none";
-
-        const clonedSvg = clonedDoc.getElementById("svg-connections");
-        const clonedGrid = clonedDoc.getElementById("grid-container");
-
-        if (clonedSvg && clonedGrid) {
-          drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
-
-          const polygons = clonedSvg.querySelectorAll("polygon");
-          polygons.forEach(poly => {
-            poly.setAttribute("fill", "#1e293b");
-          });
-
-          const paths = clonedSvg.querySelectorAll("path");
-          paths.forEach(p => {
-            p.style.fill = "none";
-            p.setAttribute("fill", "none");
-            p.style.stroke = "#1e293b";
-            p.setAttribute("stroke", "#1e293b");
-            p.style.strokeWidth = "1.5px";
-            p.setAttribute("stroke-width", "1.5");
+        const clonedTbody = clonedDoc.getElementById("horario-tbody");
+        if (clonedTbody) {
+          const filas = clonedTbody.querySelectorAll("tr");
+          // Ocultar todas las filas posteriores a la última clase registrada
+          filas.forEach((fila, idx) => {
+            if (idx > limiteCorteIdx) {
+              fila.style.display = "none";
+            }
           });
         }
       }
     });
 
-    const imageURL = canvas.toDataURL("image/png");
     const link = document.createElement("a");
-    link.download = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
-    link.href = imageURL;
+    link.download = `Horario_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
+    link.href = canvas.toDataURL("image/png");
     link.click();
-  } catch (err) {
-    console.error("Error al exportar:", err);
-    alert("Ocurrió un error al generar la imagen.");
-  } finally {
-    drawTreeLinesWithGutterRouting();
-    btn.innerHTML = textoOriginal;
-    btn.style.opacity = "1";
-    btn.disabled = false;
+  } catch (e) {
+    console.error("Error al descargar horario:", e);
+    alert("Hubo un problema al generar la foto del horario.");
   }
 }
 
     window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
 
+    // Inicialización al cargar la página
     document.getElementById("select-carrera").value = carreraActualId;
     document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
     indexarMallaActiva();
