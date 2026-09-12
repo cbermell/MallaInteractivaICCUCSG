@@ -2829,14 +2829,24 @@
     }
 
     // Hash DJB2 con salto primo para dispersar colores y evitar que materias del mismo ciclo compartan color
-    function obtenerColorMateria(nombreMateria) {
-      let hash = 5381;
-      for (let i = 0; i < nombreMateria.length; i++) {
-        hash = ((hash << 5) + hash) + nombreMateria.charCodeAt(i);
-      }
-      const index = Math.abs(hash * 31) % PALETA_HORARIO.length;
-      return PALETA_HORARIO[index];
+function obtenerColorMateria(nombreMateria) {
+  // 1. Obtener la lista de nombres únicos de materias presentes en el horario en su orden de aparición
+  const materiasRegistradas = [];
+  horarioBloques.forEach(b => {
+    if (!materiasRegistradas.includes(b.materia)) {
+      materiasRegistradas.push(b.materia);
     }
+  });
+
+  // 2. Si la materia aún no está en la lista (por render inmediato), agregarla
+  let index = materiasRegistradas.indexOf(nombreMateria);
+  if (index === -1) {
+    index = materiasRegistradas.length;
+  }
+
+  // 3. Asignar de forma secuencial garantizando colores 100% distintos
+  return PALETA_HORARIO[index % PALETA_HORARIO.length];
+}
 
     function agregarBloqueHorario() {
       const selMateria = document.getElementById("horario-materia-sel");
