@@ -914,6 +914,19 @@
       border-color: #2563eb;
     }
 
+    .horario-field optgroup {
+  font-weight: 800;
+  color: #1e3a8a;
+  background-color: #f1f5f9;
+}
+
+.horario-field option {
+  font-weight: 500;
+  color: #0f172a;
+  background-color: #ffffff;
+  padding: 4px 6px;
+}
+
     /* Input bloqueado con prefijo "Paralelo" */
     .paralelo-input-group {
       display: flex;
@@ -1102,6 +1115,17 @@
     }
 
     @media (max-width: 640px) {
+
+.modal-content.modal-horario-wide .modal-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modal-content.modal-horario-wide .modal-header button.btn-photo {
+    width: 100%;
+    justify-content: center;
+  }
+
       .dash-header {
         flex-direction: column;
         align-items: flex-start;
@@ -1414,10 +1438,19 @@
     <div class="modal-content modal-horario-wide">
       <button class="modal-close" onclick="cerrarModalHorario()">&times;</button>
       
-      <div class="modal-header">
-        <span class="modal-tag contextos">Planificador Semestral</span>
-        <h2>Horario de Clases Semanal</h2>
-      </div>
+<div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding-right: 32px;">
+  <div>
+    <span class="modal-tag contextos">Planificador Semestral</span>
+    <h2>Horario de Clases Semanal</h2>
+  </div>
+  <button class="btn-action btn-photo" onclick="descargarFotoHorario()" style="box-shadow: 0 2px 6px rgba(37,99,235,0.35);">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+      <circle cx="12" cy="13" r="4"></circle>
+    </svg>
+    Descargar Horario
+  </button>
+</div>
 
       <div class="modal-body">
         <div class="horario-toolbar">
@@ -1488,13 +1521,14 @@
         </div>
       </div>
 
-      <div class="modal-footer" style="justify-content: space-between;">
-        <button class="btn-action btn-reset" onclick="limpiarTodoHorario()">Borrar Todo el Horario</button>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button class="btn-action btn-photo" onclick="descargarFotoHorario()">Descargar Horario HD</button>
-          <button class="btn-modal-close-action" onclick="cerrarModalHorario()">Cerrar</button>
-        </div>
-      </div>
+<div class="modal-footer" style="justify-content: space-between;">
+  <button class="btn-action btn-reset" onclick="limpiarTodoHorario()" style="font-size: 0.75rem; padding: 6px 12px;">
+    Borrar Todo
+  </button>
+  <button class="btn-modal-close-action" onclick="cerrarModalHorario()">
+    Cerrar
+  </button>
+</div>
     </div>
   </div>
 
@@ -2752,22 +2786,41 @@
     }
 
     function poblarMateriasDisponibles() {
-      const sel = document.getElementById("horario-materia-sel");
-      sel.innerHTML = "";
+  const sel = document.getElementById("horario-materia-sel");
+  sel.innerHTML = "";
 
-      const materiasUnicas = new Set();
-      datosActivos.estructura.forEach(sem => {
-        [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
-          materiasUnicas.add(m.nombre);
-        });
+  // Agrupar materias por ciclo
+  datosActivos.estructura.forEach(sem => {
+    const materiasDelCiclo = [...sem.materias, sem.practica].filter(Boolean);
+
+    if (materiasDelCiclo.length > 0) {
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = `Ciclo ${sem.ciclo}`;
+
+      materiasDelCiclo.forEach(m => {
+        const option = document.createElement("option");
+        option.value = m.nombre;
+        option.textContent = m.nombre;
+        optgroup.appendChild(option);
       });
 
-      Array.from(materiasUnicas).sort().forEach(nombre => {
-        sel.innerHTML += `<option value="${nombre}">${nombre}</option>`;
-      });
-      sel.innerHTML += `<option value="__custom__">-- Escribir otra materia --</option>`;
-      verificarMateriaCustom();
+      sel.appendChild(optgroup);
     }
+  });
+
+  // Grupo final para materias electivas o personalizadas
+  const optgroupCustom = document.createElement("optgroup");
+  optgroupCustom.label = "Otras Asignaturas";
+  
+  const optionCustom = document.createElement("option");
+  optionCustom.value = "__custom__";
+  optionCustom.textContent = "+ Escribir otra materia...";
+  optgroupCustom.appendChild(optionCustom);
+  
+  sel.appendChild(optgroupCustom);
+
+  verificarMateriaCustom();
+}
 
     function verificarMateriaCustom() {
       const sel = document.getElementById("horario-materia-sel");
@@ -2922,18 +2975,22 @@ async function descargarFotoHorario() {
     return;
   }
 
-  // 1. Encontrar la hora de finalización más tardía de todas las clases agregadas
-  let maxFin = "07:00";
+  // 1. Umbral mínimo: 15:00 (3:00 PM)
+  let horaCorte = "15:00";
+
+  // 2. Si alguna clase termina después de las 15:00, el corte se amplía a esa hora
   horarioBloques.forEach(b => {
-    if (b.fin > maxFin) maxFin = b.fin;
+    if (b.fin > horaCorte) {
+      horaCorte = b.fin;
+    }
   });
 
-  // Encontrar el índice del slot correspondiente en SLOTS_HORARIO
-  let maxSlotIdx = SLOTS_HORARIO.findIndex(s => s.fin === maxFin);
-  if (maxSlotIdx === -1) maxSlotIdx = SLOTS_HORARIO.length - 1;
+  // 3. Encontrar el índice de la fila correspondiente
+  let targetSlotIdx = SLOTS_HORARIO.findIndex(s => s.fin === horaCorte);
+  if (targetSlotIdx === -1) targetSlotIdx = SLOTS_HORARIO.length - 1;
 
-  // Dejamos un margen visual limpio (+1 fila de 30 mins) si no excede el total
-  const limiteCorteIdx = Math.min(maxSlotIdx + 1, SLOTS_HORARIO.length - 1);
+  // Se añade 1 fila de margen de seguridad visual
+  const limiteCorteIdx = Math.min(targetSlotIdx + 1, SLOTS_HORARIO.length - 1);
 
   try {
     const canvas = await html2canvas(contenedor, {
@@ -2944,7 +3001,7 @@ async function descargarFotoHorario() {
         const clonedTbody = clonedDoc.getElementById("horario-tbody");
         if (clonedTbody) {
           const filas = clonedTbody.querySelectorAll("tr");
-          // Ocultar todas las filas posteriores a la última clase registrada
+          // Ocultar únicamente las filas posteriores al corte (mínimo 15:00 o la última clase)
           filas.forEach((fila, idx) => {
             if (idx > limiteCorteIdx) {
               fila.style.display = "none";
