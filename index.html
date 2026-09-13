@@ -1522,12 +1522,24 @@
     <div class="modal-content modal-horario-wide">
       <button class="modal-close" onclick="cerrarModalHorario()">&times;</button>
       
-<div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding-right: 32px;">
+<div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; padding-right: 36px; margin-bottom: 16px;">
   <div>
-    <span class="modal-tag contextos">Planificador Semestral</span>
-    <h2>Horario de Clases Semanal</h2>
+    <span class="modal-tag contextos" style="margin-bottom: 6px;">Planificador Semestral</span>
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <h2 style="margin: 0; font-size: clamp(1.1rem, 2vw, 1.25rem); font-weight: 800; color: #0f172a;">Horario de Clases Semanal</h2>
+      
+      <!-- Píldora del período junto al título -->
+      <div style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+        <span style="font-size: 0.70rem; font-weight: 800; color: #475569;">PERÍODO:</span>
+        <select id="horario-semestre-periodo" onchange="guardarPeriodoSeleccionado()" style="border: none; background: transparent; font-weight: 800; font-size: 0.78rem; color: #0f172a; cursor: pointer; outline: none;">
+          <option value="Semestre A">Ciclo Ordinario A</option>
+          <option value="Semestre B">Ciclo Ordinario B</option>
+        </select>
+      </div>
+    </div>
   </div>
-  <button class="btn-action btn-photo" onclick="descargarFotoHorario()" style="box-shadow: 0 2px 6px rgba(37,99,235,0.35);">
+
+  <button class="btn-action btn-photo" onclick="descargarFotoHorario()" style="box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
       <circle cx="12" cy="13" r="4"></circle>
@@ -1538,12 +1550,12 @@
 
       <div class="modal-body">
         <div class="horario-toolbar">
-          <div class="horario-form">
-            <div class="horario-field" style="grid-column: span 2;">
-              <label for="horario-materia-sel">Materia:</label>
-              <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
-              <input type="text" id="horario-materia-custom" placeholder="Nombre de materia" style="display:none; margin-top:4px;">
-            </div>
+  <div class="horario-form">
+    <div class="horario-field" style="grid-column: span 2;">
+      <label for="horario-materia-sel">Materia:</label>
+      <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
+      <input type="text" id="horario-materia-custom" placeholder="Nombre de materia" style="display:none; margin-top:4px;">
+    </div>
 
             <!-- Paralelo protegido -->
             <div class="horario-field">
@@ -1580,14 +1592,6 @@
               <label for="horario-fin">Fin:</label>
               <select id="horario-fin"></select>
             </div>
-
-            <div class="horario-field">
-  <label for="horario-semestre-periodo">Período Académico:</label>
-  <select id="horario-semestre-periodo" onchange="guardarPeriodoSeleccionado()">
-    <option value="Semestre A">Ciclo Ordinario A</option>
-    <option value="Semestre B">Ciclo Ordinario B</option>
-  </select>
-</div>
 
             <div class="horario-field">
               <button class="btn-action btn-photo" style="height: 33px; width: 100%;" onclick="agregarBloqueHorario()">+ Agregar</button>
