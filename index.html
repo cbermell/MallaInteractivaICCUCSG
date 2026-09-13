@@ -611,9 +611,32 @@
 }
 
     .modal-content.modal-horario-wide {
-      max-width: 1100px;
-      width: 95vw;
-    }
+  max-width: 1100px;
+  width: 95vw;
+  max-height: 90vh;
+  overflow-y: scroll !important;       /* El scroll vertical le pertenece al modal completo */
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain;
+}
+
+/* Evita que el gesto de scroll salte al fondo (malla curricular) */
+.modal-overlay,
+.modal-content {
+  overscroll-behavior: contain !important;
+}
+
+/* Clase de bloqueo total para el body cuando hay un modal abierto */
+body.modal-abierto {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+.modal-content.modal-calc-wide,
+.modal-content.modal-calc-wide .calc-card,
+.modal-content.modal-calc-wide .calc-result-card {
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+}
 
     .modal-overlay.active .modal-content {
       transform: translateY(0);
@@ -975,6 +998,12 @@
 
 /* Quita el borde exterior redundante de la tabla para que encaje perfecto con el contenedor */
 .tabla-horario-excel {
+  width: 100% !important;        /* En computadoras/tablets se expande hasta el borde derecho exacto */
+  min-width: 860px !important;    /* En celulares garantiza que no se aplaste y permita scroll */
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.72rem;
+  background: #ffffff;
   border-top: none;
 }
 
@@ -1046,27 +1075,14 @@
 .horario-table-wrap {
   width: 100%;
   max-width: 100%;
-  overflow-x: scroll !important;       /* Fuerza la barra de desplazamiento horizontal */
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;  /* Desplazamiento nativo inercial en iOS */
-  touch-action: pan-x !important;     /* Prioriza el gesto táctil horizontal */
-  overscroll-behavior-x: contain;     /* Evita que el scroll salte a la página padre */
+  overflow-x: auto !important;
   background: #ffffff;
   border: 1.5px solid #0c2340;
   border-radius: 6px;
   position: relative;
 }
 
-.tabla-horario-excel {
-  width: 880px !important;            /* Ancho fijo para garantizar overflow en pantallas chicas */
-  min-width: 880px !important;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 0.72rem;
-  background: #ffffff;
-  border-top: none;
-  touch-action: pan-x !important;
-}
+
 
     .tabla-horario-excel thead th {
       background-color: #0c2340;
@@ -1110,7 +1126,7 @@
   transition: filter 0.15s;
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
-  touch-action: pan-x !important;     /* Permite arrastrar el dedo sobre la clase */
+  touch-action: auto !important;
   user-select: none;
 }
 
@@ -1204,6 +1220,7 @@
     }
 
     @media (max-width: 640px) {
+    
 
 .modal-content.modal-horario-wide .modal-header {
     flex-direction: column;
@@ -2047,6 +2064,79 @@
       }
     }
 
+// Habilita el desplazamiento vertical fluido en móviles dentro de la calculadora
+function habilitarScrollTactilCalculadora() {
+  const modal = document.querySelector(".modal-content.modal-calc-wide");
+  if (!modal || modal.dataset.scrollIniciado) return;
+  modal.dataset.scrollIniciado = "true";
+
+  let startY = 0;
+  let scrollTopInicial = 0;
+
+  modal.addEventListener("touchstart", (e) => {
+    // Si el usuario está interactuando con un input numérico para escribir, no interferir
+    if (e.target.tagName === "INPUT") return;
+    if (e.touches.length !== 1) return;
+
+    startY = e.touches[0].clientY;
+    scrollTopInicial = modal.scrollTop;
+  }, { passive: true });
+
+  modal.addEventListener("touchmove", (e) => {
+    if (e.target.tagName === "INPUT") return;
+    if (e.touches.length !== 1) return;
+
+    const curY = e.touches[0].clientY;
+    const diffY = startY - curY;
+
+    // Desplazar el modal directamente
+    modal.scrollTop = scrollTopInicial + diffY;
+  }, { passive: true });
+}
+
+// Habilita el desplazamiento vertical en móviles cuando el dedo está sobre la tabla
+function habilitarScrollTactilHorario() {
+  const wrap = document.getElementById("contenedor-captura-horario");
+  const modal = document.querySelector(".modal-content.modal-horario-wide");
+
+  if (!wrap || !modal || wrap.dataset.scrollIniciado) return;
+  wrap.dataset.scrollIniciado = "true";
+
+  let startY = 0;
+  let startX = 0;
+  let scrollTopInicial = 0;
+  let esGestoVertical = false;
+  let gestoDefinido = false;
+
+  wrap.addEventListener("touchstart", (e) => {
+    if (e.touches.length !== 1) return;
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+    scrollTopInicial = modal.scrollTop;
+    gestoDefinido = false;
+    esGestoVertical = false;
+  }, { passive: true });
+
+  wrap.addEventListener("touchmove", (e) => {
+    if (e.touches.length !== 1) return;
+    const curY = e.touches[0].clientY;
+    const curX = e.touches[0].clientX;
+    const diffY = startY - curY;
+    const diffX = startX - curX;
+
+    // Determinar la intención del usuario en los primeros 6 píxeles de movimiento
+    if (!gestoDefinido && (Math.abs(diffY) > 6 || Math.abs(diffX) > 6)) {
+      esGestoVertical = Math.abs(diffY) > Math.abs(diffX);
+      gestoDefinido = true;
+    }
+
+    // Si el usuario desliza hacia arriba o abajo, trasladamos el scroll al modal
+    if (gestoDefinido && esGestoVertical) {
+      modal.scrollTop = scrollTopInicial + diffY;
+    }
+  }, { passive: true });
+}
+
     function crearTarjetaMateria(mat) {
       if (!mat) {
         const empty = document.createElement("div");
@@ -2595,14 +2685,17 @@
       }
     }
 
-    function abrirModalCalculadora() {
-      document.getElementById("modal-calc-overlay").classList.add("active");
-      calcularNotas();
-    }
+function abrirModalCalculadora() {
+  document.getElementById("modal-calc-overlay").classList.add("active");
+  document.body.classList.add("modal-abierto"); // Bloquea el fondo
+  calcularNotas();
+  habilitarScrollTactilCalculadora();
+}
 
     function cerrarModalCalculadora() {
-      document.getElementById("modal-calc-overlay").classList.remove("active");
-    }
+  document.getElementById("modal-calc-overlay").classList.remove("active");
+  document.body.classList.remove("modal-abierto"); // Libera el fondo
+}
 
 function cerrarModalCalcExterno(event) {
   // Solo se cierra si se hace clic intencionalmente en el fondo oscuro exterior
@@ -3100,14 +3193,17 @@ function obtenerColorMateria(nombreMateria) {
 function abrirModalHorario() {
   poblarMateriasDisponibles();
   poblarSelectoresTiempo();
-  inicializarPeriodoHorario(); // <- Agregado aquí
+  inicializarPeriodoHorario();
   renderizarTablaHorario();
   document.getElementById("modal-horario-overlay").classList.add("active");
+  document.body.classList.add("modal-abierto"); // Bloquea el fondo
+  habilitarScrollTactilHorario();
 }
 
     function cerrarModalHorario() {
-      document.getElementById("modal-horario-overlay").classList.remove("active");
-    }
+  document.getElementById("modal-horario-overlay").classList.remove("active");
+  document.body.classList.remove("modal-abierto"); // Libera el fondo
+}
 
     function cerrarModalHorarioExterno(event) {
       if (event.target.id === "modal-horario-overlay") {
