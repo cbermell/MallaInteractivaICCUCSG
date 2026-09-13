@@ -2413,17 +2413,48 @@ polygon.circuit-arrow.dimmed {
           to: d.id 
         });
       } else {
-        let corridorX;
-        if (d.conn.side === "left") {
-          corridorX = c1.left - 12;
-        } else if (d.conn.side === "right") {
-          corridorX = c1.right + 12;
-        } else if (d.x2 >= x1) {
-          corridorX = c1.right + 10;
-        } else {
-          corridorX = c1.left - 10;
-        }
-        const preEntryY = d.y2 - 20;
+            const preEntryY = d.y2 - 20;
+
+            // --- CÁLCULO AUTOMÁTICO DEL CENTRO EXACTO DEL PASILLO ---
+            let corridorX;
+            if (d.conn.side === "left") {
+              corridorX = c1.left - 12;
+            } else if (d.conn.side === "right") {
+              corridorX = c1.right + 12;
+            } else {
+              const haciaDerecha = d.x2 >= x1;
+              const xReferencia = haciaDerecha ? c1.right : c1.left;
+              
+              let obstaculoIzqMax = -Infinity;
+              let obstaculoDerMin = Infinity;
+
+              // Inspeccionar todas las materias en el tramo vertical de la bajada
+              const allBoxes = gridContainer.querySelectorAll(".materia-box");
+              allBoxes.forEach(b => {
+                const bCoords = getBoxCoords(b, gridContainer);
+                // Verificar si la tarjeta interseca verticalmente el tramo del pasillo
+                if (Math.max(midY, bCoords.top) < Math.min(preEntryY, bCoords.bottom)) {
+                  if (bCoords.right <= xReferencia + 8) {
+                    if (bCoords.right > obstaculoIzqMax) obstaculoIzqMax = bCoords.right;
+                  }
+                  if (bCoords.left >= xReferencia - 8) {
+                    if (bCoords.left < obstaculoDerMin) obstaculoDerMin = bCoords.left;
+                  }
+                }
+              });
+
+              // Si encontramos las dos tarjetas que delimitan el pasillo, calculamos el punto medio exacto
+              if (obstaculoIzqMax !== -Infinity && obstaculoDerMin !== Infinity && obstaculoDerMin > obstaculoIzqMax) {
+                corridorX = (obstaculoIzqMax + obstaculoDerMin) / 2;
+              } else if (haciaDerecha && obstaculoIzqMax !== -Infinity) {
+                corridorX = obstaculoIzqMax + 8; // Mitad del gap estándar (16px / 2)
+              } else if (!haciaDerecha && obstaculoDerMin !== Infinity) {
+                corridorX = obstaculoDerMin - 8;
+              } else {
+                corridorX = haciaDerecha ? c1.right + 8 : c1.left - 8;
+              }
+            }
+            // --------------------------------------------------------
 
         verticalSegments.push({ x: corridorX, yMin: midY, yMax: preEntryY, owner: `${fromId}->${d.id}` });
         verticalSegments.push({ x: d.x2, yMin: preEntryY, yMax: d.y2, owner: `${fromId}->${d.id}` });
