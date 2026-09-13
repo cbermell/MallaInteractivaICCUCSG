@@ -1043,24 +1043,28 @@
       text-transform: uppercase;
     }
 
-    .horario-table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      background: #ffffff;
-      border: 1.5px solid #0f172a;
-      border-radius: 6px;
-      -webkit-overflow-scrolling: touch;
-    }
+.horario-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch; /* Desplazamiento fluido nativo en móviles */
+  touch-action: pan-x pan-y;         /* Permite gestos táctiles tanto horizontales como verticales */
+  background: #ffffff;
+  border: 1.5px solid #0c2340;
+  border-radius: 6px;
+  position: relative;
+}
 
-    /* Tabla con anchos fijos y estrictos */
-    .tabla-horario-excel {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed; /* Clave: Ancho de columnas estricto e inmutable */
-      min-width: 860px;
-      font-size: 0.72rem;
-      background: #ffffff;
-    }
+.tabla-horario-excel {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 860px;                  /* Garantiza que las columnas no se aplasten */
+  font-size: 0.72rem;
+  background: #ffffff;
+  border-top: none;
+}
 
     .tabla-horario-excel thead th {
       background-color: #0c2340;
@@ -3116,13 +3120,13 @@ async function descargarFotoHorario() {
     return;
   }
 
-  // Obtener período seleccionado y año dinámico
+  // 1. Obtener período seleccionado y año dinámico
   const selPeriodo = document.getElementById("horario-semestre-periodo");
   const periodoTexto = selPeriodo ? selPeriodo.value : "Semestre A";
   const anioActual = new Date().getFullYear();
   const membretePeriodo = `HORARIO DE CLASES • ${periodoTexto.toUpperCase()} ${anioActual}`;
 
-  // 1. Umbral mínimo: 15:00 (3:00 PM) o la última clase si pasa de esa hora
+  // 2. Umbral mínimo: 15:00 (3:00 PM) o la última clase si pasa de esa hora
   let horaCorte = "15:00";
   horarioBloques.forEach(b => {
     if (b.fin > horaCorte) {
@@ -3134,17 +3138,29 @@ async function descargarFotoHorario() {
   if (targetSlotIdx === -1) targetSlotIdx = SLOTS_HORARIO.length - 1;
   const limiteCorteIdx = Math.min(targetSlotIdx + 1, SLOTS_HORARIO.length - 1);
 
+  // 3. Obtener el ancho real total de la tabla (860px mínimo) para evitar recortes en celulares
+  const tablaEl = contenedor.querySelector(".tabla-horario-excel");
+  const anchoTotalReal = Math.max(tablaEl ? tablaEl.offsetWidth : 880, 880);
+
   try {
     const canvas = await html2canvas(contenedor, {
       scale: 2,
       backgroundColor: "#ffffff",
       useCORS: true,
+      width: anchoTotalReal,
+      windowWidth: anchoTotalReal,
       onclone: (clonedDoc) => {
         const clonedContenedor = clonedDoc.getElementById("contenedor-captura-horario");
         
         if (clonedContenedor) {
+          // Forzar al contenedor clonado a no tener scroll y expandirse al 100% de las columnas
+          clonedContenedor.style.width = `${anchoTotalReal}px`;
+          clonedContenedor.style.minWidth = `${anchoTotalReal}px`;
+          clonedContenedor.style.overflow = "visible";
+
           const headerExport = clonedDoc.createElement("div");
           headerExport.className = "horario-export-header";
+          headerExport.style.marginBottom = "0px"; // Elimina la franja divisoria
           headerExport.innerHTML = `
             <div class="horario-export-brand">
               <img src="logo_ucsg_fi.png" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" />
@@ -3154,7 +3170,7 @@ async function descargarFotoHorario() {
               </div>
             </div>
             <div style="text-align: right; font-size: 0.75rem; font-weight: 700; color: #64748b;">
-              www.ucsg.edu.ec
+              UCSG • FACULTAD DE INGENIERÍA
             </div>
           `;
           clonedContenedor.insertBefore(headerExport, clonedContenedor.firstChild);
