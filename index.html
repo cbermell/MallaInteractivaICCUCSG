@@ -607,7 +607,30 @@
 .modal-content.modal-calc-wide {
   width: 620px;
   max-width: 92vw;
-  overflow-y: hidden; /* Oculta el scroll si la pantalla es suficientemente alta */
+  max-height: 88vh;
+  
+  /* Scroll nativo acelerado por hardware */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important; /* Física fluida con inercia e impulso en iOS */
+  touch-action: pan-y !important;              /* Informa al compositor que solo habrá gestos verticales */
+  overscroll-behavior-y: contain;              /* Aísla el scroll sin bloquear la fluidez */
+  
+  /* Promover a capa propia de renderizado para evitar repaints pesados */
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+/* Evitar que las tarjetas internas o textos intercepten gestos táctiles */
+.modal-content.modal-calc-wide .calc-card,
+.modal-content.modal-calc-wide .calc-result-card,
+.modal-content.modal-calc-wide .calc-grid {
+  touch-action: pan-y !important;
+}
+
+/* Permitir interacción inmediata en inputs */
+.modal-content.modal-calc-wide input {
+  touch-action: manipulation !important;
 }
 
     .modal-content.modal-horario-wide {
@@ -631,12 +654,6 @@ body.modal-abierto {
   touch-action: none !important;
 }
 
-.modal-content.modal-calc-wide,
-.modal-content.modal-calc-wide .calc-card,
-.modal-content.modal-calc-wide .calc-result-card {
-  touch-action: pan-y !important;
-  -webkit-overflow-scrolling: touch !important;
-}
 
     .modal-overlay.active .modal-content {
       transform: translateY(0);
@@ -2687,9 +2704,11 @@ function habilitarScrollTactilHorario() {
 
 function abrirModalCalculadora() {
   document.getElementById("modal-calc-overlay").classList.add("active");
-  document.body.classList.add("modal-abierto"); // Bloquea el fondo
+  document.body.classList.add("modal-abierto");
   calcularNotas();
-  habilitarScrollTactilCalculadora();
+  
+  // ELIMINA o comenta esta línea:
+  // habilitarScrollTactilCalculadora();
 }
 
     function cerrarModalCalculadora() {
