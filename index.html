@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 
-<!-- ================= SEO BÁSICO ================= -->
+  <!-- ================= SEO BÁSICO ================= -->
   <title>Malla Curricular Interactiva & Planificador de Horarios | UCSG</title>
   <meta name="description" content="Malla curricular interactiva, planificador de horarios de clases descargable en HD y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
   <meta name="keywords" content="ucsg, universidad catolica de santiago de guayaquil, horario ucsg, malla curricular ucsg, ingenieria ucsg, ciencias de la computacion ucsg, ciencia de datos ucsg, planificador de horarios ucsg, calcular notas ucsg, examen mejoramiento ucsg, facultad de ingenieria ucsg, generador de horarios ucsg">
@@ -14,7 +14,6 @@
   <meta property="og:title" content="Planificador de Horarios y Malla Curricular | UCSG">
   <meta property="og:description" content="Organiza tu semestre: visualiza tu malla interactiva, genera y descarga tu horario de clases en alta definición y proyecta tus notas de parciales.">
   <meta property="og:site_name" content="Portal Académico UCSG">
-  <!-- Reemplaza con la URL pública donde esté alojado tu proyecto y la imagen de vista previa -->
   <meta property="og:url" content="https://ingenieriaucsg.netlify.app/"> 
   <meta property="og:image" content="https://ingenieriaucsg.netlify.app/preview.jpeg"> 
 
@@ -26,7 +25,6 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Facultad de Ingeniería - UCSG</title>
 
   <!-- Favicon -->
   <link rel="icon" href="logo_ucsg.png" type="image/png">
@@ -418,10 +416,12 @@
       overflow: hidden;
     }
 
-    .materia-box:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-    }
+ /* Feedback visual refinado sin desplazar las coordenadas de las flechas */
+.materia-box:hover {
+  transform: none; /* No mueve la tarjeta de su eje Y */
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+  filter: brightness(1.03);
+}
 
     .materia-box.bloqueada {
       opacity: 0.55;
@@ -555,6 +555,23 @@
       transition: stroke 0.2s, stroke-width 0.2s, opacity 0.2s;
     }
 
+    polygon.circuit-arrow {
+  fill: var(--line-color);
+  transition: fill 0.2s, opacity 0.2s;
+}
+
+polygon.circuit-arrow.highlight-pre {
+  fill: var(--line-pre) !important;
+}
+
+polygon.circuit-arrow.highlight-post {
+  fill: var(--line-next) !important;
+}
+
+polygon.circuit-arrow.dimmed {
+  opacity: 0.18;
+}
+
     path.circuit-line.highlight-pre {
       stroke: var(--line-pre) !important;
       stroke-width: 2.6 !important;
@@ -627,56 +644,49 @@
       transition: transform 0.2s ease;
     }
 
-.modal-content.modal-calc-wide {
-  width: 620px;
-  max-width: 92vw;
-  max-height: 88vh;
-  
-  /* Scroll nativo acelerado por hardware */
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  -webkit-overflow-scrolling: touch !important; /* Física fluida con inercia e impulso en iOS */
-  touch-action: pan-y !important;              /* Informa al compositor que solo habrá gestos verticales */
-  overscroll-behavior-y: contain;              /* Aísla el scroll sin bloquear la fluidez */
-  
-  /* Promover a capa propia de renderizado para evitar repaints pesados */
-  will-change: scroll-position;
-  transform: translateZ(0);
-}
+    .modal-content.modal-calc-wide {
+      width: 620px;
+      max-width: 92vw;
+      max-height: 88vh;
+      
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      touch-action: pan-y !important;
+      overscroll-behavior-y: contain;
+      
+      will-change: scroll-position;
+      transform: translateZ(0);
+    }
 
-/* Evitar que las tarjetas internas o textos intercepten gestos táctiles */
-.modal-content.modal-calc-wide .calc-card,
-.modal-content.modal-calc-wide .calc-result-card,
-.modal-content.modal-calc-wide .calc-grid {
-  touch-action: pan-y !important;
-}
+    .modal-content.modal-calc-wide .calc-card,
+    .modal-content.modal-calc-wide .calc-result-card,
+    .modal-content.modal-calc-wide .calc-grid {
+      touch-action: pan-y !important;
+    }
 
-/* Permitir interacción inmediata en inputs */
-.modal-content.modal-calc-wide input {
-  touch-action: manipulation !important;
-}
+    .modal-content.modal-calc-wide input {
+      touch-action: manipulation !important;
+    }
 
     .modal-content.modal-horario-wide {
-  max-width: 1100px;
-  width: 95vw;
-  max-height: 90vh;
-  overflow-y: scroll !important;       /* El scroll vertical le pertenece al modal completo */
-  -webkit-overflow-scrolling: touch !important;
-  overscroll-behavior: contain;
-}
+      max-width: 1100px;
+      width: 95vw;
+      max-height: 90vh;
+      overflow-y: scroll !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain;
+    }
 
-/* Evita que el gesto de scroll salte al fondo (malla curricular) */
-.modal-overlay,
-.modal-content {
-  overscroll-behavior: contain !important;
-}
+    .modal-overlay,
+    .modal-content {
+      overscroll-behavior: contain !important;
+    }
 
-/* Clase de bloqueo total para el body cuando hay un modal abierto */
-body.modal-abierto {
-  overflow: hidden !important;
-  touch-action: none !important;
-}
-
+    body.modal-abierto {
+      overflow: hidden !important;
+      touch-action: none !important;
+    }
 
     .modal-overlay.active .modal-content {
       transform: translateY(0);
@@ -919,40 +929,40 @@ body.modal-abierto {
       color: #38bdf8;
     }
 
-.calc-target-advice {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  border-top: 1px solid #334155;
-  padding-top: 6px;
-  margin-top: 2px;
-  line-height: 1.35;
-  min-height: 38px; /* Reserva el espacio para 2 líneas completas siempre */
-}
+    .calc-target-advice {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+      margin-top: 2px;
+      line-height: 1.35;
+      min-height: 38px;
+    }
 
     .calc-score-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-.calc-emoji-badge {
-  font-size: 2.2rem;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  padding: 6px 12px;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+    .calc-emoji-badge {
+      font-size: 2.2rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 6px 12px;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-.calc-emoji-badge:hover {
-  transform: scale(1.15) rotate(4deg);
-}
+    .calc-emoji-badge:hover {
+      transform: scale(1.15) rotate(4deg);
+    }
 
     /* Horario Estilo Excel UCSG */
     .horario-toolbar {
@@ -1005,79 +1015,75 @@ body.modal-abierto {
     }
 
     .horario-field optgroup {
-  font-weight: 800;
-  color: #1e3a8a;
-  background-color: #f1f5f9;
-}
+      font-weight: 800;
+      color: #1e3a8a;
+      background-color: #f1f5f9;
+    }
 
-.horario-field option {
-  font-weight: 500;
-  color: #0f172a;
-  background-color: #ffffff;
-  padding: 4px 6px;
-}
+    .horario-field option {
+      font-weight: 500;
+      color: #0f172a;
+      background-color: #ffffff;
+      padding: 4px 6px;
+    }
 
-/* Cabecera institucional exclusiva para la foto descargada del horario */
-.horario-export-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: #ffffff;
-  border-bottom: 2px solid #0c2340; /* Línea de cierre del membrete */
-  margin-bottom: 0;                 /* Elimina la franja blanca divisoria */
-}
+    .horario-export-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #ffffff;
+      border-bottom: 2px solid #0c2340;
+      margin-bottom: 0;
+    }
 
-/* Evita que el contenedor de la captura agregue espacios extra */
-#contenedor-captura-horario {
-  background: #ffffff;
-  border: 1.5px solid #0c2340;
-  border-radius: 6px;
-  overflow: hidden;
-}
+    #contenedor-captura-horario {
+      background: #ffffff;
+      border: 1.5px solid #0c2340;
+      border-radius: 6px;
+      overflow: hidden;
+    }
 
-/* Quita el borde exterior redundante de la tabla para que encaje perfecto con el contenedor */
-.tabla-horario-excel {
-  width: 100% !important;        /* En computadoras/tablets se expande hasta el borde derecho exacto */
-  min-width: 860px !important;    /* En celulares garantiza que no se aplaste y permita scroll */
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 0.72rem;
-  background: #ffffff;
-  border-top: none;
-}
+    .tabla-horario-excel {
+      width: 100% !important;
+      min-width: 860px !important;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.72rem;
+      background: #ffffff;
+      border-top: none;
+    }
 
-.horario-export-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+    .horario-export-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-.horario-export-logo {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-}
+    .horario-export-logo {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
 
-.horario-export-info h3 {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #0f172a;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+    .horario-export-info h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-.horario-export-info p {
-  margin: 2px 0 0;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+    .horario-export-info p {
+      margin: 2px 0 0;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-    /* Input bloqueado con prefijo "Paralelo" */
     .paralelo-input-group {
       display: flex;
       align-items: center;
@@ -1112,17 +1118,15 @@ body.modal-abierto {
       text-transform: uppercase;
     }
 
-.horario-table-wrap {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto !important;
-  background: #ffffff;
-  border: 1.5px solid #0c2340;
-  border-radius: 6px;
-  position: relative;
-}
-
-
+    .horario-table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto !important;
+      background: #ffffff;
+      border: 1.5px solid #0c2340;
+      border-radius: 6px;
+      position: relative;
+    }
 
     .tabla-horario-excel thead th {
       background-color: #0c2340;
@@ -1135,7 +1139,6 @@ body.modal-abierto {
       letter-spacing: 0.5px;
     }
 
-    /* Definición milimétrica de anchos por columna */
     .col-hora { width: 100px; background-color: #1e293b !important; }
     .col-dia { width: calc((100% - 100px) / 6); }
 
@@ -1157,18 +1160,18 @@ body.modal-abierto {
       white-space: nowrap;
     }
 
-.td-clase {
-  font-weight: 600;
-  color: #0f172a;
-  padding: 4px 6px;
-  border: 1.5px solid rgba(15, 23, 42, 0.4) !important;
-  cursor: pointer;
-  transition: filter 0.15s;
-  overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
-  touch-action: auto !important;
-  user-select: none;
-}
+    .td-clase {
+      font-weight: 600;
+      color: #0f172a;
+      padding: 4px 6px;
+      border: 1.5px solid rgba(15, 23, 42, 0.4) !important;
+      cursor: pointer;
+      transition: filter 0.15s;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+      touch-action: auto !important;
+      user-select: none;
+    }
 
     .td-clase:hover {
       filter: brightness(0.92);
@@ -1190,7 +1193,6 @@ body.modal-abierto {
       margin-top: 2px;
     }
 
-    /* Footer Centrado */
     .app-creator-footer {
       max-width: 1540px;
       margin: 20px auto 10px;
@@ -1260,17 +1262,15 @@ body.modal-abierto {
     }
 
     @media (max-width: 640px) {
-    
-
-.modal-content.modal-horario-wide .modal-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .modal-content.modal-horario-wide .modal-header button.btn-photo {
-    width: 100%;
-    justify-content: center;
-  }
+      .modal-content.modal-horario-wide .modal-header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .modal-content.modal-horario-wide .modal-header button.btn-photo {
+        width: 100%;
+        justify-content: center;
+      }
 
       .dash-header {
         flex-direction: column;
@@ -1434,17 +1434,7 @@ body.modal-abierto {
 
         <div class="grid-container" id="grid-container">
           <svg id="svg-connections">
-            <defs>
-              <marker id="arrow-default" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <polygon points="0 0, 6 3, 0 6" fill="#1e293b" />
-              </marker>
-              <marker id="arrow-pre" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <polygon points="0 0, 6 3, 0 6" fill="#059669" />
-              </marker>
-              <marker id="arrow-post" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <polygon points="0 0, 6 3, 0 6" fill="#2563eb" />
-              </marker>
-            </defs>
+            
           </svg>
           <div class="semestres-grid" id="semestres-grid"></div>
         </div>
@@ -1514,7 +1504,7 @@ body.modal-abierto {
 
   <!-- Modal Calculadora -->
   <div class="modal-overlay" id="modal-calc-overlay" onclick="cerrarModalCalcExterno(event)">
-  <div class="modal-content modal-calc-wide" onclick="event.stopPropagation()">
+    <div class="modal-content modal-calc-wide" onclick="event.stopPropagation()">
       <button class="modal-close" onclick="cerrarModalCalculadora()">&times;</button>
       <div class="modal-header">
         <span class="modal-tag contextos">Escala Semestral /10</span>
@@ -1562,18 +1552,18 @@ body.modal-abierto {
         </div>
 
         <div class="calc-result-card">
-  <div class="calc-res-header">
-    <span>PROMEDIO FINAL OBTENIDO</span>
-    <span class="calc-res-status status-en-curso" id="calc-status-badge">En curso</span>
-  </div>
-  <div class="calc-score-row">
-    <div class="calc-res-num" id="calc-final-score">0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span></div>
-    <div class="calc-emoji-badge" id="calc-emoji" title="Estado de ánimo del semestre">📚</div>
-  </div>
-  <div class="calc-target-advice" id="calc-advice">
-    Ingresa las notas de tus parciales para proyectar cuánto necesitas para aprobar (Mínimo 7.00 / 10).
-  </div>
-</div>
+          <div class="calc-res-header">
+            <span>PROMEDIO FINAL OBTENIDO</span>
+            <span class="calc-res-status status-en-curso" id="calc-status-badge">En curso</span>
+          </div>
+          <div class="calc-score-row">
+            <div class="calc-res-num" id="calc-final-score">0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span></div>
+            <div class="calc-emoji-badge" id="calc-emoji" title="Estado de ánimo del semestre">📚</div>
+          </div>
+          <div class="calc-target-advice" id="calc-advice">
+            Ingresa las notas de tus parciales para proyectar cuánto necesitas para aprobar (Mínimo 7.00 / 10).
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn-modal-close-action" onclick="limpiarCalculadora()">Limpiar Campos</button>
@@ -1587,42 +1577,40 @@ body.modal-abierto {
     <div class="modal-content modal-horario-wide">
       <button class="modal-close" onclick="cerrarModalHorario()">&times;</button>
       
-<div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; padding-right: 36px; margin-bottom: 16px;">
-  <div>
-    <span class="modal-tag contextos" style="margin-bottom: 6px;">Planificador Semestral</span>
-    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-      <h2 style="margin: 0; font-size: clamp(1.1rem, 2vw, 1.25rem); font-weight: 800; color: #0f172a;">Horario de Clases Semanal</h2>
-      
-      <!-- Píldora del período junto al título -->
-      <div style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;">
-        <span style="font-size: 0.70rem; font-weight: 800; color: #475569;">PERÍODO:</span>
-        <select id="horario-semestre-periodo" onchange="guardarPeriodoSeleccionado()" style="border: none; background: transparent; font-weight: 800; font-size: 0.78rem; color: #0f172a; cursor: pointer; outline: none;">
-          <option value="Semestre A">Ciclo Ordinario A</option>
-          <option value="Semestre B">Ciclo Ordinario B</option>
-        </select>
-      </div>
-    </div>
-  </div>
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; padding-right: 36px; margin-bottom: 16px;">
+        <div>
+          <span class="modal-tag contextos" style="margin-bottom: 6px;">Planificador Semestral</span>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <h2 style="margin: 0; font-size: clamp(1.1rem, 2vw, 1.25rem); font-weight: 800; color: #0f172a;">Horario de Clases Semanal</h2>
+            
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+              <span style="font-size: 0.70rem; font-weight: 800; color: #475569;">PERÍODO:</span>
+              <select id="horario-semestre-periodo" onchange="guardarPeriodoSeleccionado()" style="border: none; background: transparent; font-weight: 800; font-size: 0.78rem; color: #0f172a; cursor: pointer; outline: none;">
+                <option value="Semestre A">Ciclo Ordinario A</option>
+                <option value="Semestre B">Ciclo Ordinario B</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-  <button class="btn-action btn-photo" onclick="descargarFotoHorario()" style="box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-      <circle cx="12" cy="13" r="4"></circle>
-    </svg>
-    Descargar Horario
-  </button>
-</div>
+        <button class="btn-action btn-photo" onclick="descargarFotoHorario()" style="box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+          Descargar Horario
+        </button>
+      </div>
 
       <div class="modal-body">
         <div class="horario-toolbar">
-  <div class="horario-form">
-    <div class="horario-field" style="grid-column: span 2;">
-      <label for="horario-materia-sel">Materia:</label>
-      <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
-      <input type="text" id="horario-materia-custom" placeholder="Nombre de materia" style="display:none; margin-top:4px;">
-    </div>
+          <div class="horario-form">
+            <div class="horario-field" style="grid-column: span 2;">
+              <label for="horario-materia-sel">Materia:</label>
+              <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
+              <input type="text" id="horario-materia-custom" placeholder="Nombre de materia" style="display:none; margin-top:4px;">
+            </div>
 
-            <!-- Paralelo protegido -->
             <div class="horario-field">
               <label>Paralelo:</label>
               <div class="paralelo-input-group">
@@ -1682,14 +1670,14 @@ body.modal-abierto {
         </div>
       </div>
 
-<div class="modal-footer" style="justify-content: space-between;">
-  <button class="btn-action btn-reset" onclick="limpiarTodoHorario()" style="font-size: 0.75rem; padding: 6px 12px;">
-    Borrar Todo
-  </button>
-  <button class="btn-modal-close-action" onclick="cerrarModalHorario()">
-    Cerrar
-  </button>
-</div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button class="btn-action btn-reset" onclick="limpiarTodoHorario()" style="font-size: 0.75rem; padding: 6px 12px;">
+          Borrar Todo
+        </button>
+        <button class="btn-modal-close-action" onclick="cerrarModalHorario()">
+          Cerrar
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2104,78 +2092,45 @@ body.modal-abierto {
       }
     }
 
-// Habilita el desplazamiento vertical fluido en móviles dentro de la calculadora
-function habilitarScrollTactilCalculadora() {
-  const modal = document.querySelector(".modal-content.modal-calc-wide");
-  if (!modal || modal.dataset.scrollIniciado) return;
-  modal.dataset.scrollIniciado = "true";
+    function habilitarScrollTactilHorario() {
+      const wrap = document.getElementById("contenedor-captura-horario");
+      const modal = document.querySelector(".modal-content.modal-horario-wide");
 
-  let startY = 0;
-  let scrollTopInicial = 0;
+      if (!wrap || !modal || wrap.dataset.scrollIniciado) return;
+      wrap.dataset.scrollIniciado = "true";
 
-  modal.addEventListener("touchstart", (e) => {
-    // Si el usuario está interactuando con un input numérico para escribir, no interferir
-    if (e.target.tagName === "INPUT") return;
-    if (e.touches.length !== 1) return;
+      let startY = 0;
+      let startX = 0;
+      let scrollTopInicial = 0;
+      let esGestoVertical = false;
+      let gestoDefinido = false;
 
-    startY = e.touches[0].clientY;
-    scrollTopInicial = modal.scrollTop;
-  }, { passive: true });
+      wrap.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 1) return;
+        startY = e.touches[0].clientY;
+        startX = e.touches[0].clientX;
+        scrollTopInicial = modal.scrollTop;
+        gestoDefinido = false;
+        esGestoVertical = false;
+      }, { passive: true });
 
-  modal.addEventListener("touchmove", (e) => {
-    if (e.target.tagName === "INPUT") return;
-    if (e.touches.length !== 1) return;
+      wrap.addEventListener("touchmove", (e) => {
+        if (e.touches.length !== 1) return;
+        const curY = e.touches[0].clientY;
+        const curX = e.touches[0].clientX;
+        const diffY = startY - curY;
+        const diffX = startX - curX;
 
-    const curY = e.touches[0].clientY;
-    const diffY = startY - curY;
+        if (!gestoDefinido && (Math.abs(diffY) > 6 || Math.abs(diffX) > 6)) {
+          esGestoVertical = Math.abs(diffY) > Math.abs(diffX);
+          gestoDefinido = true;
+        }
 
-    // Desplazar el modal directamente
-    modal.scrollTop = scrollTopInicial + diffY;
-  }, { passive: true });
-}
-
-// Habilita el desplazamiento vertical en móviles cuando el dedo está sobre la tabla
-function habilitarScrollTactilHorario() {
-  const wrap = document.getElementById("contenedor-captura-horario");
-  const modal = document.querySelector(".modal-content.modal-horario-wide");
-
-  if (!wrap || !modal || wrap.dataset.scrollIniciado) return;
-  wrap.dataset.scrollIniciado = "true";
-
-  let startY = 0;
-  let startX = 0;
-  let scrollTopInicial = 0;
-  let esGestoVertical = false;
-  let gestoDefinido = false;
-
-  wrap.addEventListener("touchstart", (e) => {
-    if (e.touches.length !== 1) return;
-    startY = e.touches[0].clientY;
-    startX = e.touches[0].clientX;
-    scrollTopInicial = modal.scrollTop;
-    gestoDefinido = false;
-    esGestoVertical = false;
-  }, { passive: true });
-
-  wrap.addEventListener("touchmove", (e) => {
-    if (e.touches.length !== 1) return;
-    const curY = e.touches[0].clientY;
-    const curX = e.touches[0].clientX;
-    const diffY = startY - curY;
-    const diffX = startX - curX;
-
-    // Determinar la intención del usuario en los primeros 6 píxeles de movimiento
-    if (!gestoDefinido && (Math.abs(diffY) > 6 || Math.abs(diffX) > 6)) {
-      esGestoVertical = Math.abs(diffY) > Math.abs(diffX);
-      gestoDefinido = true;
+        if (gestoDefinido && esGestoVertical) {
+          modal.scrollTop = scrollTopInicial + diffY;
+        }
+      }, { passive: true });
     }
-
-    // Si el usuario desliza hacia arriba o abajo, trasladamos el scroll al modal
-    if (gestoDefinido && esGestoVertical) {
-      modal.scrollTop = scrollTopInicial + diffY;
-    }
-  }, { passive: true });
-}
 
     function crearTarjetaMateria(mat) {
       if (!mat) {
@@ -2361,275 +2316,329 @@ function habilitarScrollTactilHorario() {
     }
 
     function drawTreeLinesWithGutterRouting(customSvg = null, customGrid = null) {
-      const svg = customSvg || document.getElementById("svg-connections");
-      const gridContainer = customGrid || document.getElementById("grid-container");
-      if (!svg || !gridContainer) return;
+  const svg = customSvg || document.getElementById("svg-connections");
+  const gridContainer = customGrid || document.getElementById("grid-container");
+  if (!svg || !gridContainer) return;
 
-      const docContext = svg.ownerDocument || document;
+  const docContext = svg.ownerDocument || document;
+  svg.innerHTML = "";
 
-      const defs = svg.querySelector("defs");
-      svg.innerHTML = "";
-      if (defs) svg.appendChild(defs);
+  const outgoing = {};
+  const incoming = {};
 
-      const outgoing = {};
-      const incoming = {};
+  datosActivos.conexiones.forEach(c => {
+    if (!outgoing[c.from]) outgoing[c.from] = [];
+    outgoing[c.from].push(c);
 
-      datosActivos.conexiones.forEach(c => {
-        if (!outgoing[c.from]) outgoing[c.from] = [];
-        outgoing[c.from].push(c);
+    if (!incoming[c.to]) incoming[c.to] = [];
+    incoming[c.to].push(c.from);
+  });
 
-        if (!incoming[c.to]) incoming[c.to] = [];
-        incoming[c.to].push(c.from);
+  const linesData = [];
+  const verticalSegments = [];
+  const ALTURA_FLECHA = 8; // Alto exacto del triángulo
+  const ANCHO_FLECHA = 5;  // Semi-ancho de la base
+
+  const fromIds = Object.keys(outgoing);
+  fromIds.forEach((fromId, fIndex) => {
+    const elFrom = docContext.getElementById(`mat-${fromId}`);
+    if (!elFrom) return;
+
+    const c1 = getBoxCoords(elFrom, gridContainer);
+    let x1 = c1.centerX;
+    const y1 = c1.bottom;
+
+    if (outgoing[fromId].some(conn => conn.side === "left")) {
+      x1 = c1.left + 16;
+    }
+
+    const dests = outgoing[fromId].map(conn => {
+      const elTo = docContext.getElementById(`mat-${conn.to}`);
+      if (!elTo) return null;
+      const c2 = getBoxCoords(elTo, gridContainer);
+
+      const totalIn = incoming[conn.to].length;
+      const inIdx = incoming[conn.to].indexOf(fromId);
+      let portOffset = conn.targetOffset || 0;
+      if (totalIn > 1 && portOffset === 0) {
+        portOffset = (inIdx - (totalIn - 1) / 2) * 28;
+      }
+
+      return {
+        id: conn.to,
+        el: elTo,
+        conn: conn,
+        x2: c2.centerX + portOffset,
+        y2: c2.top
+      };
+    }).filter(Boolean);
+
+    if (dests.length === 0) return;
+
+    // 1. Conexión directa
+    if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, gridContainer, docContext) && !dests[0].conn.side) {
+      verticalSegments.push({ x: x1, yMin: y1, yMax: dests[0].y2, owner: `${fromId}->${dests[0].id}` });
+      // La línea frena exactamente en la base del triángulo (y2 - ALTURA_FLECHA)
+      linesData.push({ 
+        type: "direct", 
+        x: x1, 
+        y1, 
+        y2: dests[0].y2 - ALTURA_FLECHA, 
+        puntaY: dests[0].y2, 
+        from: fromId, 
+        to: dests[0].id 
       });
+      return;
+    }
 
-      const linesData = [];
-      const verticalSegments = [];
+    const laneOffset = (fIndex % 3) * 8;
+    const midY = y1 + 22 + laneOffset;
 
-      const fromIds = Object.keys(outgoing);
-      fromIds.forEach((fromId, fIndex) => {
-        const elFrom = docContext.getElementById(`mat-${fromId}`);
-        if (!elFrom) return;
+    verticalSegments.push({ x: x1, yMin: y1, yMax: midY, owner: `${fromId}-stem` });
+    linesData.push({ type: "stem", x: x1, y1, y2: midY, from: fromId });
 
-        const c1 = getBoxCoords(elFrom, gridContainer);
-        let x1 = c1.centerX;
-        const y1 = c1.bottom;
+    dests.forEach(d => {
+      const isBlocked = isBoxObstructing(d.x2, midY, d.y2, gridContainer, docContext);
 
-        if (outgoing[fromId].some(conn => conn.side === "left")) {
-          x1 = c1.left + 16;
-        }
-
-        const dests = outgoing[fromId].map(conn => {
-          const elTo = docContext.getElementById(`mat-${conn.to}`);
-          if (!elTo) return null;
-          const c2 = getBoxCoords(elTo, gridContainer);
-
-          const totalIn = incoming[conn.to].length;
-          const inIdx = incoming[conn.to].indexOf(fromId);
-          let portOffset = conn.targetOffset || 0;
-          if (totalIn > 1 && portOffset === 0) {
-            portOffset = (inIdx - (totalIn - 1) / 2) * 28;
-          }
-
-          return {
-            id: conn.to,
-            el: elTo,
-            conn: conn,
-            x2: c2.centerX + portOffset,
-            y2: c2.top
-          };
-        }).filter(Boolean);
-
-        if (dests.length === 0) return;
-
-        if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, gridContainer, docContext) && !dests[0].conn.side) {
-          verticalSegments.push({ x: x1, yMin: y1, yMax: dests[0].y2, owner: `${fromId}->${dests[0].id}` });
-          linesData.push({ type: "direct", x: x1, y1, y2: dests[0].y2 - 6, from: fromId, to: dests[0].id });
-          return;
-        }
-
-        const laneOffset = (fIndex % 3) * 8;
-        const midY = y1 + 22 + laneOffset;
-
-        verticalSegments.push({ x: x1, yMin: y1, yMax: midY, owner: `${fromId}-stem` });
-        linesData.push({ type: "stem", x: x1, y1, y2: midY, from: fromId });
-
-        dests.forEach(d => {
-          const isBlocked = isBoxObstructing(d.x2, midY, d.y2, gridContainer, docContext);
-
-          if (!isBlocked && !d.conn.side) {
-            verticalSegments.push({ x: d.x2, yMin: midY, yMax: d.y2, owner: `${fromId}->${d.id}` });
-            linesData.push({ type: "branch-standard", x1, midY, x2: d.x2, y2: d.y2 - 6, from: fromId, to: d.id });
-          } else {
-            let corridorX;
-            if (d.conn.side === "left") {
-              corridorX = c1.left - 12;
-            } else if (d.conn.side === "right") {
-              corridorX = c1.right + 12;
-            } else if (d.x2 >= x1) {
-              corridorX = c1.right + 10;
-            } else {
-              corridorX = c1.left - 10;
-            }
-            const preEntryY = d.y2 - 20;
-
-            verticalSegments.push({ x: corridorX, yMin: midY, yMax: preEntryY, owner: `${fromId}->${d.id}` });
-            verticalSegments.push({ x: d.x2, yMin: preEntryY, yMax: d.y2, owner: `${fromId}->${d.id}` });
-
-            linesData.push({
-              type: "branch-gutter",
-              x1, midY,
-              corridorX,
-              preEntryY,
-              x2: d.x2,
-              y2: d.y2 - 6,
-              from: fromId,
-              to: d.id
-            });
-          }
+      if (!isBlocked && !d.conn.side) {
+        verticalSegments.push({ x: d.x2, yMin: midY, yMax: d.y2, owner: `${fromId}->${d.id}` });
+        linesData.push({ 
+          type: "branch-standard", 
+          x1, 
+          midY, 
+          x2: d.x2, 
+          y2: d.y2 - ALTURA_FLECHA, 
+          puntaY: d.y2, 
+          from: fromId, 
+          to: d.id 
         });
-      });
-
-      const R = 5;
-
-      linesData.forEach(item => {
-        const path = docContext.createElementNS("http://www.w3.org/2000/svg", "path");
-
-        if (item.type === "direct") {
-          path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
-          path.setAttribute("class", `circuit-line from-${item.from} to-${item.to}`);
-          path.setAttribute("data-from", item.from);
-          path.setAttribute("data-to", item.to);
-          path.setAttribute("marker-end", "url(#arrow-default)");
-        } else if (item.type === "stem") {
-          path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
-          path.setAttribute("class", `circuit-line stem from-${item.from}`);
-          path.setAttribute("data-from", item.from);
-        } else if (item.type === "branch-standard") {
-          const { x1, midY, x2, y2, from, to } = item;
-          const minX = Math.min(x1, x2);
-          const maxX = Math.max(x1, x2);
-
-          const collisions = [];
-          verticalSegments.forEach(v => {
-            if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
-            if (v.x > minX + 12 && v.x < maxX - 12) {
-              if (midY >= v.yMin + 2 && midY <= v.yMax - 2) {
-                collisions.push(v.x);
-              }
-            }
-          });
-
-          if (x1 < x2) collisions.sort((a, b) => a - b);
-          else collisions.sort((a, b) => b - a);
-
-          let d = `M ${x1} ${midY}`;
-          const dir = x2 > x1 ? 1 : -1;
-
-          collisions.forEach(cx => {
-            const startX = cx - dir * R;
-            const endX = cx + dir * R;
-            d += ` L ${startX} ${midY}`;
-            d += ` A ${R} ${R} 0 0 ${dir > 0 ? 1 : 0} ${endX} ${midY}`;
-          });
-
-          d += ` L ${x2} ${midY} L ${x2} ${y2}`;
-          path.setAttribute("d", d);
-          path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
-          path.setAttribute("data-from", from);
-          path.setAttribute("data-to", to);
-          path.setAttribute("marker-end", "url(#arrow-default)");
-        } else if (item.type === "branch-gutter") {
-          const { x1, midY, corridorX, preEntryY, x2, y2, from, to } = item;
-
-          let d = `M ${x1} ${midY}`;
-          const minX1 = Math.min(x1, corridorX);
-          const maxX1 = Math.max(x1, corridorX);
-          const coll1 = [];
-
-          verticalSegments.forEach(v => {
-            if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
-            if (v.x > minX1 + 12 && v.x < maxX1 - 12) {
-              if (midY >= v.yMin + 2 && midY <= v.yMax - 2) coll1.push(v.x);
-            }
-          });
-
-          if (x1 < corridorX) coll1.sort((a, b) => a - b);
-          else coll1.sort((a, b) => b - a);
-
-          const dir1 = corridorX > x1 ? 1 : -1;
-          coll1.forEach(cx => {
-            d += ` L ${cx - dir1 * R} ${midY} A ${R} ${R} 0 0 ${dir1 > 0 ? 1 : 0} ${cx + dir1 * R} ${midY}`;
-          });
-
-          d += ` L ${corridorX} ${midY} L ${corridorX} ${preEntryY}`;
-
-          const minX2 = Math.min(corridorX, x2);
-          const maxX2 = Math.max(corridorX, x2);
-          const coll2 = [];
-
-          verticalSegments.forEach(v => {
-            if (v.owner === `${from}->${to}`) return;
-            if (v.x > minX2 + 12 && v.x < maxX2 - 12) {
-              if (preEntryY >= v.yMin + 2 && preEntryY <= v.yMax - 2) coll2.push(v.x);
-            }
-          });
-
-          if (corridorX < x2) coll2.sort((a, b) => a - b);
-          else coll2.sort((a, b) => b - a);
-
-          const dir2 = x2 > corridorX ? 1 : -1;
-          coll2.forEach(cx => {
-            d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
-          });
-
-          d += ` L ${x2} ${preEntryY} L ${x2} ${y2}`;
-
-          path.setAttribute("d", d);
-          path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
-          path.setAttribute("data-from", from);
-          path.setAttribute("data-to", to);
-          path.setAttribute("marker-end", "url(#arrow-default)");
+      } else {
+        let corridorX;
+        if (d.conn.side === "left") {
+          corridorX = c1.left - 12;
+        } else if (d.conn.side === "right") {
+          corridorX = c1.right + 12;
+        } else if (d.x2 >= x1) {
+          corridorX = c1.right + 10;
+        } else {
+          corridorX = c1.left - 10;
         }
+        const preEntryY = d.y2 - 20;
 
-        svg.appendChild(path);
-      });
-    }
+        verticalSegments.push({ x: corridorX, yMin: midY, yMax: preEntryY, owner: `${fromId}->${d.id}` });
+        verticalSegments.push({ x: d.x2, yMin: preEntryY, yMax: d.y2, owner: `${fromId}->${d.id}` });
 
-    function highlightDependencies(id) {
-      const boxes = document.querySelectorAll(".materia-box");
-      const lines = document.querySelectorAll("path.circuit-line");
-
-      boxes.forEach(b => b.classList.add("dimmed"));
-      lines.forEach(l => l.classList.add("dimmed"));
-
-      const target = document.getElementById(`mat-${id}`);
-      if (target) target.classList.remove("dimmed");
-
-      const directPreSources = new Set();
-      document.querySelectorAll(`path.to-${id}`).forEach(line => {
-        line.classList.remove("dimmed");
-        line.classList.add("highlight-pre");
-        line.setAttribute("marker-end", "url(#arrow-pre)");
-
-        const preId = line.getAttribute("data-from");
-        if (preId) {
-          directPreSources.add(preId);
-          const preBox = document.getElementById(`mat-${preId}`);
-          if (preBox) preBox.classList.remove("dimmed");
-        }
-      });
-
-      directPreSources.forEach(preId => {
-        document.querySelectorAll(`path.stem.from-${preId}`).forEach(stemLine => {
-          stemLine.classList.remove("dimmed");
-          stemLine.classList.add("highlight-pre");
+        linesData.push({
+          type: "branch-gutter",
+          x1, 
+          midY,
+          corridorX,
+          preEntryY,
+          x2: d.x2,
+          y2: d.y2 - ALTURA_FLECHA,
+          puntaY: d.y2,
+          from: fromId,
+          to: d.id
         });
+      }
+    });
+  });
+
+  const R = 5;
+
+  linesData.forEach(item => {
+    const path = docContext.createElementNS("http://www.w3.org/2000/svg", "path");
+
+    if (item.type === "direct") {
+      path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
+      path.setAttribute("class", `circuit-line from-${item.from} to-${item.to}`);
+      path.setAttribute("data-from", item.from);
+      path.setAttribute("data-to", item.to);
+      svg.appendChild(path);
+
+      // Triángulo dibujado de forma explícita
+      const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      arrow.setAttribute("points", `${item.x - ANCHO_FLECHA},${item.y2} ${item.x + ANCHO_FLECHA},${item.y2} ${item.x},${item.puntaY}`);
+      arrow.setAttribute("class", `circuit-arrow from-${item.from} to-${item.to}`);
+      arrow.setAttribute("data-from", item.from);
+      arrow.setAttribute("data-to", item.to);
+      svg.appendChild(arrow);
+
+    } else if (item.type === "stem") {
+      path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
+      path.setAttribute("class", `circuit-line stem from-${item.from}`);
+      path.setAttribute("data-from", item.from);
+      svg.appendChild(path);
+
+    } else if (item.type === "branch-standard") {
+      const { x1, midY, x2, y2, puntaY, from, to } = item;
+      const minX = Math.min(x1, x2);
+      const maxX = Math.max(x1, x2);
+
+      const collisions = [];
+      verticalSegments.forEach(v => {
+        if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
+        if (v.x > minX + 12 && v.x < maxX - 12) {
+          if (midY >= v.yMin + 2 && midY <= v.yMax - 2) {
+            collisions.push(v.x);
+          }
+        }
       });
 
-      document.querySelectorAll(`path.from-${id}`).forEach(line => {
-        line.classList.remove("dimmed");
-        line.classList.add("highlight-post");
-        if (line.getAttribute("marker-end")) {
-          line.setAttribute("marker-end", "url(#arrow-post)");
-        }
+      if (x1 < x2) collisions.sort((a, b) => a - b);
+      else collisions.sort((a, b) => b - a);
 
-        const toId = line.getAttribute("data-to");
-        if (toId) {
-          const postBox = document.getElementById(`mat-${toId}`);
-          if (postBox) postBox.classList.remove("dimmed");
+      let d = `M ${x1} ${midY}`;
+      const dir = x2 > x1 ? 1 : -1;
+
+      collisions.forEach(cx => {
+        const startX = cx - dir * R;
+        const endX = cx + dir * R;
+        d += ` L ${startX} ${midY}`;
+        d += ` A ${R} ${R} 0 0 ${dir > 0 ? 1 : 0} ${endX} ${midY}`;
+      });
+
+      d += ` L ${x2} ${midY} L ${x2} ${y2}`;
+      path.setAttribute("d", d);
+      path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
+      path.setAttribute("data-from", from);
+      path.setAttribute("data-to", to);
+      svg.appendChild(path);
+
+      // Triángulo dibujado de forma explícita
+      const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      arrow.setAttribute("points", `${x2 - ANCHO_FLECHA},${y2} ${x2 + ANCHO_FLECHA},${y2} ${x2},${puntaY}`);
+      arrow.setAttribute("class", `circuit-arrow from-${from} to-${to}`);
+      arrow.setAttribute("data-from", from);
+      arrow.setAttribute("data-to", to);
+      svg.appendChild(arrow);
+
+    } else if (item.type === "branch-gutter") {
+      const { x1, midY, corridorX, preEntryY, x2, y2, puntaY, from, to } = item;
+
+      let d = `M ${x1} ${midY}`;
+      const minX1 = Math.min(x1, corridorX);
+      const maxX1 = Math.max(x1, corridorX);
+      const coll1 = [];
+
+      verticalSegments.forEach(v => {
+        if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
+        if (v.x > minX1 + 12 && v.x < maxX1 - 12) {
+          if (midY >= v.yMin + 2 && midY <= v.yMax - 2) coll1.push(v.x);
         }
       });
+
+      if (x1 < corridorX) coll1.sort((a, b) => a - b);
+      else coll1.sort((a, b) => b - a);
+
+      const dir1 = corridorX > x1 ? 1 : -1;
+      coll1.forEach(cx => {
+        d += ` L ${cx - dir1 * R} ${midY} A ${R} ${R} 0 0 ${dir1 > 0 ? 1 : 0} ${cx + dir1 * R} ${midY}`;
+      });
+
+      d += ` L ${corridorX} ${midY} L ${corridorX} ${preEntryY}`;
+
+      const minX2 = Math.min(corridorX, x2);
+      const maxX2 = Math.max(corridorX, x2);
+      const coll2 = [];
+
+      verticalSegments.forEach(v => {
+        if (v.owner === `${from}->${to}`) return;
+        if (v.x > minX2 + 12 && v.x < maxX2 - 12) {
+          if (preEntryY >= v.yMin + 2 && preEntryY <= v.yMax - 2) coll2.push(v.x);
+        }
+      });
+
+      if (corridorX < x2) coll2.sort((a, b) => a - b);
+      else coll2.sort((a, b) => b - a);
+
+      const dir2 = x2 > corridorX ? 1 : -1;
+      coll2.forEach(cx => {
+        d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
+      });
+
+      d += ` L ${x2} ${preEntryY} L ${x2} ${y2}`;
+
+      path.setAttribute("d", d);
+      path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
+      path.setAttribute("data-from", from);
+      path.setAttribute("data-to", to);
+      svg.appendChild(path);
+
+      // Triángulo dibujado de forma explícita
+      const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      arrow.setAttribute("points", `${x2 - ANCHO_FLECHA},${y2} ${x2 + ANCHO_FLECHA},${y2} ${x2},${puntaY}`);
+      arrow.setAttribute("class", `circuit-arrow from-${from} to-${to}`);
+      arrow.setAttribute("data-from", from);
+      arrow.setAttribute("data-to", to);
+      svg.appendChild(arrow);
     }
+  });
+}
 
-    function resetDependencies() {
-      document.querySelectorAll(".materia-box").forEach(b => b.classList.remove("dimmed"));
-      document.querySelectorAll("path.circuit-line").forEach(l => {
-        l.classList.remove("dimmed", "highlight-pre", "highlight-post");
-        if (l.getAttribute("marker-end")) {
-          l.setAttribute("marker-end", "url(#arrow-default)");
-        }
-      });
+function highlightDependencies(id) {
+  const boxes = document.querySelectorAll(".materia-box");
+  const lines = document.querySelectorAll("path.circuit-line");
+  const arrows = document.querySelectorAll("polygon.circuit-arrow");
+
+  boxes.forEach(b => b.classList.add("dimmed"));
+  lines.forEach(l => l.classList.add("dimmed"));
+  arrows.forEach(a => a.classList.add("dimmed"));
+
+  const target = document.getElementById(`mat-${id}`);
+  if (target) target.classList.remove("dimmed");
+
+  const directPreSources = new Set();
+  document.querySelectorAll(`path.to-${id}`).forEach(line => {
+    line.classList.remove("dimmed");
+    line.classList.add("highlight-pre");
+
+    const preId = line.getAttribute("data-from");
+    if (preId) {
+      directPreSources.add(preId);
+      const preBox = document.getElementById(`mat-${preId}`);
+      if (preBox) preBox.classList.remove("dimmed");
     }
+  });
+
+  document.querySelectorAll(`polygon.to-${id}`).forEach(arrow => {
+    arrow.classList.remove("dimmed");
+    arrow.classList.add("highlight-pre");
+  });
+
+  directPreSources.forEach(preId => {
+    document.querySelectorAll(`path.stem.from-${preId}`).forEach(stemLine => {
+      stemLine.classList.remove("dimmed");
+      stemLine.classList.add("highlight-pre");
+    });
+  });
+
+  document.querySelectorAll(`path.from-${id}`).forEach(line => {
+    line.classList.remove("dimmed");
+    line.classList.add("highlight-post");
+
+    const toId = line.getAttribute("data-to");
+    if (toId) {
+      const postBox = document.getElementById(`mat-${toId}`);
+      if (postBox) postBox.classList.remove("dimmed");
+    }
+  });
+
+  document.querySelectorAll(`polygon.from-${id}`).forEach(arrow => {
+    arrow.classList.remove("dimmed");
+    arrow.classList.add("highlight-post");
+  });
+}
+
+function resetDependencies() {
+  document.querySelectorAll(".materia-box").forEach(b => b.classList.remove("dimmed"));
+  document.querySelectorAll("path.circuit-line").forEach(l => {
+    l.classList.remove("dimmed", "highlight-pre", "highlight-post");
+  });
+  document.querySelectorAll("polygon.circuit-arrow").forEach(a => {
+    a.classList.remove("dimmed", "highlight-pre", "highlight-post");
+  });
+}
 
     function reiniciarProgreso() {
       if (confirm(`¿Deseas restablecer el estado de las asignaturas para ${datosActivos.nombre}?`)) {
@@ -2725,26 +2734,22 @@ function habilitarScrollTactilHorario() {
       }
     }
 
-function abrirModalCalculadora() {
-  document.getElementById("modal-calc-overlay").classList.add("active");
-  document.body.classList.add("modal-abierto");
-  calcularNotas();
-  
-  // ELIMINA o comenta esta línea:
-  // habilitarScrollTactilCalculadora();
-}
+    function abrirModalCalculadora() {
+      document.getElementById("modal-calc-overlay").classList.add("active");
+      document.body.classList.add("modal-abierto");
+      calcularNotas();
+    }
 
     function cerrarModalCalculadora() {
-  document.getElementById("modal-calc-overlay").classList.remove("active");
-  document.body.classList.remove("modal-abierto"); // Libera el fondo
-}
+      document.getElementById("modal-calc-overlay").classList.remove("active");
+      document.body.classList.remove("modal-abierto");
+    }
 
-function cerrarModalCalcExterno(event) {
-  // Solo se cierra si se hace clic intencionalmente en el fondo oscuro exterior
-  if (event.target === document.getElementById("modal-calc-overlay")) {
-    cerrarModalCalculadora();
-  }
-}
+    function cerrarModalCalcExterno(event) {
+      if (event.target === document.getElementById("modal-calc-overlay")) {
+        cerrarModalCalculadora();
+      }
+    }
 
     function limpiarCalculadora() {
       document.getElementById("p1-form").value = "";
@@ -2764,118 +2769,118 @@ function cerrarModalCalcExterno(event) {
     }
 
     function calcularNotas() {
-  const p1Form = parseInput(document.getElementById("p1-form").value);
-  const p1Eval = parseInput(document.getElementById("p1-eval").value);
-  const p2Form = parseInput(document.getElementById("p2-form").value);
-  const p2Eval = parseInput(document.getElementById("p2-eval").value);
-  const mejora = parseInput(document.getElementById("mejora-nota").value);
+      const p1Form = parseInput(document.getElementById("p1-form").value);
+      const p1Eval = parseInput(document.getElementById("p1-eval").value);
+      const p2Form = parseInput(document.getElementById("p2-form").value);
+      const p2Eval = parseInput(document.getElementById("p2-eval").value);
+      const mejora = parseInput(document.getElementById("mejora-nota").value);
 
-  let p1Total = null;
-  if (p1Form !== null && p1Eval !== null) {
-    p1Total = (p1Form * 0.5) + (p1Eval * 0.5);
-    document.getElementById("p1-total").textContent = p1Total.toFixed(2);
-  } else if (p1Form !== null || p1Eval !== null) {
-    const val = ((p1Form || 0) * 0.5) + ((p1Eval || 0) * 0.5);
-    document.getElementById("p1-total").textContent = val.toFixed(2);
-  } else {
-    document.getElementById("p1-total").textContent = "0.00";
-  }
-
-  let p2Total = null;
-  if (p2Form !== null && p2Eval !== null) {
-    p2Total = (p2Form * 0.5) + (p2Eval * 0.5);
-    document.getElementById("p2-total").textContent = p2Total.toFixed(2);
-  } else if (p2Form !== null || p2Eval !== null) {
-    const val = ((p2Form || 0) * 0.5) + ((p2Eval || 0) * 0.5);
-    document.getElementById("p2-total").textContent = val.toFixed(2);
-  } else {
-    document.getElementById("p2-total").textContent = "0.00";
-  }
-
-  const scoreEl = document.getElementById("calc-final-score");
-  const statusBadge = document.getElementById("calc-status-badge");
-  const adviceEl = document.getElementById("calc-advice");
-  const emojiEl = document.getElementById("calc-emoji"); // Elemento del emoji
-
-  if (p1Total !== null && p2Total !== null) {
-    let finalP1 = p1Total;
-    let finalP2 = p2Total;
-    let reemplazoTexto = "";
-
-    if (mejora !== null) {
-      if (finalP1 <= finalP2 && mejora > finalP1) {
-        finalP1 = mejora;
-        reemplazoTexto = ` (Se reemplazó P1 con la nota de mejoramiento: ${mejora.toFixed(2)})`;
-      } else if (finalP2 < finalP1 && mejora > finalP2) {
-        finalP2 = mejora;
-        reemplazoTexto = ` (Se reemplazó P2 con la nota de mejoramiento: ${mejora.toFixed(2)})`;
+      let p1Total = null;
+      if (p1Form !== null && p1Eval !== null) {
+        p1Total = (p1Form * 0.5) + (p1Eval * 0.5);
+        document.getElementById("p1-total").textContent = p1Total.toFixed(2);
+      } else if (p1Form !== null || p1Eval !== null) {
+        const val = ((p1Form || 0) * 0.5) + ((p1Eval || 0) * 0.5);
+        document.getElementById("p1-total").textContent = val.toFixed(2);
+      } else {
+        document.getElementById("p1-total").textContent = "0.00";
       }
-    }
 
-    const promedioFinal = (finalP1 + finalP2) / 2;
-    scoreEl.innerHTML = `${promedioFinal.toFixed(2)} <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+      let p2Total = null;
+      if (p2Form !== null && p2Eval !== null) {
+        p2Total = (p2Form * 0.5) + (p2Eval * 0.5);
+        document.getElementById("p2-total").textContent = p2Total.toFixed(2);
+      } else if (p2Form !== null || p2Eval !== null) {
+        const val = ((p2Form || 0) * 0.5) + ((p2Eval || 0) * 0.5);
+        document.getElementById("p2-total").textContent = val.toFixed(2);
+      } else {
+        document.getElementById("p2-total").textContent = "0.00";
+      }
 
-    if (promedioFinal >= 7.00) {
-      statusBadge.textContent = "Aprobado";
-      statusBadge.className = "calc-res-status status-aprobado";
-      adviceEl.innerHTML = `¡Felicidades! Superaste el puntaje mínimo de 7.00 con un promedio final de <strong>${promedioFinal.toFixed(2)}</strong>.${reemplazoTexto}`;
-      if (emojiEl) emojiEl.textContent = promedioFinal >= 9.0 ? "🥳" : (promedioFinal >= 8.0 ? "😎" : "😌");
-    } else {
-      statusBadge.textContent = "Reprobado";
-      statusBadge.className = "calc-res-status status-reprobado";
-      if (mejora === null) {
-        const menor = Math.min(p1Total, p2Total);
-        const neededEnMejora = 14.00 - Math.max(p1Total, p2Total);
-        if (neededEnMejora <= 10.00) {
-          adviceEl.innerHTML = `Promedio insuficiente (${promedioFinal.toFixed(2)}). Para aprobar, necesitas rendir el examen de mejoramiento y obtener al menos <strong>${neededEnMejora.toFixed(2)} / 10</strong> para reemplazar el parcial más bajo (${menor.toFixed(2)}).`;
-          if (emojiEl) emojiEl.textContent = "🫣";
-        } else {
-          adviceEl.innerHTML = `Promedio insuficiente (${promedioFinal.toFixed(2)}). Aún con 10/10 en examen de mejoramiento no alcanzas el promedio mínimo de 7.00.`;
-          if (emojiEl) emojiEl.textContent = "💀";
+      const scoreEl = document.getElementById("calc-final-score");
+      const statusBadge = document.getElementById("calc-status-badge");
+      const adviceEl = document.getElementById("calc-advice");
+      const emojiEl = document.getElementById("calc-emoji");
+
+      if (p1Total !== null && p2Total !== null) {
+        let finalP1 = p1Total;
+        let finalP2 = p2Total;
+        let reemplazoTexto = "";
+
+        if (mejora !== null) {
+          if (finalP1 <= finalP2 && mejora > finalP1) {
+            finalP1 = mejora;
+            reemplazoTexto = ` (Se reemplazó P1 con la nota de mejoramiento: ${mejora.toFixed(2)})`;
+          } else if (finalP2 < finalP1 && mejora > finalP2) {
+            finalP2 = mejora;
+            reemplazoTexto = ` (Se reemplazó P2 con la nota de mejoramiento: ${mejora.toFixed(2)})`;
+          }
         }
-      } else {
-        adviceEl.innerHTML = `Aun aplicando el examen de mejoramiento, el promedio final es de <strong>${promedioFinal.toFixed(2)}</strong> (Inferior al mínimo de 7.00).`;
-        if (emojiEl) emojiEl.textContent = "💀";
+
+        const promedioFinal = (finalP1 + finalP2) / 2;
+        scoreEl.innerHTML = `${promedioFinal.toFixed(2)} <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+
+        if (promedioFinal >= 7.00) {
+          statusBadge.textContent = "Aprobado";
+          statusBadge.className = "calc-res-status status-aprobado";
+          adviceEl.innerHTML = `¡Felicidades! Superaste el puntaje mínimo de 7.00 con un promedio final de <strong>${promedioFinal.toFixed(2)}</strong>.${reemplazoTexto}`;
+          if (emojiEl) emojiEl.textContent = promedioFinal >= 9.0 ? "🥳" : (promedioFinal >= 8.0 ? "😎" : "😌");
+        } else {
+          statusBadge.textContent = "Reprobado";
+          statusBadge.className = "calc-res-status status-reprobado";
+          if (mejora === null) {
+            const menor = Math.min(p1Total, p2Total);
+            const neededEnMejora = 14.00 - Math.max(p1Total, p2Total);
+            if (neededEnMejora <= 10.00) {
+              adviceEl.innerHTML = `Promedio insuficiente (${promedioFinal.toFixed(2)}). Para aprobar, necesitas rendir el examen de mejoramiento y obtener al menos <strong>${neededEnMejora.toFixed(2)} / 10</strong> para reemplazar el parcial más bajo (${menor.toFixed(2)}).`;
+              if (emojiEl) emojiEl.textContent = "🫣";
+            } else {
+              adviceEl.innerHTML = `Promedio insuficiente (${promedioFinal.toFixed(2)}). Aún con 10/10 en examen de mejoramiento no alcanzas el promedio mínimo de 7.00.`;
+              if (emojiEl) emojiEl.textContent = "💀";
+            }
+          } else {
+            adviceEl.innerHTML = `Aun aplicando el examen de mejoramiento, el promedio final es de <strong>${promedioFinal.toFixed(2)}</strong> (Inferior al mínimo de 7.00).`;
+            if (emojiEl) emojiEl.textContent = "💀";
+          }
+        }
+        return;
       }
+
+      if (p1Total !== null && p2Total === null) {
+        scoreEl.innerHTML = `-- <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+        statusBadge.textContent = "En curso";
+        statusBadge.className = "calc-res-status status-en-curso";
+        if (emojiEl) emojiEl.textContent = p1Total >= 7.0 ? "🧐" : "😰";
+
+        const neededP2Total = 14.00 - p1Total;
+
+        if (p2Form !== null && p2Eval === null) {
+          const neededEval = (neededP2Total - (p2Form * 0.5)) / 0.5;
+          if (neededEval <= 0) {
+            adviceEl.innerHTML = `Con tu componente formativo de P2 (${p2Form.toFixed(2)}), ya aseguras la aprobación de la materia sin importar la nota del examen de segundo parcial.`;
+            if (emojiEl) emojiEl.textContent = "🏖️";
+          } else if (neededEval <= 10) {
+            adviceEl.innerHTML = `Para aprobar directamente con 7.00/10, necesitas obtener al menos <strong>${neededEval.toFixed(2)} / 10</strong> en la Evaluación del Segundo Parcial.`;
+          } else {
+            adviceEl.innerHTML = `Con tu formativo de P2 (${p2Form.toFixed(2)}), necesitas más de 10 en el examen de P2. Deberás recurrir al examen de mejoramiento.`;
+            if (emojiEl) emojiEl.textContent = "🫣";
+          }
+        } else {
+          if (neededP2Total <= 10.00) {
+            adviceEl.innerHTML = `Tienes P1 completo con <strong>${p1Total.toFixed(2)}/10</strong>. Necesitas que el total de tu Segundo Parcial sea de al menos <strong>${neededP2Total.toFixed(2)} / 10</strong> para aprobar directamente.`;
+          } else {
+            adviceEl.innerHTML = `P1 es bajo (${p1Total.toFixed(2)}). Aunque saques 10 en P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
+          }
+        }
+        return;
+      }
+
+      scoreEl.innerHTML = `0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
+      statusBadge.textContent = "En curso";
+      statusBadge.className = "calc-res-status status-en-curso";
+      if (emojiEl) emojiEl.textContent = "📚";
+      adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
-    return;
-  }
-
-  if (p1Total !== null && p2Total === null) {
-    scoreEl.innerHTML = `-- <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
-    statusBadge.textContent = "En curso";
-    statusBadge.className = "calc-res-status status-en-curso";
-    if (emojiEl) emojiEl.textContent = p1Total >= 7.0 ? "🧐" : "😰";
-
-    const neededP2Total = 14.00 - p1Total;
-
-    if (p2Form !== null && p2Eval === null) {
-      const neededEval = (neededP2Total - (p2Form * 0.5)) / 0.5;
-      if (neededEval <= 0) {
-        adviceEl.innerHTML = `Con tu componente formativo de P2 (${p2Form.toFixed(2)}), ya aseguras la aprobación de la materia sin importar la nota del examen de segundo parcial.`;
-        if (emojiEl) emojiEl.textContent = "🏖️";
-      } else if (neededEval <= 10) {
-        adviceEl.innerHTML = `Para aprobar directamente con 7.00/10, necesitas obtener al menos <strong>${neededEval.toFixed(2)} / 10</strong> en la Evaluación del Segundo Parcial.`;
-      } else {
-        adviceEl.innerHTML = `Con tu formativo de P2 (${p2Form.toFixed(2)}), necesitas más de 10 en el examen de P2. Deberás recurrir al examen de mejoramiento.`;
-        if (emojiEl) emojiEl.textContent = "🫣";
-      }
-    } else {
-      if (neededP2Total <= 10.00) {
-        adviceEl.innerHTML = `Tienes P1 completo con <strong>${p1Total.toFixed(2)}/10</strong>. Necesitas que el total de tu Segundo Parcial sea de al menos <strong>${neededP2Total.toFixed(2)} / 10</strong> para aprobar directamente.`;
-      } else {
-        adviceEl.innerHTML = `P1 es bajo (${p1Total.toFixed(2)}). Aunque saques 10 en P2, requerirás rendir examen de mejoramiento para reemplazar la nota de P1.`;
-      }
-    }
-    return;
-  }
-
-  scoreEl.innerHTML = `0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span>`;
-  statusBadge.textContent = "En curso";
-  statusBadge.className = "calc-res-status status-en-curso";
-  if (emojiEl) emojiEl.textContent = "📚";
-  adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
-}
 
     async function generarFotoMalla() {
       const btn = document.getElementById("btn-exportar-foto");
@@ -2962,51 +2967,41 @@ function cerrarModalCalcExterno(event) {
       }
     }
 
-    // Obtiene el año actual del sistema dinámicamente
-const ANIO_ACTUAL = new Date().getFullYear();
+    const ANIO_ACTUAL = new Date().getFullYear();
 
-function inicializarPeriodoHorario() {
-  const selPeriodo = document.getElementById("horario-semestre-periodo");
-  if (!selPeriodo) return;
+    function inicializarPeriodoHorario() {
+      const selPeriodo = document.getElementById("horario-semestre-periodo");
+      if (!selPeriodo) return;
 
-  const guardado = localStorage.getItem("horario_periodo_seleccionado");
-  if (guardado) {
-    selPeriodo.value = guardado;
-  } else {
-    // Si el mes está entre mayo (4) y septiembre (8), sugiere Ciclo A; de lo contrario, Ciclo B
-    const mes = new Date().getMonth();
-    selPeriodo.value = (mes >= 4 && mes <= 8) ? "Semestre A" : "Semestre B";
-  }
-}
+      const guardado = localStorage.getItem("horario_periodo_seleccionado");
+      if (guardado) {
+        selPeriodo.value = guardado;
+      } else {
+        const mes = new Date().getMonth();
+        selPeriodo.value = (mes >= 4 && mes <= 8) ? "Semestre A" : "Semestre B";
+      }
+    }
 
-function guardarPeriodoSeleccionado() {
-  const selPeriodo = document.getElementById("horario-semestre-periodo");
-  if (selPeriodo) {
-    localStorage.setItem("horario_periodo_seleccionado", selPeriodo.value);
-  }
-}
+    function guardarPeriodoSeleccionado() {
+      const selPeriodo = document.getElementById("horario-semestre-periodo");
+      if (selPeriodo) {
+        localStorage.setItem("horario_periodo_seleccionado", selPeriodo.value);
+      }
+    }
 
-    // --- LÓGICA DEL HORARIO ESTILO EXCEL UCSG ---
     const DIAS_HORARIO = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-    // Paleta de 16 colores pastel distintivos
     const PALETA_HORARIO = [
-      { bg: "#fde2d2", bdr: "#f5a87e" }, // Durazno / Coral pastel
-      { bg: "#fef9c3", bdr: "#facc15" }, // Amarillo cálido
-      { bg: "#dcfce7", bdr: "#86efac" }, // Menta / Verde pastel
-      { bg: "#e9d5ff", bdr: "#c084fc" }, // Violeta suave
-      { bg: "#e0f2fe", bdr: "#7dd3fc" }, // Azul cielo
-      { bg: "#fce7f3", bdr: "#f472b6" }, // Rosa pastel
-      { bg: "#ccfbf1", bdr: "#5eead4" }, // Aguamarina
-      { bg: "#ffedd5", bdr: "#fdba74" }, // Naranja pastel
-      { bg: "#ecfccb", bdr: "#a3e635" }, // Lima suave
-      { bg: "#fee2e2", bdr: "#fca5a5" }, // Rojo suave / Salmón
-      { bg: "#f3e8ff", bdr: "#d8b4fe" }, // Lavanda
-      { bg: "#e0e7ff", bdr: "#818cf8" }, // Índigo claro
-      { bg: "#d1fae5", bdr: "#34d399" }, // Esmeralda suave
-      { bg: "#fef08a", bdr: "#eab308" }, // Amarillo mostaza pastel
-      { bg: "#e2e8f0", bdr: "#94a3b8" }, // Gris plata azulado
-      { bg: "#fed7aa", bdr: "#fb923c" }  // Ámbar pastel
+      { bg: "#fed7aa", bdr: "#f97316" },
+      { bg: "#bbf7d0", bdr: "#22c55e" },
+      { bg: "#fef08a", bdr: "#eab308" },
+      { bg: "#e9d5ff", bdr: "#a855f7" },
+      { bg: "#bae6fd", bdr: "#0284c7" },
+      { bg: "#fbcfe8", bdr: "#ec4899" },
+      { bg: "#99f6e4", bdr: "#14b8a6" },
+      { bg: "#fecaca", bdr: "#ef4444" },
+      { bg: "#ddd6fe", bdr: "#6366f1" },
+      { bg: "#d9f99d", bdr: "#84cc16" }
     ];
 
     let horarioBloques = JSON.parse(localStorage.getItem("horario_universitario_ucsg") || "[]");
@@ -3048,7 +3043,6 @@ function guardarPeriodoSeleccionado() {
       actualizarHoraFinAutomatica();
     }
 
-    // Actualiza automáticamente la hora de fin sumando 2 horas (4 slots de 30 mins)
     function actualizarHoraFinAutomatica() {
       const horaIni = document.getElementById("horario-inicio").value;
       const indexIni = SLOTS_HORARIO.findIndex(s => s.inicio === horaIni);
@@ -3059,41 +3053,39 @@ function guardarPeriodoSeleccionado() {
     }
 
     function poblarMateriasDisponibles() {
-  const sel = document.getElementById("horario-materia-sel");
-  sel.innerHTML = "";
+      const sel = document.getElementById("horario-materia-sel");
+      sel.innerHTML = "";
 
-  // Agrupar materias por ciclo
-  datosActivos.estructura.forEach(sem => {
-    const materiasDelCiclo = [...sem.materias, sem.practica].filter(Boolean);
+      datosActivos.estructura.forEach(sem => {
+        const materiasDelCiclo = [...sem.materias, sem.practica].filter(Boolean);
 
-    if (materiasDelCiclo.length > 0) {
-      const optgroup = document.createElement("optgroup");
-      optgroup.label = `Ciclo ${sem.ciclo}`;
+        if (materiasDelCiclo.length > 0) {
+          const optgroup = document.createElement("optgroup");
+          optgroup.label = `Ciclo ${sem.ciclo}`;
 
-      materiasDelCiclo.forEach(m => {
-        const option = document.createElement("option");
-        option.value = m.nombre;
-        option.textContent = m.nombre;
-        optgroup.appendChild(option);
+          materiasDelCiclo.forEach(m => {
+            const option = document.createElement("option");
+            option.value = m.nombre;
+            option.textContent = m.nombre;
+            optgroup.appendChild(option);
+          });
+
+          sel.appendChild(optgroup);
+        }
       });
 
-      sel.appendChild(optgroup);
+      const optgroupCustom = document.createElement("optgroup");
+      optgroupCustom.label = "Otras Asignaturas";
+      
+      const optionCustom = document.createElement("option");
+      optionCustom.value = "__custom__";
+      optionCustom.textContent = "+ Escribir otra materia...";
+      optgroupCustom.appendChild(optionCustom);
+      
+      sel.appendChild(optgroupCustom);
+
+      verificarMateriaCustom();
     }
-  });
-
-  // Grupo final para materias electivas o personalizadas
-  const optgroupCustom = document.createElement("optgroup");
-  optgroupCustom.label = "Otras Asignaturas";
-  
-  const optionCustom = document.createElement("option");
-  optionCustom.value = "__custom__";
-  optionCustom.textContent = "+ Escribir otra materia...";
-  optgroupCustom.appendChild(optionCustom);
-  
-  sel.appendChild(optgroupCustom);
-
-  verificarMateriaCustom();
-}
 
     function verificarMateriaCustom() {
       const sel = document.getElementById("horario-materia-sel");
@@ -3101,25 +3093,21 @@ function guardarPeriodoSeleccionado() {
       custom.style.display = sel.value === "__custom__" ? "block" : "none";
     }
 
-    // Hash DJB2 con salto primo para dispersar colores y evitar que materias del mismo ciclo compartan color
-function obtenerColorMateria(nombreMateria) {
-  // 1. Obtener la lista de nombres únicos de materias presentes en el horario en su orden de aparición
-  const materiasRegistradas = [];
-  horarioBloques.forEach(b => {
-    if (!materiasRegistradas.includes(b.materia)) {
-      materiasRegistradas.push(b.materia);
+    function obtenerColorMateria(nombreMateria) {
+      const materiasRegistradas = [];
+      horarioBloques.forEach(b => {
+        if (!materiasRegistradas.includes(b.materia)) {
+          materiasRegistradas.push(b.materia);
+        }
+      });
+
+      let index = materiasRegistradas.indexOf(nombreMateria);
+      if (index === -1) {
+        index = materiasRegistradas.length;
+      }
+
+      return PALETA_HORARIO[index % PALETA_HORARIO.length];
     }
-  });
-
-  // 2. Si la materia aún no está en la lista (por render inmediato), agregarla
-  let index = materiasRegistradas.indexOf(nombreMateria);
-  if (index === -1) {
-    index = materiasRegistradas.length;
-  }
-
-  // 3. Asignar de forma secuencial garantizando colores 100% distintos
-  return PALETA_HORARIO[index % PALETA_HORARIO.length];
-}
 
     function agregarBloqueHorario() {
       const selMateria = document.getElementById("horario-materia-sel");
@@ -3232,20 +3220,20 @@ function obtenerColorMateria(nombreMateria) {
       });
     }
 
-function abrirModalHorario() {
-  poblarMateriasDisponibles();
-  poblarSelectoresTiempo();
-  inicializarPeriodoHorario();
-  renderizarTablaHorario();
-  document.getElementById("modal-horario-overlay").classList.add("active");
-  document.body.classList.add("modal-abierto"); // Bloquea el fondo
-  habilitarScrollTactilHorario();
-}
+    function abrirModalHorario() {
+      poblarMateriasDisponibles();
+      poblarSelectoresTiempo();
+      inicializarPeriodoHorario();
+      renderizarTablaHorario();
+      document.getElementById("modal-horario-overlay").classList.add("active");
+      document.body.classList.add("modal-abierto");
+      habilitarScrollTactilHorario();
+    }
 
     function cerrarModalHorario() {
-  document.getElementById("modal-horario-overlay").classList.remove("active");
-  document.body.classList.remove("modal-abierto"); // Libera el fondo
-}
+      document.getElementById("modal-horario-overlay").classList.remove("active");
+      document.body.classList.remove("modal-abierto");
+    }
 
     function cerrarModalHorarioExterno(event) {
       if (event.target.id === "modal-horario-overlay") {
@@ -3253,96 +3241,91 @@ function abrirModalHorario() {
       }
     }
 
-async function descargarFotoHorario() {
-  const contenedor = document.getElementById("contenedor-captura-horario");
-  if (!contenedor) return;
+    async function descargarFotoHorario() {
+      const contenedor = document.getElementById("contenedor-captura-horario");
+      if (!contenedor) return;
 
-  if (horarioBloques.length === 0) {
-    alert("Agrega al menos una materia a tu horario antes de descargar la imagen.");
-    return;
-  }
-
-  // 1. Obtener período seleccionado y año dinámico
-  const selPeriodo = document.getElementById("horario-semestre-periodo");
-  const periodoTexto = selPeriodo ? selPeriodo.value : "Semestre A";
-  const anioActual = new Date().getFullYear();
-  const membretePeriodo = `HORARIO DE CLASES • ${periodoTexto.toUpperCase()} ${anioActual}`;
-
-  // 2. Umbral mínimo: 15:00 (3:00 PM) o la última clase si pasa de esa hora
-  let horaCorte = "15:00";
-  horarioBloques.forEach(b => {
-    if (b.fin > horaCorte) {
-      horaCorte = b.fin;
-    }
-  });
-
-  let targetSlotIdx = SLOTS_HORARIO.findIndex(s => s.fin === horaCorte);
-  if (targetSlotIdx === -1) targetSlotIdx = SLOTS_HORARIO.length - 1;
-  const limiteCorteIdx = Math.min(targetSlotIdx + 1, SLOTS_HORARIO.length - 1);
-
-  // 3. Obtener el ancho real total de la tabla (860px mínimo) para evitar recortes en celulares
-  const tablaEl = contenedor.querySelector(".tabla-horario-excel");
-  const anchoTotalReal = Math.max(tablaEl ? tablaEl.offsetWidth : 880, 880);
-
-  try {
-    const canvas = await html2canvas(contenedor, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-      useCORS: true,
-      width: anchoTotalReal,
-      windowWidth: anchoTotalReal,
-      onclone: (clonedDoc) => {
-        const clonedContenedor = clonedDoc.getElementById("contenedor-captura-horario");
-        
-        if (clonedContenedor) {
-          // Forzar al contenedor clonado a no tener scroll y expandirse al 100% de las columnas
-          clonedContenedor.style.width = `${anchoTotalReal}px`;
-          clonedContenedor.style.minWidth = `${anchoTotalReal}px`;
-          clonedContenedor.style.overflow = "visible";
-
-          const headerExport = clonedDoc.createElement("div");
-          headerExport.className = "horario-export-header";
-          headerExport.style.marginBottom = "0px"; // Elimina la franja divisoria
-          headerExport.innerHTML = `
-            <div class="horario-export-brand">
-              <img src="logo_ucsg_fi.png" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" />
-              <div class="horario-export-info">
-                <h3>${datosActivos.nombre}</h3>
-                <p>${membretePeriodo}</p>
-              </div>
-            </div>
-            <div style="text-align: right; font-size: 0.75rem; font-weight: 700; color: #64748b;">
-              www.ucsg.edu.ec
-            </div>
-          `;
-          clonedContenedor.insertBefore(headerExport, clonedContenedor.firstChild);
-        }
-
-        const clonedTbody = clonedDoc.getElementById("horario-tbody");
-        if (clonedTbody) {
-          const filas = clonedTbody.querySelectorAll("tr");
-          filas.forEach((fila, idx) => {
-            if (idx > limiteCorteIdx) {
-              fila.style.display = "none";
-            }
-          });
-        }
+      if (horarioBloques.length === 0) {
+        alert("Agrega al menos una materia a tu horario antes de descargar la imagen.");
+        return;
       }
-    });
 
-    const link = document.createElement("a");
-    link.download = `Horario_${datosActivos.id.toUpperCase()}_${periodoTexto.replace(" ", "_")}_${anioActual}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  } catch (e) {
-    console.error("Error al descargar horario:", e);
-    alert("Hubo un problema al generar la foto del horario.");
-  }
-}
+      const selPeriodo = document.getElementById("horario-semestre-periodo");
+      const periodoTexto = selPeriodo ? selPeriodo.value : "Semestre A";
+      const anioActual = new Date().getFullYear();
+      const membretePeriodo = `HORARIO DE CLASES • ${periodoTexto.toUpperCase()} ${anioActual}`;
+
+      let horaCorte = "15:00";
+      horarioBloques.forEach(b => {
+        if (b.fin > horaCorte) {
+          horaCorte = b.fin;
+        }
+      });
+
+      let targetSlotIdx = SLOTS_HORARIO.findIndex(s => s.fin === horaCorte);
+      if (targetSlotIdx === -1) targetSlotIdx = SLOTS_HORARIO.length - 1;
+      const limiteCorteIdx = Math.min(targetSlotIdx + 1, SLOTS_HORARIO.length - 1);
+
+      const tablaEl = contenedor.querySelector(".tabla-horario-excel");
+      const anchoTotalReal = Math.max(tablaEl ? tablaEl.offsetWidth : 880, 880);
+
+      try {
+        const canvas = await html2canvas(contenedor, {
+          scale: 2,
+          backgroundColor: "#ffffff",
+          useCORS: true,
+          width: anchoTotalReal,
+          windowWidth: anchoTotalReal,
+          onclone: (clonedDoc) => {
+            const clonedContenedor = clonedDoc.getElementById("contenedor-captura-horario");
+            
+            if (clonedContenedor) {
+              clonedContenedor.style.width = `${anchoTotalReal}px`;
+              clonedContenedor.style.minWidth = `${anchoTotalReal}px`;
+              clonedContenedor.style.overflow = "visible";
+
+              const headerExport = clonedDoc.createElement("div");
+              headerExport.className = "horario-export-header";
+              headerExport.style.marginBottom = "0px";
+              headerExport.innerHTML = `
+                <div class="horario-export-brand">
+                  <img src="logo_ucsg_fi.png" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" />
+                  <div class="horario-export-info">
+                    <h3>${datosActivos.nombre}</h3>
+                    <p>${membretePeriodo}</p>
+                  </div>
+                </div>
+                <div style="text-align: right; font-size: 0.75rem; font-weight: 700; color: #64748b;">
+                  www.ucsg.edu.ec
+                </div>
+              `;
+              clonedContenedor.insertBefore(headerExport, clonedContenedor.firstChild);
+            }
+
+            const clonedTbody = clonedDoc.getElementById("horario-tbody");
+            if (clonedTbody) {
+              const filas = clonedTbody.querySelectorAll("tr");
+              filas.forEach((fila, idx) => {
+                if (idx > limiteCorteIdx) {
+                  fila.style.display = "none";
+                }
+              });
+            }
+          }
+        });
+
+        const link = document.createElement("a");
+        link.download = `Horario_${datosActivos.id.toUpperCase()}_${periodoTexto.replace(" ", "_")}_${anioActual}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      } catch (e) {
+        console.error("Error al descargar horario:", e);
+        alert("Hubo un problema al generar la foto del horario.");
+      }
+    }
 
     window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
 
-    // Inicialización al cargar la página
     document.getElementById("select-carrera").value = carreraActualId;
     document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
     indexarMallaActiva();
