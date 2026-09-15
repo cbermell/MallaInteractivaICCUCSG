@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
   <!-- ================= SEO BÁSICO ================= -->
   <title>Malla Curricular Interactiva & Planificador de Horarios | UCSG</title>
-  <meta name="description" content="Malla curricular interactiva, planificador de horarios de clases descargable en HD y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
-  <meta name="keywords" content="ucsg, universidad catolica de santiago de guayaquil, horario ucsg, malla curricular ucsg, ingenieria ucsg, ciencias de la computacion ucsg, ciencia de datos ucsg, planificador de horarios ucsg, calcular notas ucsg, examen mejoramiento ucsg, facultad de ingenieria ucsg, generador de horarios ucsg">
+  <meta name="description"
+    content="Malla curricular interactiva, planificador de horarios de clases descargable en HD y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
+  <meta name="keywords"
+    content="ucsg, universidad catolica de santiago de guayaquil, horario ucsg, malla curricular ucsg, ingenieria ucsg, ciencias de la computacion ucsg, ciencia de datos ucsg, planificador de horarios ucsg, calcular notas ucsg, examen mejoramiento ucsg, facultad de ingenieria ucsg, generador de horarios ucsg">
   <meta name="robots" content="index, follow">
   <meta name="author" content="Carlos Bermello">
 
   <!-- ================= OPEN GRAPH (WhatsApp, Facebook, LinkedIn, Discord) ================= -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Planificador de Horarios y Malla Curricular | UCSG">
-  <meta property="og:description" content="Organiza tu semestre: visualiza tu malla interactiva, genera y descarga tu horario de clases en alta definición y proyecta tus notas de parciales.">
+  <meta property="og:description"
+    content="Organiza tu semestre: visualiza tu malla interactiva, genera y descarga tu horario de clases en alta definición y proyecta tus notas de parciales.">
   <meta property="og:site_name" content="Portal Académico UCSG">
-  <meta property="og:url" content="https://ingenieriaucsg.netlify.app/"> 
-  <meta property="og:image" content="https://ingenieriaucsg.netlify.app/preview.jpeg"> 
+  <meta property="og:url" content="https://ingenieriaucsg.netlify.app/">
+  <meta property="og:image" content="https://ingenieriaucsg.netlify.app/preview.jpeg">
 
   <!-- ================= TWITTER / X CARDS ================= -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Planificador de Horarios & Malla Curricular UCSG">
-  <meta name="twitter:description" content="Visualiza tu avance curricular, crea tu horario de clases semanal en HD y calcula tus notas de parciales y mejoramiento.">
-  <meta name="twitter:image" content="https://ingenieriaucsg.netlify.app/preview.jpeg"> 
+  <meta name="twitter:description"
+    content="Visualiza tu avance curricular, crea tu horario de clases semanal en HD y calcula tus notas de parciales y mejoramiento.">
+  <meta name="twitter:image" content="https://ingenieriaucsg.netlify.app/preview.jpeg">
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,7 +35,7 @@
   <link rel="icon" href="logo_ucsg.png" type="image/png">
   <!-- Librería html2canvas para captura de alta resolución -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  
+
   <style>
     :root {
       --c-fundamentos: #b8eedf;
@@ -164,31 +169,46 @@
       transition: background 0.2s, transform 0.1s;
       white-space: nowrap;
     }
-    .btn-action:active { transform: scale(0.98); }
+
+    .btn-action:active {
+      transform: scale(0.98);
+    }
 
     .btn-photo {
       background: #2563eb;
       color: white;
     }
-    .btn-photo:hover { background: #1d4ed8; }
+
+    .btn-photo:hover {
+      background: #1d4ed8;
+    }
 
     .btn-calc-trigger {
       background: #059669;
       color: white;
     }
-    .btn-calc-trigger:hover { background: #047857; }
+
+    .btn-calc-trigger:hover {
+      background: #047857;
+    }
 
     .btn-horario-trigger {
       background: #0f172a;
       color: white;
     }
-    .btn-horario-trigger:hover { background: #1e293b; }
+
+    .btn-horario-trigger:hover {
+      background: #1e293b;
+    }
 
     .btn-reset {
       background: #ef4444;
       color: white;
     }
-    .btn-reset:hover { background: #dc2626; }
+
+    .btn-reset:hover {
+      background: #dc2626;
+    }
 
     .dash-overview {
       display: grid;
@@ -451,6 +471,29 @@
       gap: 16px;
     }
 
+    .grid-civil .semestre-row {
+      grid-template-columns: 42px repeat(7, 1fr) 16px 88px;
+      gap: 12px;
+    }
+
+    .grid-civil .malla-layout {
+      min-width: 1540px;
+    }
+
+    .badge-en-linea {
+      font-size: 0.60rem;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: #e0e7ff;
+      color: #3730a3;
+      border: 1px solid #c7d2fe;
+      margin-left: 4px;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
     .sem-badge {
       display: flex;
       align-items: center;
@@ -503,12 +546,13 @@
       overflow: hidden;
     }
 
- /* Feedback visual refinado sin desplazar las coordenadas de las flechas */
-.materia-box:hover {
-  transform: none; /* No mueve la tarjeta de su eje Y */
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
-  filter: brightness(1.03);
-}
+    /* Feedback visual refinado sin desplazar las coordenadas de las flechas */
+    .materia-box:hover {
+      transform: none;
+      /* No mueve la tarjeta de su eje Y */
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+      filter: brightness(1.03);
+    }
 
     .materia-box.bloqueada {
       opacity: 0.55;
@@ -521,9 +565,20 @@
       box-shadow: none;
     }
 
-    .fundamentos { background-color: var(--c-fundamentos); border-color: var(--b-fundamentos); }
-    .contextos { background-color: var(--c-contextos); border-color: var(--b-contextos); }
-    .integracion { background-color: var(--c-integracion); border-color: var(--b-integracion); }
+    .fundamentos {
+      background-color: var(--c-fundamentos);
+      border-color: var(--b-fundamentos);
+    }
+
+    .contextos {
+      background-color: var(--c-contextos);
+      border-color: var(--b-contextos);
+    }
+
+    .integracion {
+      background-color: var(--c-integracion);
+      border-color: var(--b-integracion);
+    }
 
     .materia-header-row {
       display: flex;
@@ -671,8 +726,27 @@
       opacity: 1 !important;
     }
 
-    path.circuit-line.dimmed, .materia-box.dimmed {
+    path.circuit-line.dimmed,
+    .materia-box.dimmed {
       opacity: 0.12;
+    }
+
+    /* En Civil: ocultar la totalidad de conexiones en reposo; se muestran exclusivamente al interactuar con el camino de una materia */
+    .grid-civil path.circuit-line:not(.highlight-pre):not(.highlight-post),
+    .grid-civil polygon.circuit-arrow:not(.highlight-pre):not(.highlight-post) {
+      opacity: 0 !important;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .grid-civil path.circuit-line.highlight-pre,
+    .grid-civil path.circuit-line.highlight-post,
+    .grid-civil polygon.circuit-arrow.highlight-pre,
+    .grid-civil polygon.circuit-arrow.highlight-post {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto;
     }
 
     .malla-footer-notes {
@@ -687,10 +761,23 @@
     }
 
     @keyframes shakeBox {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-4px); }
-      40%, 80% { transform: translateX(4px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-4px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(4px);
+      }
     }
+
     .shake {
       animation: shakeBox 0.35s ease;
     }
@@ -737,13 +824,13 @@
       width: 620px;
       max-width: 92vw;
       max-height: 88vh;
-      
+
       overflow-y: auto !important;
       overflow-x: hidden !important;
       -webkit-overflow-scrolling: touch !important;
       touch-action: pan-y !important;
       overscroll-behavior-y: contain;
-      
+
       will-change: scroll-position;
       transform: translateZ(0);
     }
@@ -794,7 +881,10 @@
       line-height: 1;
       padding: 4px;
     }
-    .modal-close:hover { color: #0f172a; }
+
+    .modal-close:hover {
+      color: #0f172a;
+    }
 
     .modal-tag {
       font-size: 0.7rem;
@@ -807,9 +897,20 @@
       margin-bottom: 8px;
     }
 
-    .modal-tag.fundamentos { background: var(--c-fundamentos); color: #064e3b; }
-    .modal-tag.contextos { background: var(--c-contextos); color: #4c1d95; }
-    .modal-tag.integracion { background: var(--c-integracion); color: #713f12; }
+    .modal-tag.fundamentos {
+      background: var(--c-fundamentos);
+      color: #064e3b;
+    }
+
+    .modal-tag.contextos {
+      background: var(--c-contextos);
+      color: #4c1d95;
+    }
+
+    .modal-tag.integracion {
+      background: var(--c-integracion);
+      color: #713f12;
+    }
 
     .modal-header h2 {
       margin: 0 0 14px;
@@ -881,7 +982,10 @@
       transition: background 0.15s;
       cursor: pointer;
     }
-    .btn-syllabus:hover { background: #1d4ed8; }
+
+    .btn-syllabus:hover {
+      background: #1d4ed8;
+    }
 
     .btn-modal-close-action {
       background: #f1f5f9;
@@ -894,7 +998,10 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-modal-close-action:hover { background: #e2e8f0; }
+
+    .btn-modal-close-action:hover {
+      background: #e2e8f0;
+    }
 
     /* Calculadora */
     .calc-grid {
@@ -947,7 +1054,10 @@
       outline: none;
       transition: border-color 0.15s;
     }
-    .calc-field input:focus { border-color: #2563eb; }
+
+    .calc-field input:focus {
+      border-color: #2563eb;
+    }
 
     .calc-subtotal-badge {
       font-size: 0.75rem;
@@ -1008,9 +1118,20 @@
       border-radius: 4px;
     }
 
-    .status-aprobado { background: #10b981; color: #ffffff; }
-    .status-reprobado { background: #ef4444; color: #ffffff; }
-    .status-en-curso { background: #f59e0b; color: #ffffff; }
+    .status-aprobado {
+      background: #10b981;
+      color: #ffffff;
+    }
+
+    .status-reprobado {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .status-en-curso {
+      background: #f59e0b;
+      color: #ffffff;
+    }
 
     .calc-res-num {
       font-size: 1.6rem;
@@ -1228,8 +1349,14 @@
       letter-spacing: 0.5px;
     }
 
-    .col-hora { width: 100px; background-color: #1e293b !important; }
-    .col-dia { width: calc((100% - 100px) / 6); }
+    .col-hora {
+      width: 100px;
+      background-color: #1e293b !important;
+    }
+
+    .col-dia {
+      width: calc((100% - 100px) / 6);
+    }
 
     .tabla-horario-excel tbody td {
       border: 1px solid #cbd5e1;
@@ -1257,7 +1384,7 @@
       cursor: pointer;
       transition: filter 0.15s;
       overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
       touch-action: auto !important;
       user-select: none;
     }
@@ -1339,15 +1466,34 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     }
 
-    .btn-github { background-color: #24292e; }
-    .btn-github:hover { background-color: #0f1419; }
-    .btn-linkedin { background-color: #0a66c2; }
-    .btn-linkedin:hover { background-color: #004182; }
-    .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-    .btn-instagram:hover { filter: brightness(1.08); }
+    .btn-github {
+      background-color: #24292e;
+    }
+
+    .btn-github:hover {
+      background-color: #0f1419;
+    }
+
+    .btn-linkedin {
+      background-color: #0a66c2;
+    }
+
+    .btn-linkedin:hover {
+      background-color: #004182;
+    }
+
+    .btn-instagram {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .btn-instagram:hover {
+      filter: brightness(1.08);
+    }
 
     @media (max-width: 1024px) {
-      .scroll-hint-bar { display: flex; }
+      .scroll-hint-bar {
+        display: flex;
+      }
 
       .dash-overview {
         grid-template-columns: 1fr;
@@ -1370,7 +1516,7 @@
         flex-direction: column;
         gap: 10px;
       }
-      
+
       .modal-content.modal-horario-wide .modal-header button.btn-photo {
         width: 100%;
         justify-content: center;
@@ -1479,23 +1625,21 @@
     }
   </style>
 </head>
+
 <body>
 
   <div id="bloque-principal">
     <header class="dashboard-card">
       <div class="dash-header">
         <div class="brand-title-group">
-          <img 
-            class="ucsg-logo-img" 
-            src="logo_ucsg_fi.png" 
-            alt="UCSG Facultad de Ingeniería"
-          />
+          <img class="ucsg-logo-img" src="logo_ucsg_fi.png" alt="UCSG Facultad de Ingeniería" />
 
           <div class="header-text-block">
             <div class="carrera-selector-wrap">
               <select id="select-carrera" class="carrera-select" onchange="cambiarCarrera(this.value)">
                 <option value="computacion">Ingeniería en Ciencias de la Computación</option>
                 <option value="datos_ia">Ingeniería en Ciencia de Datos e Inteligencia Artificial</option>
+                <option value="civil">Ingeniería Civil</option>
               </select>
             </div>
             <span id="txt-facultad-institucional">MALLA CURRICULAR</span>
@@ -1508,9 +1652,9 @@
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
               <circle cx="12" cy="13" r="4"></circle>
             </svg>
-            Foto de Avance HD
+            Descargar Avance
           </button>
-          
+
           <button class="btn-action btn-horario-trigger" onclick="abrirModalHorario()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -1557,7 +1701,7 @@
             </svg>
             <div class="progress-circle-content">
               <span class="progress-circle-pct" id="lbl-porcentaje">0%</span>
-              
+
             </div>
           </div>
           <div class="progress-circle-info">
@@ -1584,7 +1728,8 @@
           </div>
           <div class="stat-item">
             <span class="stat-lbl">Práctica Comunitaria (*)</span>
-            <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos Pendientes</span>
+            <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos
+              Pendientes</span>
           </div>
         </div>
       </div>
@@ -1607,15 +1752,17 @@
 
         <div class="grid-container" id="grid-container">
           <svg id="svg-connections">
-            
+
           </svg>
           <div class="semestres-grid" id="semestres-grid"></div>
         </div>
       </div>
 
       <div class="malla-footer-notes" id="malla-footer-notes">
-        <div><strong>(*) Para tomar las "Prácticas Comunitarias"</strong> es necesario haber aprobado las asignaturas de la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
-        <div id="txt-resolucion-requisitos"><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
+        <div><strong>(*) Para tomar las "Prácticas Comunitarias"</strong> es necesario haber aprobado las asignaturas de
+          la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
+        <div id="txt-resolucion-requisitos"><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma
+          inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
       </div>
     </main>
   </div>
@@ -1627,17 +1774,21 @@
     <div class="creator-social-links">
       <a href="https://github.com/cbermell" target="_blank" rel="noopener noreferrer" class="btn-social btn-github">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
         </svg>
         GitHub
       </a>
-      <a href="https://linkedin.com/in/carlosbermello/" target="_blank" rel="noopener noreferrer" class="btn-social btn-linkedin">
+      <a href="https://linkedin.com/in/carlosbermello/" target="_blank" rel="noopener noreferrer"
+        class="btn-social btn-linkedin">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          <path
+            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
         </svg>
         LinkedIn
       </a>
-      <a href="https://instagram.com/belocast_" target="_blank" rel="noopener noreferrer" class="btn-social btn-instagram">
+      <a href="https://instagram.com/belocast_" target="_blank" rel="noopener noreferrer"
+        class="btn-social btn-instagram">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
           <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -1667,7 +1818,8 @@
           <h4>Prerrequisitos obligatorios:</h4>
           <p id="modal-prereqs">Ninguno</p>
           <div class="practica-notice" id="modal-practica-notice" style="display: none;">
-            Esta asignatura corresponde a prácticas formativas de vinculación y aplicación profesional. La aprobación y control se realiza mediante la Dirección de Carrera y tutorías institucionales.
+            Esta asignatura corresponde a prácticas formativas de vinculación y aplicación profesional. La aprobación y
+            control se realiza mediante la Dirección de Carrera y tutorías institucionales.
           </div>
         </div>
       </div>
@@ -1689,11 +1841,13 @@
             <h3>Primer Parcial</h3>
             <div class="calc-field">
               <label for="p1-form">Componente Formativo:</label>
-              <input type="number" id="p1-form" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+              <input type="number" id="p1-form" min="0" max="10" step="0.01" placeholder="0 - 10"
+                oninput="calcularNotas()">
             </div>
             <div class="calc-field">
               <label for="p1-eval">Exámen:</label>
-              <input type="number" id="p1-eval" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+              <input type="number" id="p1-eval" min="0" max="10" step="0.01" placeholder="0 - 10"
+                oninput="calcularNotas()">
             </div>
             <div class="calc-subtotal-badge">
               Total P1: <span id="p1-total">0.00</span> / 10
@@ -1704,11 +1858,13 @@
             <h3>Segundo Parcial</h3>
             <div class="calc-field">
               <label for="p2-form">Componente Formativo:</label>
-              <input type="number" id="p2-form" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+              <input type="number" id="p2-form" min="0" max="10" step="0.01" placeholder="0 - 10"
+                oninput="calcularNotas()">
             </div>
             <div class="calc-field">
               <label for="p2-eval">Exámen:</label>
-              <input type="number" id="p2-eval" min="0" max="10" step="0.01" placeholder="0 - 10" oninput="calcularNotas()">
+              <input type="number" id="p2-eval" min="0" max="10" step="0.01" placeholder="0 - 10"
+                oninput="calcularNotas()">
             </div>
             <div class="calc-subtotal-badge">
               Total P2: <span id="p2-total">0.00</span> / 10
@@ -1718,9 +1874,11 @@
 
         <div class="calc-mejora-box">
           <h4>Examen de Mejoramiento (Opcional)</h4>
-          <span class="calc-mejora-desc">Reemplaza automáticamente el promedio total del parcial con la nota más baja (si la nota del mejoramiento es superior).</span>
+          <span class="calc-mejora-desc">Reemplaza automáticamente el promedio total del parcial con la nota más baja
+            (si la nota del mejoramiento es superior).</span>
           <div class="calc-field" style="margin-top: 6px;">
-            <input type="number" id="mejora-nota" min="0" max="10" step="0.01" placeholder="Ingresa nota del examen de mejoramiento (/10)" oninput="calcularNotas()">
+            <input type="number" id="mejora-nota" min="0" max="10" step="0.01"
+              placeholder="Ingresa nota del examen de mejoramiento (/10)" oninput="calcularNotas()">
           </div>
         </div>
 
@@ -1730,7 +1888,8 @@
             <span class="calc-res-status status-en-curso" id="calc-status-badge">En curso</span>
           </div>
           <div class="calc-score-row">
-            <div class="calc-res-num" id="calc-final-score">0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/ 10</span></div>
+            <div class="calc-res-num" id="calc-final-score">0.00 <span style="font-size: 0.9rem; color: #94a3b8;">/
+                10</span></div>
             <div class="calc-emoji-badge" id="calc-emoji" title="Estado de ánimo del semestre">📚</div>
           </div>
           <div class="calc-target-advice" id="calc-advice">
@@ -1749,16 +1908,20 @@
   <div class="modal-overlay" id="modal-horario-overlay" onclick="cerrarModalHorarioExterno(event)">
     <div class="modal-content modal-horario-wide">
       <button class="modal-close" onclick="cerrarModalHorario()">&times;</button>
-      
-      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; padding-right: 36px; margin-bottom: 16px;">
+
+      <div class="modal-header"
+        style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px; padding-right: 36px; margin-bottom: 16px;">
         <div>
           <span class="modal-tag contextos" style="margin-bottom: 6px;">Planificador Semestral</span>
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-            <h2 style="margin: 0; font-size: clamp(1.1rem, 2vw, 1.25rem); font-weight: 800; color: #0f172a;">Horario de Clases Semanal</h2>
-            
-            <div style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+            <h2 style="margin: 0; font-size: clamp(1.1rem, 2vw, 1.25rem); font-weight: 800; color: #0f172a;">Horario de
+              Clases Semanal</h2>
+
+            <div
+              style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;">
               <span style="font-size: 0.70rem; font-weight: 800; color: #475569;">PERÍODO:</span>
-              <select id="horario-semestre-periodo" onchange="guardarPeriodoSeleccionado()" style="border: none; background: transparent; font-weight: 800; font-size: 0.78rem; color: #0f172a; cursor: pointer; outline: none;">
+              <select id="horario-semestre-periodo" onchange="guardarPeriodoSeleccionado()"
+                style="border: none; background: transparent; font-weight: 800; font-size: 0.78rem; color: #0f172a; cursor: pointer; outline: none;">
                 <option value="Semestre A">Ciclo Ordinario A</option>
                 <option value="Semestre B">Ciclo Ordinario B</option>
               </select>
@@ -1766,7 +1929,8 @@
           </div>
         </div>
 
-        <button class="btn-action btn-photo" onclick="descargarFotoHorario()" style="box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
+        <button class="btn-action btn-photo" onclick="descargarFotoHorario()"
+          style="box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
             <circle cx="12" cy="13" r="4"></circle>
@@ -1781,14 +1945,16 @@
             <div class="horario-field" style="grid-column: span 2;">
               <label for="horario-materia-sel">Materia:</label>
               <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
-              <input type="text" id="horario-materia-custom" placeholder="Nombre de materia" style="display:none; margin-top:4px;">
+              <input type="text" id="horario-materia-custom" placeholder="Nombre de materia"
+                style="display:none; margin-top:4px;">
             </div>
 
             <div class="horario-field">
               <label>Paralelo:</label>
               <div class="paralelo-input-group">
                 <span class="paralelo-prefix">Paralelo</span>
-                <input type="text" id="horario-paralelo-letra" class="paralelo-input-field" maxlength="4" value="A" placeholder="A, B...">
+                <input type="text" id="horario-paralelo-letra" class="paralelo-input-field" maxlength="4" value="A"
+                  placeholder="A, B...">
               </div>
             </div>
 
@@ -1820,7 +1986,8 @@
             </div>
 
             <div class="horario-field">
-              <button class="btn-action btn-photo" style="height: 33px; width: 100%;" onclick="agregarBloqueHorario()">+ Agregar</button>
+              <button class="btn-action btn-photo" style="height: 33px; width: 100%;" onclick="agregarBloqueHorario()">+
+                Agregar</button>
             </div>
           </div>
         </div>
@@ -1844,7 +2011,8 @@
       </div>
 
       <div class="modal-footer" style="justify-content: space-between;">
-        <button class="btn-action btn-reset" onclick="limpiarTodoHorario()" style="font-size: 0.75rem; padding: 6px 12px;">
+        <button class="btn-action btn-reset" onclick="limpiarTodoHorario()"
+          style="font-size: 0.75rem; padding: 6px 12px;">
           Borrar Todo
         </button>
         <button class="btn-modal-close-action" onclick="cerrarModalHorario()">
@@ -1874,7 +2042,7 @@
               { id: "res_prob", nombre: "Resolución de Problemas de Ingeniería", cr: 3, hr: 144, tipo: "fundamentos" },
               null
             ],
-            practica: { id: "leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos" }
+            practica: { id: "leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos", enLinea: true }
           },
           {
             ciclo: "II", crTotal: 14, hrTotal: 672,
@@ -1883,9 +2051,9 @@
               null,
               { id: "calc2", nombre: "Cálculo de Varias Variables", cr: 3, hr: 144, tipo: "fundamentos" },
               { id: "fund_prog", nombre: "Fundamentos de Programación", cr: 3, hr: 144, tipo: "fundamentos" },
-              { id: "hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos" }
+              { id: "hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true }
             ],
-            practica: { id: "leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos" }
+            practica: { id: "leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos", enLinea: true }
           },
           {
             ciclo: "III", crTotal: 14, hrTotal: 672,
@@ -1894,9 +2062,9 @@
               null,
               { id: "prob_est", nombre: "Probabilidad y Estadística", cr: 3, hr: 144, tipo: "fundamentos" },
               { id: "poo", nombre: "Programación Orientada a Objetos", cr: 4, hr: 192, tipo: "fundamentos" },
-              { id: "hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos" }
+              { id: "hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true }
             ],
-            practica: { id: "cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos" }
+            practica: { id: "cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true }
           },
           {
             ciclo: "IV", crTotal: 15, hrTotal: 720,
@@ -1980,7 +2148,7 @@
           { from: "redes", to: "cloud" },
           { from: "ing_req", to: "met_form" },
           { from: "org_gest", to: "ing_econ" },
-          { from: "prob_est", to: "analisis_d"},
+          { from: "prob_est", to: "analisis_d" },
           { from: "admin_bd", to: "analisis_d" },
           { from: "comp_soc", to: "gest_proy" },
           { from: "cloud", to: "seg_sist" },
@@ -2011,7 +2179,7 @@
               { id: "ia_fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
               { id: "ia_fund_prog", nombre: "Fundamentos de Programación", cr: 3, hr: 144, tipo: "fundamentos" },
               null,
-              { id: "ia_leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos" }
+              { id: "ia_leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos", enLinea: true }
             ],
             practica: null
           },
@@ -2022,8 +2190,8 @@
               { id: "ia_met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "fundamentos" },
               { id: "ia_eda", nombre: "Estructura de Datos y Algoritmos", cr: 2, hr: 96, tipo: "fundamentos" },
               { id: "ia_poo", nombre: "Programación Orientada a Objetos", cr: 3, hr: 144, tipo: "fundamentos" },
-              { id: "ia_hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos" },
-              { id: "ia_leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "ia_hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
+              { id: "ia_leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos", enLinea: true },
             ],
             practica: null
           },
@@ -2034,8 +2202,8 @@
               { id: "ia_alg_lin", nombre: "Álgebra Lineal", cr: 3, hr: 144, tipo: "fundamentos" },
               { id: "ia_arq_so", nombre: "Arquitectura y Sistemas Operativos", cr: 2, hr: 96, tipo: "fundamentos" },
               { id: "ia_bd", nombre: "Bases de Datos", cr: 3, hr: 144, tipo: "fundamentos" },
-              { id: "ia_hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos" },
-              { id: "ia_cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos" }
+              { id: "ia_hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
+              { id: "ia_cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true }
             ],
             practica: null
           },
@@ -2150,6 +2318,184 @@
           { from: "ia_hum_pers", to: "ia_hum_soc" },
           { from: "ia_leng2", to: "ia_cult_cont" }
         ]
+      },
+      civil: {
+        id: "civil",
+        nombre: "Ingeniería Civil",
+        storageKey: "malla_aprobadas_civil_v1",
+        gridClass: "grid-civil",
+        resolucion: "Certificado B1 en idioma inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.",
+        estructura: [
+          {
+            ciclo: "I", crTotal: 17, hrTotal: 816,
+            materias: [
+              { id: "civ_calc1", nombre: "Cálculo de Una Variable", cr: 5, hr: 240, tipo: "fundamentos" },
+              { id: "civ_fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "civ_quimica", nombre: "Química", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "civ_prog", nombre: "Programación", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "civ_planos", nombre: "Planos Digitales", cr: 2, hr: 96, tipo: "fundamentos" },
+              null,
+              { id: "civ_leng1", nombre: "Lenguaje y Pensamiento I", cr: 3, hr: 144, tipo: "fundamentos", enLinea: true }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "II", crTotal: 17, hrTotal: 816,
+            materias: [
+              { id: "civ_calc2", nombre: "Cálculo de Varias Variables", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "civ_estatica", nombre: "Estática", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "civ_estadistica", nombre: "Estadística", cr: 3, hr: 144, tipo: "fundamentos" },
+              null,
+              { id: "civ_topografia", nombre: "Topografía", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "civ_hum_pers", nombre: "Humanismo y Persona", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
+              { id: "civ_leng2", nombre: "Lenguaje y Pensamiento II", cr: 3, hr: 144, tipo: "fundamentos", enLinea: true }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "III", crTotal: 16, hrTotal: 768,
+            materias: [
+              { id: "civ_edo_alg", nombre: "Ecuaciones Diferenciales y Álgebra Lineal", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "civ_res_mat1", nombre: "Resistencia de Materiales I", cr: 3, hr: 144, tipo: "fundamentos" },
+              { id: "civ_mat_const", nombre: "Materiales de Construcción", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "civ_met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "fundamentos" },
+              { id: "civ_sig", nombre: "Sistemas de Información Geográfica", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
+              { id: "civ_hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
+              { id: "civ_prac_com", nombre: "Prácticas Comunitarias (*)", cr: 2, hr: 96, tipo: "fundamentos", esPractica: true }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "IV", crTotal: 18, hrTotal: 864,
+            materias: [
+              { id: "civ_met_num", nombre: "Métodos Numéricos", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "civ_res_mat2", nombre: "Resistencia de Materiales II", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "civ_suelos1", nombre: "Mecánica de Suelos I", cr: 4, hr: 192, tipo: "contextos" },
+              { id: "civ_hidraulica1", nombre: "Hidráulica I", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "civ_tec_hormigon", nombre: "Tecnología del Hormigón", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "civ_cult_cont", nombre: "Culturas Contemporáneas", cr: 2, hr: 96, tipo: "contextos", enLinea: true },
+              { id: "civ_ctrl_proy1", nombre: "Control de Proyecto Digital I", cr: 2, hr: 96, tipo: "contextos", enLinea: true }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "V", crTotal: 16, hrTotal: 768,
+            materias: [
+              { id: "civ_estructuras", nombre: "Estructuras", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "civ_suelos2", nombre: "Mecánica de Suelos II", cr: 3, hr: 144, tipo: "contextos" },
+              { id: "civ_trafico", nombre: "Tráfico y Transporte", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "civ_hidrologia", nombre: "Hidrología", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "civ_hidraulica2", nombre: "Hidráulica II", cr: 2, hr: 96, tipo: "contextos" },
+              { id: "civ_prac_lab1", nombre: "Prácticas Laborales I", cr: 2, hr: 96, tipo: "contextos", esPractica: true },
+              { id: "civ_instalaciones", nombre: "Instalaciones", cr: 2, hr: 96, tipo: "contextos", enLinea: true }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VI", crTotal: 18, hrTotal: 864,
+            materias: [
+              { id: "civ_sismo", nombre: "Análisis Sismorresistente", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_hormigon1", nombre: "Hormigón I", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_acero", nombre: "Estructuras de Acero", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_cimentaciones", nombre: "Cimentaciones", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "civ_abastecimiento", nombre: "Abastecimiento de Aguas", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_costos", nombre: "Análisis de Costos y Rendimientos", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "civ_vial", nombre: "Ingeniería Vial", cr: 2, hr: 96, tipo: "integracion" }
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VII", crTotal: 16, hrTotal: 768,
+            materias: [
+              { id: "civ_ing_estructural", nombre: "Ingeniería Estructural", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_hormigon2", nombre: "Hormigón II", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_pavimentos", nombre: "Pavimentos", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_alcantarillado", nombre: "Alcantarillado Sanitario y Pluvial", cr: 3, hr: 144, tipo: "integracion" },
+              { id: "civ_prog_obras", nombre: "Programación de Obras", cr: 2, hr: 96, tipo: "integracion" },
+              { id: "civ_ctrl_proy2", nombre: "Control de Proyecto Digital II", cr: 2, hr: 96, tipo: "integracion" },
+              null
+            ],
+            practica: null
+          },
+          {
+            ciclo: "VIII", crTotal: 9, hrTotal: 432,
+            materias: [
+              { id: "civ_proy_ic", nombre: "Proyecto IC", cr: 2, hr: 96, tipo: "integracion" },
+              null,
+              { id: "civ_ing_ambiental", nombre: "Ingeniería Ambiental", cr: 2, hr: 96, tipo: "integracion", enLinea: true },
+              { id: "civ_gerencia_proy", nombre: "Gerencia de Proyectos", cr: 2, hr: 96, tipo: "integracion", enLinea: true },
+              null,
+              { id: "civ_prac_lab2", nombre: "Prácticas Laborales II", cr: 3, hr: 144, tipo: "integracion", esPractica: true },
+              null
+            ],
+            practica: null
+          }
+        ],
+        conexiones: [
+          // Ciclo I -> Ciclo II
+          { from: "civ_leng1", to: "civ_leng2" },
+          { from: "civ_calc1", to: "civ_calc2" },
+          { from: "civ_fisica", to: "civ_estatica" },
+          { from: "civ_planos", to: "civ_topografia" },
+
+          // Ciclo II -> Ciclo III / IV
+          { from: "civ_calc2", to: "civ_edo_alg" },
+          { from: "civ_estatica", to: "civ_res_mat1" },
+          { from: "civ_estatica", to: "civ_mat_const" },
+          { from: "civ_estadistica", to: "civ_mat_const" },
+          { from: "civ_hum_pers", to: "civ_hum_soc" },
+          { from: "civ_topografia", to: "civ_sig" },
+          { from: "civ_estadistica", to: "civ_met_inv" },
+          { from: "civ_leng2", to: "civ_cult_cont" },
+
+          // Ciclo III -> Ciclo IV / V / VI
+          { from: "civ_res_mat1", to: "civ_res_mat2" },
+          { from: "civ_res_mat1", to: "civ_suelos1" },
+          { from: "civ_res_mat1", to: "civ_tec_hormigon" },
+          { from: "civ_edo_alg", to: "civ_met_num" },
+          { from: "civ_mat_const", to: "civ_tec_hormigon" },
+          { from: "civ_mat_const", to: "civ_acero" },
+          { from: "civ_sig", to: "civ_trafico" },
+
+          // Ciclo IV -> Ciclo V / VII
+          { from: "civ_met_num", to: "civ_estructuras" },
+          { from: "civ_res_mat2", to: "civ_estructuras" },
+          { from: "civ_suelos1", to: "civ_suelos2" },
+          { from: "civ_hidraulica1", to: "civ_hidraulica2" },
+          { from: "civ_hidraulica1", to: "civ_hidrologia" },
+          { from: "civ_hidraulica1", to: "civ_instalaciones" },
+          { from: "civ_ctrl_proy1", to: "civ_ctrl_proy2" },
+
+          // Ciclo V -> Ciclo VI / VII
+          { from: "civ_estructuras", to: "civ_sismo" },
+          { from: "civ_estructuras", to: "civ_acero" },
+          { from: "civ_estructuras", to: "civ_hormigon1" },
+          { from: "civ_hidrologia", to: "civ_abastecimiento" },
+          { from: "civ_hidraulica2", to: "civ_abastecimiento" },
+          { from: "civ_instalaciones", to: "civ_costos" },
+          { from: "civ_suelos2", to: "civ_cimentaciones" },
+          { from: "civ_suelos2", to: "civ_vial" },
+          { from: "civ_trafico", to: "civ_costos" },
+          { from: "civ_trafico", to: "civ_pavimentos" },
+
+          // Ciclo VI -> Ciclo VII
+          { from: "civ_abastecimiento", to: "civ_alcantarillado" },
+          { from: "civ_costos", to: "civ_prog_obras" },
+          { from: "civ_sismo", to: "civ_ing_estructural" },
+          { from: "civ_acero", to: "civ_ing_estructural" },
+          { from: "civ_hormigon1", to: "civ_hormigon2" },
+          { from: "civ_hormigon1", to: "civ_ing_estructural" },
+          { from: "civ_vial", to: "civ_pavimentos" },
+
+          // Ciclo VII -> Ciclo VIII
+          { from: "civ_alcantarillado", to: "civ_ing_ambiental" },
+          { from: "civ_alcantarillado", to: "civ_proy_ic" },
+          { from: "civ_hormigon2", to: "civ_proy_ic" },
+          { from: "civ_ing_estructural", to: "civ_proy_ic" },
+          { from: "civ_pavimentos", to: "civ_proy_ic" },
+          { from: "civ_ctrl_proy2", to: "civ_gerencia_proy" },
+          { from: "civ_prog_obras", to: "civ_gerencia_proy" }
+        ]
       }
     };
 
@@ -2195,11 +2541,11 @@
     }
 
     function estanRequisitosCompletos(id) {
-      if (id === "prac_com" || id === "ia_prac_com") {
+      if (id === "prac_com" || id === "ia_prac_com" || id === "civ_prac_com") {
         let fundamentosCompletos = true;
         datosActivos.estructura.slice(0, 3).forEach(sem => {
           [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
-            if (!aprobadas.has(m.id)) fundamentosCompletos = false;
+            if (m.id !== id && !aprobadas.has(m.id)) fundamentosCompletos = false;
           });
         });
         return fundamentosCompletos;
@@ -2207,6 +2553,8 @@
 
       if (id === "prac_prof") return aprobadas.has("prac_com");
       if (id === "ia_prac_prof") return aprobadas.has("ia_prac_com");
+      if (id === "civ_prac_lab1") return aprobadas.has("civ_prac_com");
+      if (id === "civ_prac_lab2") return aprobadas.has("civ_prac_lab1");
 
       const reqs = prerequisitosMap[id] || [];
       if (reqs.length === 0) {
@@ -2226,6 +2574,11 @@
 
       if (id === "prac_com" && aprobadas.has("prac_prof")) aprobadas.delete("prac_prof");
       if (id === "ia_prac_com" && aprobadas.has("ia_prac_prof")) aprobadas.delete("ia_prac_prof");
+      if (id === "civ_prac_com") {
+        if (aprobadas.has("civ_prac_lab1")) aprobadas.delete("civ_prac_lab1");
+        if (aprobadas.has("civ_prac_lab2")) aprobadas.delete("civ_prac_lab2");
+      }
+      if (id === "civ_prac_lab1" && aprobadas.has("civ_prac_lab2")) aprobadas.delete("civ_prac_lab2");
 
       const mat = materiasMap[id];
       if (mat) {
@@ -2261,6 +2614,11 @@
         if (aprobadas.has("ia_prac_com")) {
           aprobadas.delete("ia_prac_com");
           if (aprobadas.has("ia_prac_prof")) aprobadas.delete("ia_prac_prof");
+        }
+        if (aprobadas.has("civ_prac_com")) {
+          aprobadas.delete("civ_prac_com");
+          if (aprobadas.has("civ_prac_lab1")) aprobadas.delete("civ_prac_lab1");
+          if (aprobadas.has("civ_prac_lab2")) aprobadas.delete("civ_prac_lab2");
         }
       }
     }
@@ -2322,10 +2680,13 @@
       box.onmouseenter = () => highlightDependencies(mat.id);
       box.onmouseleave = () => resetDependencies();
 
+      const badgeEl = mat.enLinea ? `<span class="badge-en-linea" title="Modalidad En Línea (E.L.)">E.L.</span>` : "";
+
       box.innerHTML = `
         <div class="materia-header-row">
           <div class="materia-top-left">
             <span class="materia-top">${mat.cr} CR</span>
+            ${badgeEl}
             <button class="btn-info-syllabus" onclick="abrirModalSyllabus('${mat.id}', event)" title="Ver Información">i</button>
           </div>
           <div class="check-circle">
@@ -2345,7 +2706,7 @@
       grid.innerHTML = "";
 
       const container = document.getElementById("malla-container");
-      container.classList.remove("grid-computacion", "grid-datos-ia");
+      container.classList.remove("grid-computacion", "grid-datos-ia", "grid-civil");
       container.classList.add(datosActivos.gridClass);
 
       datosActivos.estructura.forEach(sem => {
@@ -2388,6 +2749,7 @@
         if (!estanRequisitosCompletos(id)) {
           const el = document.getElementById(`mat-${id}`);
           if (el) {
+            highlightDependencies(id);
             el.classList.add("shake");
             setTimeout(() => el.classList.remove("shake"), 350);
           }
@@ -2519,6 +2881,12 @@
     }
 
     function buildHorizontalSegmentWithHops(xStart, xEnd, y, verticalSegments, currentFrom, currentTo) {
+      // En Civil, las conexiones se visualizan según la materia en foco (camino interactivo);
+      // los trazos son directos y ortogonales, sin saltos artificiales sobre líneas no visibles.
+      if (datosActivos.id === "civil") {
+        return ` L ${xEnd} ${y}`;
+      }
+
       const R = 6;
       const minX = Math.min(xStart, xEnd);
       const maxX = Math.max(xStart, xEnd);
@@ -2620,8 +2988,8 @@
 
         const totalIn = incoming[c.to].length;
         const inIdx = incoming[c.to].indexOf(c.from);
-        let portOffset = c.targetOffset || 0;
-        if (totalIn > 1 && portOffset === 0) {
+        let portOffset = c.targetOffset !== undefined ? c.targetOffset : 0;
+        if (datosActivos.id !== "civil" && totalIn > 1 && c.targetOffset === undefined) {
           portOffset = (inIdx - (totalIn - 1) / 2) * 24;
         }
 
@@ -2674,7 +3042,12 @@
           const laneOffset = (cardIdx % 5) * 8;
           fromMap[fromKey].forEach(item => {
             const gapY = item.y2 - item.y1;
-            item.midY = item.y1 + Math.max(16, Math.min(18 + laneOffset, gapY - 26));
+            if (datosActivos.id === "civil") {
+              // En Civil, los trazos se centran perfectamente en el canal intersemestral (37px en el gap de 74px) para un camino limpio y simétrico
+              item.midY = item.y1 + Math.round(Math.min(gapY, 74) / 2);
+            } else {
+              item.midY = item.y1 + Math.max(16, Math.min(18 + laneOffset, gapY - 26));
+            }
           });
         });
       });
@@ -2706,7 +3079,8 @@
           verticalSegments.push({ x: x1, yMin: y1, yMax: midY, connId });
           verticalSegments.push({ x: x2, yMin: midY, yMax: y2, connId });
         } else {
-          const preEntryY = y2 - 20;
+          // En Civil, preEntryY se alinea exactamente al canal superior de c2 (y2 - 37) para que las entradas desde pasillo sean 100% colineales con las entradas adyacentes
+          const preEntryY = datosActivos.id === "civil" ? y2 - Math.round(Math.min(y2 - y1, 74) / 2) : y2 - 20;
           item.preEntryY = preEntryY;
           let corridorX;
 
@@ -2894,10 +3268,12 @@
       const practicaNoticeEl = document.getElementById("modal-practica-notice");
       const footerContainer = document.getElementById("modal-footer-container");
 
-      if (id === "prac_com" || id === "ia_prac_com") {
+      if (id === "prac_com" || id === "ia_prac_com" || id === "civ_prac_com") {
         prereqsEl.textContent = "Aprobación completa de la organización curricular de Fundamentos (Ciclos I, II y III).";
-      } else if (id === "prac_prof" || id === "ia_prac_prof") {
+      } else if (id === "prac_prof" || id === "ia_prac_prof" || id === "civ_prac_lab1") {
         prereqsEl.textContent = "Aprobación previa de las Prácticas Comunitarias (*).";
+      } else if (id === "civ_prac_lab2") {
+        prereqsEl.textContent = "Aprobación previa de las Prácticas Laborales I.";
       } else if (reqs.length === 0) {
         if (mat.cicloIndex > 0) {
           const cicloAnteriorNombre = datosActivos.estructura[mat.cicloIndex - 1].ciclo;
@@ -3141,22 +3517,26 @@
             const clonedGrid = clonedDoc.getElementById("grid-container");
 
             if (clonedSvg && clonedGrid) {
-              drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
+              if (datosActivos.id === "civil") {
+                clonedSvg.innerHTML = "";
+              } else {
+                drawTreeLinesWithGutterRouting(clonedSvg, clonedGrid);
 
-              const polygons = clonedSvg.querySelectorAll("polygon");
-              polygons.forEach(poly => {
-                poly.setAttribute("fill", "#1e293b");
-              });
+                const polygons = clonedSvg.querySelectorAll("polygon");
+                polygons.forEach(poly => {
+                  poly.setAttribute("fill", "#1e293b");
+                });
 
-              const paths = clonedSvg.querySelectorAll("path");
-              paths.forEach(p => {
-                p.style.fill = "none";
-                p.setAttribute("fill", "none");
-                p.style.stroke = "#1e293b";
-                p.setAttribute("stroke", "#1e293b");
-                p.style.strokeWidth = "1.5px";
-                p.setAttribute("stroke-width", "1.5");
-              });
+                const paths = clonedSvg.querySelectorAll("path");
+                paths.forEach(p => {
+                  p.style.fill = "none";
+                  p.setAttribute("fill", "none");
+                  p.style.stroke = "#1e293b";
+                  p.setAttribute("stroke", "#1e293b");
+                  p.style.strokeWidth = "1.5px";
+                  p.setAttribute("stroke-width", "1.5");
+                });
+              }
             }
           }
         });
@@ -3223,10 +3603,10 @@
         const hStr = h.toString().padStart(2, "0");
         const mStr = m.toString().padStart(2, "0");
         const tInicio = `${hStr}:${mStr}`;
-        
+
         m += 30;
         if (m === 60) { h++; m = 0; }
-        
+
         const hFinStr = h.toString().padStart(2, "0");
         const mFinStr = m.toString().padStart(2, "0");
         const tFin = `${hFinStr}:${mFinStr}`;
@@ -3286,12 +3666,12 @@
 
       const optgroupCustom = document.createElement("optgroup");
       optgroupCustom.label = "Otras Asignaturas";
-      
+
       const optionCustom = document.createElement("option");
       optionCustom.value = "__custom__";
       optionCustom.textContent = "+ Escribir otra materia...";
       optgroupCustom.appendChild(optionCustom);
-      
+
       sel.appendChild(optgroupCustom);
 
       verificarMateriaCustom();
@@ -3323,7 +3703,7 @@
       const selMateria = document.getElementById("horario-materia-sel");
       const customMateria = document.getElementById("horario-materia-custom");
       const materia = selMateria.value === "__custom__" ? customMateria.value.trim() : selMateria.value;
-      
+
       const letraParalelo = document.getElementById("horario-paralelo-letra").value.trim().toUpperCase() || "A";
       const paralelo = `Paralelo ${letraParalelo}`;
       const aula = document.getElementById("horario-aula").value.trim();
@@ -3488,7 +3868,7 @@
           windowWidth: anchoTotalReal,
           onclone: (clonedDoc) => {
             const clonedContenedor = clonedDoc.getElementById("contenedor-captura-horario");
-            
+
             if (clonedContenedor) {
               clonedContenedor.style.width = `${anchoTotalReal}px`;
               clonedContenedor.style.minWidth = `${anchoTotalReal}px`;
@@ -3542,4 +3922,5 @@
     renderMalla();
   </script>
 </body>
+
 </html>
