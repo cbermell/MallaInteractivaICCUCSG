@@ -4,9 +4,9 @@
 <head>
 
   <!-- ================= SEO BÁSICO ================= -->
-  <title>Planificador Ingeniería | UCSG</title>
+  <title>Malla Curricular Interactiva & Planificador de Horarios | UCSG</title>
   <meta name="description"
-    content="Malla curricular interactiva, planificador de horarios de clases descargable y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
+    content="Malla curricular interactiva, planificador de horarios de clases descargable en HD y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
   <meta name="keywords"
     content="ucsg, universidad catolica de santiago de guayaquil, horario ucsg, malla curricular ucsg, ingenieria ucsg, ciencias de la computacion ucsg, ciencia de datos ucsg, planificador de horarios ucsg, calcular notas ucsg, examen mejoramiento ucsg, facultad de ingenieria ucsg, generador de horarios ucsg">
   <meta name="robots" content="index, follow">
@@ -100,6 +100,52 @@
       width: auto;
       object-fit: contain;
       flex-shrink: 0;
+      display: block;
+    }
+
+    .brand-divider {
+      width: 1.5px;
+      height: 38px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      align-self: center;
+    }
+
+    .powered-by-badge {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      padding: 4px 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .powered-by-badge:hover {
+      background: #f0f9ff;
+      border-color: #00629B;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 98, 155, 0.15);
+    }
+
+    .powered-by-label {
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #00629B;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .ieee-logo-img {
+      height: clamp(24px, 3.2vw, 32px);
+      width: auto;
+      object-fit: contain;
       display: block;
     }
 
@@ -1425,6 +1471,8 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
+
+
     .creator-text {
       font-size: clamp(0.85rem, 1.4vw, 0.92rem);
       font-weight: 600;
@@ -1532,6 +1580,33 @@
         gap: 12px;
       }
 
+      .brand-divider {
+        display: none;
+      }
+
+      .powered-by-badge {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 8px 14px;
+        box-sizing: border-box;
+      }
+
+      .powered-by-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.8px;
+        white-space: nowrap;
+      }
+
+      .ieee-logo-img {
+        height: 26px;
+        max-width: 100%;
+        object-fit: contain;
+      }
+
       .header-text-block {
         width: 100%;
       }
@@ -1632,7 +1707,8 @@
     <header class="dashboard-card">
       <div class="dash-header">
         <div class="brand-title-group">
-          <img class="ucsg-logo-img" src="logo_ucsg_fi.png" alt="UCSG Facultad de Ingeniería" />
+          <img class="ucsg-logo-img" src="logo_ucsg_fi.svg" onerror="this.onerror=null; this.src='logo_ucsg_fi.png';"
+            alt="UCSG Facultad de Ingeniería" />
 
           <div class="header-text-block">
             <div class="carrera-selector-wrap">
@@ -1644,6 +1720,14 @@
             </div>
             <span id="txt-facultad-institucional">MALLA CURRICULAR</span>
           </div>
+
+          <div class="brand-divider"></div>
+
+          <a href="https://www.instagram.com/ieee_ucsg" target="_blank" rel="noopener noreferrer"
+            class="powered-by-badge" title="Visitar Instagram de la Rama Estudiantil IEEE UCSG (@ieee_ucsg)">
+            <span class="powered-by-label">Powered by</span>
+            <img class="ieee-logo-img" src="logo_ieee_ucsg.svg" alt="Rama Estudiantil IEEE UCSG" />
+          </a>
         </div>
 
         <div class="header-actions">
@@ -1769,7 +1853,7 @@
 
   <footer class="app-creator-footer">
     <div class="creator-text">
-      Desarrollado por <span>Carlos Bermello</span>
+      Diseñado por <span>Carlos Bermello</span>
     </div>
     <div class="creator-social-links">
       <a href="https://github.com/cbermell" target="_blank" rel="noopener noreferrer" class="btn-social btn-github">
@@ -3879,14 +3963,18 @@
               headerExport.style.marginBottom = "0px";
               headerExport.innerHTML = `
                 <div class="horario-export-brand">
-                  <img src="logo_ucsg_fi.png" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" />
+                  <img src="logo_ucsg_fi.svg" onerror="this.onerror=null; this.src='logo_ucsg_fi.png';" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" />
                   <div class="horario-export-info">
                     <h3>${datosActivos.nombre}</h3>
                     <p>${membretePeriodo}</p>
                   </div>
                 </div>
-                <div style="text-align: right; font-size: 0.75rem; font-weight: 700; color: #64748b;">
-                  www.ucsg.edu.ec
+                <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                  <div style="font-size: 0.75rem; font-weight: 700; color: #64748b;"></div>
+                  <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.68rem; font-weight: 700; color: #00629B;">
+                    <span style="font-size: 0.60rem; color: #64748b; letter-spacing: 0.5px;">POWERED BY</span>
+                    <img src="logo_ieee_ucsg.svg" alt="IEEE UCSG" style="height: 18px; width: auto; object-fit: contain;" />
+                  </div>
                 </div>
               `;
               clonedContenedor.insertBefore(headerExport, clonedContenedor.firstChild);
