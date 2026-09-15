@@ -3820,9 +3820,27 @@
       const posX = (pageWidth - finalWidth) / 2;
       const posY = (pageHeight - finalHeight) / 2;
 
-      // Usar compresión sin pérdida (SLOW / Flate lossless) para máxima nitidez de texto y líneas
-      const imgData = canvas.toDataURL("image/png");
-      pdf.addImage(imgData, "PNG", posX, posY, finalWidth, finalHeight, undefined, "SLOW");
+      // Optimización de formato según dispositivo para evitar desbordamiento de memoria
+      const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                      (window.innerWidth <= 768) || 
+                      (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+      
+      let imgData, formatoImg;
+      try {
+        if (esMovil) {
+          // En celulares, JPEG al 95% evita agotar la memoria RAM con DataURLs gigantes (>50MB) y se inserta al instante
+          formatoImg = "JPEG";
+          imgData = canvas.toDataURL("image/jpeg", 0.95);
+        } else {
+          formatoImg = "PNG";
+          imgData = canvas.toDataURL("image/png");
+        }
+      } catch (err) {
+        formatoImg = "JPEG";
+        imgData = canvas.toDataURL("image/jpeg", 0.92);
+      }
+
+      pdf.addImage(imgData, formatoImg, posX, posY, finalWidth, finalHeight, undefined, "FAST");
       pdf.save(nombreArchivo);
     }
 
@@ -3839,8 +3857,15 @@
 
       const contenedorPrincipal = document.getElementById("bloque-principal");
       const ANCHO_CANONICO = 1540;
-      // Escala 3x para PDF (4620px de ancho = 400+ DPI para impresión A4 nítida)
-      const factorEscala = (formato === "pdf") ? 3 : 2;
+
+      // Detección de dispositivo móvil
+      const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                      (window.innerWidth <= 768) || 
+                      (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+
+      // En móviles usamos escala 1.5x (2310px de ancho): nítido (>200 DPI en A4) y dentro del límite seguro de 4096px de la GPU.
+      // En PC usamos escala 2.0x (3080px = 280 DPI ultra-definido, también 100% seguro).
+      const factorEscala = esMovil ? 1.5 : 2.0;
 
       try {
         const canvas = await html2canvas(contenedorPrincipal, {
@@ -3852,6 +3877,10 @@
           backgroundColor: "#f8fafc",
           width: ANCHO_CANONICO,
           windowWidth: ANCHO_CANONICO,
+          scrollX: 0,
+          scrollY: 0,
+          x: 0,
+          y: 0,
           onclone: (clonedDoc) => {
             clonedDoc.body.style.webkitFontSmoothing = "antialiased";
             clonedDoc.body.style.mozOsxFontSmoothing = "grayscale";
@@ -4242,8 +4271,12 @@
       const tablaEl = contenedor.querySelector(".tabla-horario-excel");
       const anchoTotalReal = Math.max(tablaEl ? tablaEl.offsetWidth : 880, 880);
 
-      // Escala 3.5x para horario en PDF (más de 3000px de resolución para texto y celdas impecables en A4)
-      const factorEscala = (formato === "pdf") ? 3.5 : 2;
+      const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                      (window.innerWidth <= 768) || 
+                      (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+
+      // Escala segura: 1.6x en móvil (~1400px de ancho) y 2.0x en PC (~1800px)
+      const factorEscala = esMovil ? 1.6 : 2.0;
 
       try {
         const canvas = await html2canvas(contenedor, {
@@ -4255,6 +4288,10 @@
           imageTimeout: 0,
           width: anchoTotalReal,
           windowWidth: anchoTotalReal,
+          scrollX: 0,
+          scrollY: 0,
+          x: 0,
+          y: 0,
           onclone: (clonedDoc) => {
             clonedDoc.body.style.webkitFontSmoothing = "antialiased";
             clonedDoc.body.style.mozOsxFontSmoothing = "grayscale";
