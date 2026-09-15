@@ -4,7 +4,7 @@
 <head>
 
   <!-- ================= SEO BÁSICO ================= -->
-  <title>Planificador Académico | UCSG</title>
+  <title>Malla Curricular Interactiva & Planificador de Horarios | UCSG</title>
   <meta name="description"
     content="Malla curricular interactiva, planificador de horarios de clases descargable en HD y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
   <meta name="keywords"
@@ -966,6 +966,22 @@
 
     .shake {
       animation: shakeBox 0.35s ease;
+    }
+
+    @media print {
+      .btn-info-syllabus,
+      .header-actions,
+      .scroll-hint-bar {
+        display: none !important;
+      }
+      .materia-box,
+      .materia-box.bloqueada,
+      .materia-box.dimmed {
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
     }
 
     /* Modales Generales */
@@ -3905,6 +3921,17 @@
               .malla-layout {
                 min-width: 1400px !important;
               }
+              /* Ocultar el botón circular de información 'i' (acceso al sílabo) en el avance descargado */
+              .btn-info-syllabus {
+                display: none !important;
+              }
+              /* Mostrar todas las materias activadas con su color original completo (sin opacidad reducida ni escala de grises) */
+              .materia-box,
+              .materia-box.bloqueada,
+              .materia-box.dimmed {
+                opacity: 1 !important;
+                filter: none !important;
+              }
             `;
             clonedDoc.head.appendChild(styleOverride);
 
@@ -3933,6 +3960,16 @@
             if (actions) actions.style.display = "none";
             const hint = clonedDoc.querySelector(".scroll-hint-bar");
             if (hint) hint.style.display = "none";
+
+            // Ocultar/eliminar botones circulares de información 'i' en la captura del avance
+            clonedDoc.querySelectorAll(".btn-info-syllabus").forEach(btn => btn.remove());
+
+            // Activar visualmente todas las materias para que mantengan su color original completo y solo el check-circle muestre el estado de verificación
+            clonedDoc.querySelectorAll(".materia-box").forEach(box => {
+              box.classList.remove("bloqueada", "dimmed");
+              box.style.opacity = "1";
+              box.style.filter = "none";
+            });
 
             const clonedSvg = clonedDoc.getElementById("svg-connections");
             const clonedGrid = clonedDoc.getElementById("grid-container");
