@@ -35,6 +35,8 @@
   <link rel="icon" href="logo_ucsg.png" type="image/png">
   <!-- Librería html2canvas para captura de alta resolución -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Librería jsPDF para generación de documentos PDF en formato A4 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
     :root {
@@ -101,6 +103,11 @@
       object-fit: contain;
       flex-shrink: 0;
       display: block;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
+      pointer-events: none;
     }
 
     .brand-divider {
@@ -124,6 +131,8 @@
       transition: all 0.2s ease;
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .powered-by-badge:hover {
@@ -147,6 +156,11 @@
       width: auto;
       object-fit: contain;
       display: block;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
+      pointer-events: none;
     }
 
     .header-text-block {
@@ -188,7 +202,7 @@
       background: #ffffff;
     }
 
-    .dash-header span {
+    #txt-facultad-institucional {
       font-size: clamp(0.75rem, 1.2vw, 0.85rem);
       color: #64748b;
       font-weight: 600;
@@ -220,6 +234,14 @@
       transform: scale(0.98);
     }
 
+    /* Botones de acción del encabezado principal: igual altura que Descargar Avance */
+    .header-actions .btn-action {
+      min-height: 38px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+
     .btn-photo {
       background: #2563eb;
       color: white;
@@ -229,31 +251,149 @@
       background: #1d4ed8;
     }
 
+    /* Split Button: Mismo botón dividido en dos secciones independientes */
+    .split-btn-group {
+      display: inline-flex;
+      align-items: stretch;
+      background: #2563eb;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+      transition: box-shadow 0.2s, transform 0.1s;
+      vertical-align: middle;
+      min-height: 38px;
+    }
+
+    .split-btn-group:hover {
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    .split-btn-group:active {
+      transform: scale(0.99);
+    }
+
+    /* Sección Izquierda: Acción de Descargar Independiente */
+    .split-btn-action {
+      border: none;
+      background: #2563eb;
+      color: #ffffff !important;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      outline: none;
+      transition: background 0.18s ease;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .split-btn-action:hover {
+      background: #1d4ed8;
+    }
+
+    .split-btn-action:active {
+      background: #1e40af;
+    }
+
+    .split-btn-action span,
+    #lbl-btn-malla,
+    #lbl-btn-horario {
+      color: #ffffff !important;
+      font-weight: 700 !important;
+    }
+
+    .split-btn-action svg {
+      stroke: #ffffff;
+      flex-shrink: 0;
+    }
+
+    /* Divisor vertical nítido entre las dos secciones */
+    .split-btn-divider {
+      width: 1.5px;
+      background: rgba(255, 255, 255, 0.35);
+      flex-shrink: 0;
+    }
+
+    /* Sección Derecha: Selector de Formato Independiente */
+    .split-btn-format {
+      position: relative;
+      background: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      cursor: pointer;
+      transition: background 0.18s ease;
+      flex-shrink: 0;
+    }
+
+    .split-btn-format:hover {
+      background: #1e40af;
+    }
+
+    .split-btn-select {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      padding: 0 22px 0 10px;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 9 6'%3E%3Cpath fill='white' d='M0 0l4.5 6 4.5-6z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      transition: background 0.2s;
+      text-align: center;
+    }
+
+    .split-btn-select option {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 8px;
+    }
+
     .btn-calc-trigger {
       background: #059669;
       color: white;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
     }
 
     .btn-calc-trigger:hover {
       background: #047857;
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.35);
     }
 
     .btn-horario-trigger {
       background: #0f172a;
       color: white;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
     }
 
     .btn-horario-trigger:hover {
       background: #1e293b;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.35);
     }
 
     .btn-reset {
       background: #ef4444;
       color: white;
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.20);
     }
 
     .btn-reset:hover {
       background: #dc2626;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.30);
     }
 
     .dash-overview {
@@ -867,9 +1007,10 @@
     }
 
     .modal-content.modal-calc-wide {
-      width: 620px;
-      max-width: 92vw;
-      max-height: 88vh;
+      width: 630px;
+      max-width: 94vw;
+      max-height: 94vh;
+      padding: 18px 22px 14px;
 
       overflow-y: auto !important;
       overflow-x: hidden !important;
@@ -879,6 +1020,10 @@
 
       will-change: scroll-position;
       transform: translateZ(0);
+    }
+
+    .modal-content.modal-calc-wide .modal-header h2 {
+      margin: 0 0 10px;
     }
 
     .modal-content.modal-calc-wide .calc-card,
@@ -1053,46 +1198,46 @@
     .calc-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .calc-parcial-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 12px;
+      padding: 9px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .calc-parcial-box h3 {
-      margin: 0 0 4px;
-      font-size: 0.85rem;
+      margin: 0 0 2px;
+      font-size: 0.82rem;
       font-weight: 800;
       color: #1e293b;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 4px;
+      padding-bottom: 3px;
     }
 
     .calc-field {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .calc-field label {
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 700;
       color: #64748b;
     }
 
     .calc-field input {
-      padding: 8px 10px;
-      font-size: 0.85rem;
+      padding: 6px 10px;
+      font-size: 0.84rem;
       font-weight: 700;
       border: 1.5px solid #cbd5e1;
       border-radius: 6px;
@@ -1106,46 +1251,46 @@
     }
 
     .calc-subtotal-badge {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 800;
       color: #334155;
       text-align: right;
-      padding-top: 4px;
+      padding-top: 2px;
     }
 
     .calc-mejora-box {
       background: #fdf4ff;
       border: 1px solid #f0abfc;
       border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 14px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .calc-mejora-box h4 {
       margin: 0;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 800;
       color: #86198f;
       text-transform: uppercase;
     }
 
     .calc-mejora-desc {
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       color: #701a75;
-      line-height: 1.3;
+      line-height: 1.25;
     }
 
     .calc-result-card {
       background: #0f172a;
       color: #ffffff;
       border-radius: 8px;
-      padding: 14px 18px;
+      padding: 10px 14px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .calc-res-header {
@@ -1153,14 +1298,14 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 4px;
     }
 
     .calc-res-status {
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 800;
       text-transform: uppercase;
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
     }
 
@@ -1180,44 +1325,55 @@
     }
 
     .calc-res-num {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 800;
       color: #38bdf8;
     }
 
     .calc-target-advice {
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 600;
       color: #cbd5e1;
       border-top: 1px solid #334155;
-      padding-top: 6px;
+      padding-top: 4px;
       margin-top: 2px;
-      line-height: 1.35;
-      min-height: 38px;
+      line-height: 1.3;
+      min-height: 30px;
     }
 
     .calc-score-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
 
     .calc-emoji-badge {
-      font-size: 2.2rem;
+      font-size: 1.85rem;
       line-height: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 6px 12px;
+      border-radius: 10px;
+      padding: 4px 10px;
       transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .calc-emoji-badge:hover {
       transform: scale(1.15) rotate(4deg);
+    }
+
+    .modal-content.modal-calc-wide .modal-footer {
+      padding-top: 10px;
+      margin-top: 4px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .modal-content.modal-calc-wide .modal-footer .btn-modal-close-action {
+      padding: 7px 16px;
+      font-size: 0.82rem;
     }
 
     /* Horario Estilo Excel UCSG */
@@ -1634,8 +1790,44 @@
         gap: 4px;
       }
 
+      .header-actions .btn-action {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 0.76rem;
+        gap: 5px;
+        min-height: 46px;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      .header-actions .btn-reset {
+        grid-column: span 2;
+      }
+
       .btn-photo {
         grid-column: span 2;
+      }
+
+      .split-btn-group {
+        width: 100%;
+        grid-column: span 2;
+        min-height: 46px;
+      }
+
+      .split-btn-action {
+        flex: 1;
+        justify-content: center;
+        padding: 10px 12px;
+        font-size: 0.80rem;
+      }
+
+      .split-btn-format {
+        min-width: 82px;
+      }
+
+      .modal-content.modal-horario-wide .modal-header .split-btn-group {
+        width: 100%;
+        min-height: 46px;
       }
 
       .dash-overview {
@@ -1708,7 +1900,7 @@
       <div class="dash-header">
         <div class="brand-title-group">
           <img class="ucsg-logo-img" src="logo_ucsg_fi.svg" onerror="this.onerror=null; this.src='logo_ucsg_fi.png';"
-            alt="UCSG Facultad de Ingeniería" />
+            alt="UCSG Facultad de Ingeniería" draggable="false" oncontextmenu="return false;" />
 
           <div class="header-text-block">
             <div class="carrera-selector-wrap">
@@ -1724,20 +1916,33 @@
           <div class="brand-divider"></div>
 
           <a href="https://www.instagram.com/ieee_ucsg" target="_blank" rel="noopener noreferrer"
-            class="powered-by-badge" title="Visitar Instagram de la Rama Estudiantil IEEE UCSG (@ieee_ucsg)">
+            class="powered-by-badge" title="Visitar Instagram de la Rama Estudiantil IEEE UCSG (@ieee_ucsg)"
+            oncontextmenu="event.preventDefault(); return false;">
             <span class="powered-by-label">Powered by</span>
-            <img class="ieee-logo-img" src="logo_ieee_ucsg.svg" alt="Rama Estudiantil IEEE UCSG" />
+            <img class="ieee-logo-img" src="logo_ieee_ucsg.svg" alt="Rama Estudiantil IEEE UCSG" draggable="false" oncontextmenu="return false;" />
           </a>
         </div>
 
         <div class="header-actions">
-          <button class="btn-action btn-photo" id="btn-exportar-foto" onclick="generarFotoMalla()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-              <circle cx="12" cy="13" r="4"></circle>
-            </svg>
-            Descargar Avance
-          </button>
+          <div class="split-btn-group" id="split-malla">
+            <button type="button" class="split-btn-action" id="btn-exportar-foto" onclick="generarFotoMalla()" title="Descargar avance curricular">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span id="lbl-btn-malla">Descargar Avance</span>
+            </button>
+
+            <div class="split-btn-divider"></div>
+
+            <div class="split-btn-format" title="Elegir formato de descarga">
+              <select class="split-btn-select" id="formato-export-malla" aria-label="Elegir formato de avance">
+                <option value="png">PNG</option>
+                <option value="pdf">PDF</option>
+              </select>
+            </div>
+          </div>
 
           <button class="btn-action btn-horario-trigger" onclick="abrirModalHorario()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -2013,14 +2218,25 @@
           </div>
         </div>
 
-        <button class="btn-action btn-photo" onclick="descargarFotoHorario()"
-          style="box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-          </svg>
-          Descargar Horario
-        </button>
+        <div class="split-btn-group" id="split-horario">
+          <button type="button" class="split-btn-action" id="btn-exportar-horario" onclick="descargarFotoHorario()" title="Descargar horario de clases">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span id="lbl-btn-horario">Descargar Horario</span>
+          </button>
+
+          <div class="split-btn-divider"></div>
+
+          <div class="split-btn-format" title="Elegir formato de horario">
+            <select class="split-btn-select" id="formato-export-horario" aria-label="Elegir formato de horario">
+              <option value="png">PNG</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div class="modal-body">
@@ -3552,10 +3768,70 @@
       adviceEl.textContent = "Ingresa las notas de tus componentes formativos y evaluaciones para ver tus promedios y requerimientos.";
     }
 
+    function actualizarLabelMalla() {
+      const lbl = document.getElementById("lbl-btn-malla");
+      if (lbl) lbl.textContent = "Descargar Avance";
+    }
+
+    function actualizarLabelHorario() {
+      const lbl = document.getElementById("lbl-btn-horario");
+      if (lbl) lbl.textContent = "Descargar Horario";
+    }
+
+    function descargarCanvasComoPDF(canvas, nombreArchivo, orientacionPreferida = "auto") {
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("No se pudo inicializar el generador de PDF. Verifica tu conexión a internet.");
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+
+      let orientacion = "l";
+      if (orientacionPreferida === "auto") {
+        orientacion = canvas.width >= canvas.height ? "l" : "p";
+      } else if (orientacionPreferida === "landscape") {
+        orientacion = "l";
+      } else if (orientacionPreferida === "portrait") {
+        orientacion = "p";
+      }
+
+      const pdf = new jsPDF({
+        orientation: orientacion,
+        unit: "mm",
+        format: "a4",
+        compress: true
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 8; // 8 mm de margen para presentación limpia
+
+      const maxWidth = pageWidth - (margin * 2);
+      const maxHeight = pageHeight - (margin * 2);
+
+      const canvasRatio = canvas.width / canvas.height;
+      let finalWidth = maxWidth;
+      let finalHeight = maxWidth / canvasRatio;
+
+      if (finalHeight > maxHeight) {
+        finalHeight = maxHeight;
+        finalWidth = maxHeight * canvasRatio;
+      }
+
+      const posX = (pageWidth - finalWidth) / 2;
+      const posY = (pageHeight - finalHeight) / 2;
+
+      // Usar compresión sin pérdida (SLOW / Flate lossless) para máxima nitidez de texto y líneas
+      const imgData = canvas.toDataURL("image/png");
+      pdf.addImage(imgData, "PNG", posX, posY, finalWidth, finalHeight, undefined, "SLOW");
+      pdf.save(nombreArchivo);
+    }
+
     async function generarFotoMalla() {
+      const selFormato = document.getElementById("formato-export-malla");
+      const formato = selFormato ? selFormato.value : "png";
       const btn = document.getElementById("btn-exportar-foto");
-      const textoOriginal = btn.innerHTML;
-      btn.innerHTML = "Generando imagen...";
+      const lbl = document.getElementById("lbl-btn-malla");
+      if (lbl) lbl.textContent = "Generando...";
       btn.style.opacity = "0.7";
       btn.disabled = true;
 
@@ -3563,17 +3839,23 @@
 
       const contenedorPrincipal = document.getElementById("bloque-principal");
       const ANCHO_CANONICO = 1540;
+      // Escala 3x para PDF (4620px de ancho = 400+ DPI para impresión A4 nítida)
+      const factorEscala = (formato === "pdf") ? 3 : 2;
 
       try {
         const canvas = await html2canvas(contenedorPrincipal, {
-          scale: 2,
+          scale: factorEscala,
           useCORS: true,
           allowTaint: true,
           logging: false,
+          imageTimeout: 0,
           backgroundColor: "#f8fafc",
           width: ANCHO_CANONICO,
           windowWidth: ANCHO_CANONICO,
           onclone: (clonedDoc) => {
+            clonedDoc.body.style.webkitFontSmoothing = "antialiased";
+            clonedDoc.body.style.mozOsxFontSmoothing = "grayscale";
+            clonedDoc.body.style.textRendering = "geometricPrecision";
             clonedDoc.documentElement.style.width = `${ANCHO_CANONICO}px`;
             clonedDoc.body.style.width = `${ANCHO_CANONICO}px`;
             clonedDoc.body.style.minWidth = `${ANCHO_CANONICO}px`;
@@ -3625,17 +3907,24 @@
           }
         });
 
-        const imageURL = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${new Date().toISOString().slice(0, 10)}.png`;
-        link.href = imageURL;
-        link.click();
+        const fechaIso = new Date().toISOString().slice(0, 10);
+        const nombreBase = `Malla_${datosActivos.id.toUpperCase()}_UCSG_${fechaIso}`;
+
+        if (formato === "pdf") {
+          descargarCanvasComoPDF(canvas, `${nombreBase}.pdf`, "landscape");
+        } else {
+          const imageURL = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.download = `${nombreBase}.png`;
+          link.href = imageURL;
+          link.click();
+        }
       } catch (err) {
-        console.error("Error al exportar:", err);
-        alert("Ocurrió un error al generar la imagen.");
+        console.error("Error al exportar avance:", err);
+        alert("Ocurrió un error al generar el archivo.");
       } finally {
         drawTreeLinesWithGutterRouting();
-        btn.innerHTML = textoOriginal;
+        if (lbl) lbl.textContent = "Descargar Avance";
         btn.style.opacity = "1";
         btn.disabled = false;
       }
@@ -3920,8 +4209,18 @@
       if (!contenedor) return;
 
       if (horarioBloques.length === 0) {
-        alert("Agrega al menos una materia a tu horario antes de descargar la imagen.");
+        alert("Agrega al menos una materia a tu horario antes de descargar.");
         return;
+      }
+
+      const selFormato = document.getElementById("formato-export-horario");
+      const formato = selFormato ? selFormato.value : "png";
+      const btn = document.getElementById("btn-exportar-horario");
+      const lbl = document.getElementById("lbl-btn-horario");
+      if (lbl) lbl.textContent = "Generando...";
+      if (btn) {
+        btn.style.opacity = "0.7";
+        btn.disabled = true;
       }
 
       const selPeriodo = document.getElementById("horario-semestre-periodo");
@@ -3943,14 +4242,23 @@
       const tablaEl = contenedor.querySelector(".tabla-horario-excel");
       const anchoTotalReal = Math.max(tablaEl ? tablaEl.offsetWidth : 880, 880);
 
+      // Escala 3.5x para horario en PDF (más de 3000px de resolución para texto y celdas impecables en A4)
+      const factorEscala = (formato === "pdf") ? 3.5 : 2;
+
       try {
         const canvas = await html2canvas(contenedor, {
-          scale: 2,
+          scale: factorEscala,
           backgroundColor: "#ffffff",
           useCORS: true,
+          allowTaint: true,
+          logging: false,
+          imageTimeout: 0,
           width: anchoTotalReal,
           windowWidth: anchoTotalReal,
           onclone: (clonedDoc) => {
+            clonedDoc.body.style.webkitFontSmoothing = "antialiased";
+            clonedDoc.body.style.mozOsxFontSmoothing = "grayscale";
+            clonedDoc.body.style.textRendering = "geometricPrecision";
             const clonedContenedor = clonedDoc.getElementById("contenedor-captura-horario");
 
             if (clonedContenedor) {
@@ -3963,7 +4271,7 @@
               headerExport.style.marginBottom = "0px";
               headerExport.innerHTML = `
                 <div class="horario-export-brand">
-                  <img src="logo_ucsg_fi.svg" onerror="this.onerror=null; this.src='logo_ucsg_fi.png';" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" />
+                  <img src="logo_ucsg_fi.svg" onerror="this.onerror=null; this.src='logo_ucsg_fi.png';" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" draggable="false" oncontextmenu="return false;" />
                   <div class="horario-export-info">
                     <h3>${datosActivos.nombre}</h3>
                     <p>${membretePeriodo}</p>
@@ -3973,7 +4281,7 @@
                   <div style="font-size: 0.75rem; font-weight: 700; color: #64748b;"></div>
                   <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.68rem; font-weight: 700; color: #00629B;">
                     <span style="font-size: 0.60rem; color: #64748b; letter-spacing: 0.5px;">POWERED BY</span>
-                    <img src="logo_ieee_ucsg.svg" alt="IEEE UCSG" style="height: 18px; width: auto; object-fit: contain;" />
+                    <img src="logo_ieee_ucsg.svg" alt="IEEE UCSG" style="height: 18px; width: auto; object-fit: contain;" draggable="false" oncontextmenu="return false;" />
                   </div>
                 </div>
               `;
@@ -3992,15 +4300,33 @@
           }
         });
 
-        const link = document.createElement("a");
-        link.download = `Horario_${datosActivos.id.toUpperCase()}_${periodoTexto.replace(" ", "_")}_${anioActual}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+        const nombreBase = `Horario_${datosActivos.id.toUpperCase()}_${periodoTexto.replace(" ", "_")}_${anioActual}`;
+
+        if (formato === "pdf") {
+          descargarCanvasComoPDF(canvas, `${nombreBase}.pdf`, "auto");
+        } else {
+          const link = document.createElement("a");
+          link.download = `${nombreBase}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        }
       } catch (e) {
         console.error("Error al descargar horario:", e);
-        alert("Hubo un problema al generar la foto del horario.");
+        alert("Hubo un problema al generar el archivo del horario.");
+      } finally {
+        if (lbl) lbl.textContent = "Descargar Horario";
+        if (btn) {
+          btn.style.opacity = "1";
+          btn.disabled = false;
+        }
       }
     }
+
+    // Protección anti-descarga y anti-menú contextual para logos institucionales
+    document.querySelectorAll(".ucsg-logo-img, .powered-by-badge, .ieee-logo-img, .horario-export-logo").forEach(el => {
+      el.addEventListener("contextmenu", e => e.preventDefault());
+      el.addEventListener("dragstart", e => e.preventDefault());
+    });
 
     window.addEventListener("resize", () => drawTreeLinesWithGutterRouting());
 
