@@ -3820,27 +3820,9 @@
       const posX = (pageWidth - finalWidth) / 2;
       const posY = (pageHeight - finalHeight) / 2;
 
-      // Optimización de formato según dispositivo para evitar desbordamiento de memoria
-      const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                      (window.innerWidth <= 768) || 
-                      (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
-      
-      let imgData, formatoImg;
-      try {
-        if (esMovil) {
-          // En celulares, JPEG al 95% evita agotar la memoria RAM con DataURLs gigantes (>50MB) y se inserta al instante
-          formatoImg = "JPEG";
-          imgData = canvas.toDataURL("image/jpeg", 0.95);
-        } else {
-          formatoImg = "PNG";
-          imgData = canvas.toDataURL("image/png");
-        }
-      } catch (err) {
-        formatoImg = "JPEG";
-        imgData = canvas.toDataURL("image/jpeg", 0.92);
-      }
-
-      pdf.addImage(imgData, formatoImg, posX, posY, finalWidth, finalHeight, undefined, "FAST");
+      // Generación en formato PNG 100% sin pérdida (lossless) con compresión Flate para máxima nitidez de texto y líneas
+      const imgData = canvas.toDataURL("image/png");
+      pdf.addImage(imgData, "PNG", posX, posY, finalWidth, finalHeight, undefined, "SLOW");
       pdf.save(nombreArchivo);
     }
 
@@ -3858,14 +3840,10 @@
       const contenedorPrincipal = document.getElementById("bloque-principal");
       const ANCHO_CANONICO = 1540;
 
-      // Detección de dispositivo móvil
-      const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                      (window.innerWidth <= 768) || 
-                      (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
-
-      // En móviles usamos escala 1.5x (2310px de ancho): nítido (>200 DPI en A4) y dentro del límite seguro de 4096px de la GPU.
-      // En PC usamos escala 2.0x (3080px = 280 DPI ultra-definido, también 100% seguro).
-      const factorEscala = esMovil ? 1.5 : 2.0;
+      // Escala 2.0x (3080px de ancho = 280 DPI ultra-definición para A4):
+      // - Garantiza textos, logos y líneas vectoriales nítidos sin pixelación.
+      // - Se mantiene estrictamente por debajo de los 4096px de GPU en celulares (evita franjas de colores).
+      const factorEscala = 2.0;
 
       try {
         const canvas = await html2canvas(contenedorPrincipal, {
@@ -3882,6 +3860,54 @@
           x: 0,
           y: 0,
           onclone: (clonedDoc) => {
+            // Forzar estilos de escritorio dentro del documento clonado para que en móviles
+            // se capture la cuadrícula y el encabezado en su disposición panorámica óptima
+            const styleOverride = clonedDoc.createElement("style");
+            styleOverride.textContent = `
+              #bloque-principal {
+                width: ${ANCHO_CANONICO}px !important;
+                min-width: ${ANCHO_CANONICO}px !important;
+                max-width: ${ANCHO_CANONICO}px !important;
+              }
+              .dash-header {
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+              }
+              .brand-title-group {
+                width: auto !important;
+                gap: 16px !important;
+              }
+              .brand-divider {
+                display: block !important;
+              }
+              .powered-by-badge {
+                width: auto !important;
+                padding: 6px 14px !important;
+              }
+              .dash-overview {
+                grid-template-columns: 240px 1fr !important;
+                gap: 14px !important;
+              }
+              .dash-stats {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 10px !important;
+              }
+              .stat-item {
+                padding: 10px 14px !important;
+              }
+              .stat-lbl {
+                font-size: 0.68rem !important;
+              }
+              .stat-num {
+                font-size: 1.15rem !important;
+              }
+              .malla-layout {
+                min-width: 1400px !important;
+              }
+            `;
+            clonedDoc.head.appendChild(styleOverride);
+
             clonedDoc.body.style.webkitFontSmoothing = "antialiased";
             clonedDoc.body.style.mozOsxFontSmoothing = "grayscale";
             clonedDoc.body.style.textRendering = "geometricPrecision";
@@ -4275,8 +4301,8 @@
                       (window.innerWidth <= 768) || 
                       (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
 
-      // Escala segura: 1.6x en móvil (~1400px de ancho) y 2.0x en PC (~1800px)
-      const factorEscala = esMovil ? 1.6 : 2.0;
+      // Escala 2.0x constante para nitidez cristalina en celdas y textos
+      const factorEscala = 2.0;
 
       try {
         const canvas = await html2canvas(contenedor, {
