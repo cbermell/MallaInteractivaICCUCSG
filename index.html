@@ -190,11 +190,125 @@
     }
     .btn-reset:hover { background: #dc2626; }
 
+    .dash-overview {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .progress-circle-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .progress-circle-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .progress-circle-wrapper {
+      position: relative;
+      width: 86px;
+      height: 86px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-ring-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      display: block;
+    }
+
+    .progress-ring-bg {
+      fill: none;
+      stroke: #e2e8f0;
+      stroke-width: 8;
+    }
+
+    .progress-ring-bar {
+      fill: none;
+      stroke: url(#progressGrad);
+      stroke-width: 8.5;
+      stroke-linecap: round;
+      stroke-dasharray: 263.894;
+      stroke-dashoffset: 263.894;
+      transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-circle-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .progress-circle-pct {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    .progress-circle-sub {
+      font-size: 0.55rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-top: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-circle-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .progress-info-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #334155;
+      line-height: 1.2;
+    }
+
+    .progress-info-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.70rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #64748b;
+      width: fit-content;
+      transition: all 0.2s ease;
+    }
+
     .dash-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 0;
     }
 
     .stat-item {
@@ -204,6 +318,7 @@
       padding: 10px 14px;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       gap: 4px;
     }
 
@@ -218,34 +333,6 @@
       font-size: clamp(1.05rem, 1.8vw, 1.25rem);
       font-weight: 800;
       color: #0f172a;
-    }
-
-    .progress-bar-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: #334155;
-    }
-
-    .progress-track {
-      background: #e2e8f0;
-      height: 14px;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10b981, #059669);
-      width: 0%;
-      transition: width 0.3s ease;
     }
 
     .malla-outer {
@@ -549,41 +636,43 @@
     path.circuit-line {
       fill: none;
       stroke: var(--line-color);
-      stroke-width: 1.6;
+      stroke-width: 1.8;
       stroke-linejoin: miter;
       stroke-linecap: square;
-      transition: stroke 0.2s, stroke-width 0.2s, opacity 0.2s;
+      transition: stroke 0.2s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     polygon.circuit-arrow {
-  fill: var(--line-color);
-  transition: fill 0.2s, opacity 0.2s;
-}
+      fill: var(--line-color);
+      transition: fill 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-polygon.circuit-arrow.highlight-pre {
-  fill: var(--line-pre) !important;
-}
+    polygon.circuit-arrow.highlight-pre {
+      fill: var(--line-pre) !important;
+    }
 
-polygon.circuit-arrow.highlight-post {
-  fill: var(--line-next) !important;
-}
+    polygon.circuit-arrow.highlight-post {
+      fill: var(--line-next) !important;
+    }
 
-polygon.circuit-arrow.dimmed {
-  opacity: 0.18;
-}
+    polygon.circuit-arrow.dimmed {
+      opacity: 0.12;
+    }
 
     path.circuit-line.highlight-pre {
       stroke: var(--line-pre) !important;
-      stroke-width: 2.6 !important;
+      stroke-width: 3 !important;
+      opacity: 1 !important;
     }
 
     path.circuit-line.highlight-post {
       stroke: var(--line-next) !important;
-      stroke-width: 2.6 !important;
+      stroke-width: 3 !important;
+      opacity: 1 !important;
     }
 
     path.circuit-line.dimmed, .materia-box.dimmed {
-      opacity: 0.18;
+      opacity: 0.12;
     }
 
     .malla-footer-notes {
@@ -1259,6 +1348,21 @@ polygon.circuit-arrow.dimmed {
 
     @media (max-width: 1024px) {
       .scroll-hint-bar { display: flex; }
+
+      .dash-overview {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .progress-circle-card {
+        justify-content: center;
+        padding: 12px 18px;
+        gap: 20px;
+      }
+
+      .dash-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 640px) {
@@ -1311,6 +1415,56 @@ polygon.circuit-arrow.dimmed {
 
       .btn-photo {
         grid-column: span 2;
+      }
+
+      .dash-overview {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .progress-circle-card {
+        padding: 10px 14px;
+        gap: 14px;
+        justify-content: flex-start;
+      }
+
+      .progress-circle-wrapper {
+        width: 74px;
+        height: 74px;
+      }
+
+      .progress-circle-pct {
+        font-size: 1.12rem;
+      }
+
+      .progress-circle-sub {
+        font-size: 0.50rem;
+      }
+
+      .progress-info-title {
+        font-size: 0.72rem;
+      }
+
+      .progress-info-badge {
+        font-size: 0.68rem;
+        padding: 3px 6px;
+      }
+
+      .dash-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .stat-item {
+        padding: 8px 10px;
+      }
+
+      .stat-lbl {
+        font-size: 0.62rem;
+      }
+
+      .stat-num {
+        font-size: 1.02rem;
       }
 
       .calc-grid {
@@ -1387,32 +1541,51 @@ polygon.circuit-arrow.dimmed {
         </div>
       </div>
 
-      <div class="dash-stats">
-        <div class="stat-item">
-          <span class="stat-lbl">Materias Aprobadas</span>
-          <span class="stat-num"><span id="lbl-aprobadas">0</span> / <span id="lbl-total">0</span></span>
+      <div class="dash-overview">
+        <!-- Indicador Circular de Avance -->
+        <div class="progress-circle-card">
+          <div class="progress-circle-wrapper">
+            <svg class="progress-ring-svg" viewBox="0 0 100 100" aria-label="Progreso circular de la carrera">
+              <defs>
+                <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#10b981" />
+                  <stop offset="100%" stop-color="#059669" />
+                </linearGradient>
+              </defs>
+              <circle class="progress-ring-bg" cx="50" cy="50" r="42" />
+              <circle class="progress-ring-bar" id="main-progress-circle" cx="50" cy="50" r="42" />
+            </svg>
+            <div class="progress-circle-content">
+              <span class="progress-circle-pct" id="lbl-porcentaje">0%</span>
+              
+            </div>
+          </div>
+          <div class="progress-circle-info">
+            <span class="progress-info-title">Avance de Carrera</span>
+            <span class="progress-info-badge" id="lbl-status-avance">Sin iniciar</span>
+          </div>
+          <!-- Retrocompatibilidad oculta -->
+          <div class="progress-fill" id="main-progress" style="display: none;"></div>
         </div>
-        <div class="stat-item">
-          <span class="stat-lbl">Créditos Aprobados</span>
-          <span class="stat-num"><span id="lbl-creditos">0</span> / 120</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-lbl">Horas Académicas</span>
-          <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-lbl">Práctica Comunitaria (*)</span>
-          <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos Pendientes</span>
-        </div>
-      </div>
 
-      <div class="progress-bar-wrap">
-        <div class="progress-meta">
-          <span>AVANCE TOTAL DE LA CARRERA</span>
-          <span id="lbl-porcentaje">0%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="main-progress"></div>
+        <!-- Métricas Principales -->
+        <div class="dash-stats">
+          <div class="stat-item">
+            <span class="stat-lbl">Materias Aprobadas</span>
+            <span class="stat-num"><span id="lbl-aprobadas">0</span> / <span id="lbl-total">0</span></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">Créditos Aprobados</span>
+            <span class="stat-num"><span id="lbl-creditos">0</span> / 120</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">Horas Académicas</span>
+            <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">Práctica Comunitaria (*)</span>
+            <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos Pendientes</span>
+          </div>
         </div>
       </div>
     </header>
@@ -1481,7 +1654,7 @@ polygon.circuit-arrow.dimmed {
       <button class="modal-close" onclick="cerrarModalSyllabus()">&times;</button>
       <div class="modal-header">
         <span class="modal-tag" id="modal-tag">Fundamentos</span>
-        <h2 id="modal-title">Cálculo de una Variable</h2>
+        <h2 id="modal-title">Cálculo de Una Variable</h2>
       </div>
       <div class="modal-body">
         <div class="modal-specs">
@@ -1695,7 +1868,7 @@ polygon.circuit-arrow.dimmed {
           {
             ciclo: "I", crTotal: 14, hrTotal: 672,
             materias: [
-              { id: "calc1", nombre: "Cálculo de una Variable", cr: 5, hr: 240, tipo: "fundamentos" },
+              { id: "calc1", nombre: "Cálculo de Una Variable", cr: 5, hr: 240, tipo: "fundamentos" },
               null,
               { id: "fisica", nombre: "Física", cr: 3, hr: 144, tipo: "fundamentos" },
               { id: "res_prob", nombre: "Resolución de Problemas de Ingeniería", cr: 3, hr: 144, tipo: "fundamentos" },
@@ -2247,14 +2420,44 @@ polygon.circuit-arrow.dimmed {
         });
       });
 
-      const pct = Math.round((totalCreditos / 120) * 100);
+      const pct = Math.min(100, Math.round((totalCreditos / 120) * 100));
 
       document.getElementById("lbl-aprobadas").textContent = aprobadas.size;
       document.getElementById("lbl-total").textContent = totalMaterias;
       document.getElementById("lbl-creditos").textContent = totalCreditos;
       document.getElementById("lbl-horas").textContent = totalHoras;
-      document.getElementById("lbl-porcentaje").textContent = `${pct}%`;
-      document.getElementById("main-progress").style.width = `${pct}%`;
+
+      const lblPct = document.getElementById("lbl-porcentaje");
+      if (lblPct) lblPct.textContent = `${pct}%`;
+
+      const mainProgBar = document.getElementById("main-progress");
+      if (mainProgBar) mainProgBar.style.width = `${pct}%`;
+
+      // Anillo circular SVG (radio 42 -> perímetro 2 * PI * 42 ≈ 263.894)
+      const circleBar = document.getElementById("main-progress-circle");
+      if (circleBar) {
+        const circumference = 2 * Math.PI * 42;
+        const offset = circumference - (pct / 100) * circumference;
+        circleBar.style.strokeDashoffset = offset;
+      }
+
+      // Badge de estado de avance
+      const statusBadge = document.getElementById("lbl-status-avance");
+      if (statusBadge) {
+        if (pct === 0) {
+          statusBadge.textContent = "Sin iniciar";
+          statusBadge.style.background = "#f1f5f9";
+          statusBadge.style.color = "#64748b";
+        } else if (pct < 100) {
+          statusBadge.textContent = "En Camino";
+          statusBadge.style.background = "#ecfdf5";
+          statusBadge.style.color = "#059669";
+        } else {
+          statusBadge.textContent = "¡Completada!";
+          statusBadge.style.background = "#fef3c7";
+          statusBadge.style.color = "#b45309";
+        }
+      }
 
       const comBadge = document.getElementById("lbl-comunitaria");
       const tieneComunitaria = aprobadas.has("prac_com") || aprobadas.has("ia_prac_com");
@@ -2315,361 +2518,337 @@ polygon.circuit-arrow.dimmed {
       return false;
     }
 
-    function drawTreeLinesWithGutterRouting(customSvg = null, customGrid = null) {
-  const svg = customSvg || document.getElementById("svg-connections");
-  const gridContainer = customGrid || document.getElementById("grid-container");
-  if (!svg || !gridContainer) return;
+    function buildHorizontalSegmentWithHops(xStart, xEnd, y, verticalSegments, currentFrom, currentTo) {
+      const R = 6;
+      const minX = Math.min(xStart, xEnd);
+      const maxX = Math.max(xStart, xEnd);
 
-  const docContext = svg.ownerDocument || document;
-  svg.innerHTML = "";
-
-  const outgoing = {};
-  const incoming = {};
-
-  datosActivos.conexiones.forEach(c => {
-    if (!outgoing[c.from]) outgoing[c.from] = [];
-    outgoing[c.from].push(c);
-
-    if (!incoming[c.to]) incoming[c.to] = [];
-    incoming[c.to].push(c.from);
-  });
-
-  const linesData = [];
-  const verticalSegments = [];
-  const ALTURA_FLECHA = 8; // Alto exacto del triángulo
-  const ANCHO_FLECHA = 5;  // Semi-ancho de la base
-
-  const fromIds = Object.keys(outgoing);
-  fromIds.forEach((fromId, fIndex) => {
-    const elFrom = docContext.getElementById(`mat-${fromId}`);
-    if (!elFrom) return;
-
-    const c1 = getBoxCoords(elFrom, gridContainer);
-    let x1 = c1.centerX;
-    const y1 = c1.bottom;
-
-    if (outgoing[fromId].some(conn => conn.side === "left")) {
-      x1 = c1.left + 16;
-    }
-
-    const dests = outgoing[fromId].map(conn => {
-      const elTo = docContext.getElementById(`mat-${conn.to}`);
-      if (!elTo) return null;
-      const c2 = getBoxCoords(elTo, gridContainer);
-
-      const totalIn = incoming[conn.to].length;
-      const inIdx = incoming[conn.to].indexOf(fromId);
-      let portOffset = conn.targetOffset || 0;
-      if (totalIn > 1 && portOffset === 0) {
-        portOffset = (inIdx - (totalIn - 1) / 2) * 28;
+      if (maxX - minX < R * 2 + 4) {
+        return ` L ${xEnd} ${y}`;
       }
 
-      return {
-        id: conn.to,
-        el: elTo,
-        conn: conn,
-        x2: c2.centerX + portOffset,
-        y2: c2.top
-      };
-    }).filter(Boolean);
-
-    if (dests.length === 0) return;
-
-    // 1. Conexión directa
-    if (dests.length === 1 && Math.abs(x1 - dests[0].x2) < 4 && !isBoxObstructing(x1, y1, dests[0].y2, gridContainer, docContext) && !dests[0].conn.side) {
-      verticalSegments.push({ x: x1, yMin: y1, yMax: dests[0].y2, owner: `${fromId}->${dests[0].id}` });
-      // La línea frena exactamente en la base del triángulo (y2 - ALTURA_FLECHA)
-      linesData.push({ 
-        type: "direct", 
-        x: x1, 
-        y1, 
-        y2: dests[0].y2 - ALTURA_FLECHA, 
-        puntaY: dests[0].y2, 
-        from: fromId, 
-        to: dests[0].id 
-      });
-      return;
-    }
-
-    const laneOffset = (fIndex % 3) * 8;
-    const midY = y1 + 22 + laneOffset;
-
-    verticalSegments.push({ x: x1, yMin: y1, yMax: midY, owner: `${fromId}-stem` });
-    linesData.push({ type: "stem", x: x1, y1, y2: midY, from: fromId });
-
-    dests.forEach(d => {
-      const isBlocked = isBoxObstructing(d.x2, midY, d.y2, gridContainer, docContext);
-
-      if (!isBlocked && !d.conn.side) {
-        verticalSegments.push({ x: d.x2, yMin: midY, yMax: d.y2, owner: `${fromId}->${d.id}` });
-        linesData.push({ 
-          type: "branch-standard", 
-          x1, 
-          midY, 
-          x2: d.x2, 
-          y2: d.y2 - ALTURA_FLECHA, 
-          puntaY: d.y2, 
-          from: fromId, 
-          to: d.id 
-        });
-      } else {
-            const preEntryY = d.y2 - 20;
-
-            // --- CÁLCULO AUTOMÁTICO DEL CENTRO EXACTO DEL PASILLO ---
-            let corridorX;
-            if (d.conn.side === "left") {
-              corridorX = c1.left - 12;
-            } else if (d.conn.side === "right") {
-              corridorX = c1.right + 12;
-            } else {
-              const haciaDerecha = d.x2 >= x1;
-              const xReferencia = haciaDerecha ? c1.right : c1.left;
-              
-              let obstaculoIzqMax = -Infinity;
-              let obstaculoDerMin = Infinity;
-
-              // Inspeccionar todas las materias en el tramo vertical de la bajada
-              const allBoxes = gridContainer.querySelectorAll(".materia-box");
-              allBoxes.forEach(b => {
-                const bCoords = getBoxCoords(b, gridContainer);
-                // Verificar si la tarjeta interseca verticalmente el tramo del pasillo
-                if (Math.max(midY, bCoords.top) < Math.min(preEntryY, bCoords.bottom)) {
-                  if (bCoords.right <= xReferencia + 8) {
-                    if (bCoords.right > obstaculoIzqMax) obstaculoIzqMax = bCoords.right;
-                  }
-                  if (bCoords.left >= xReferencia - 8) {
-                    if (bCoords.left < obstaculoDerMin) obstaculoDerMin = bCoords.left;
-                  }
-                }
-              });
-
-              // Si encontramos las dos tarjetas que delimitan el pasillo, calculamos el punto medio exacto
-              if (obstaculoIzqMax !== -Infinity && obstaculoDerMin !== Infinity && obstaculoDerMin > obstaculoIzqMax) {
-                corridorX = (obstaculoIzqMax + obstaculoDerMin) / 2;
-              } else if (haciaDerecha && obstaculoIzqMax !== -Infinity) {
-                corridorX = obstaculoIzqMax + 8; // Mitad del gap estándar (16px / 2)
-              } else if (!haciaDerecha && obstaculoDerMin !== Infinity) {
-                corridorX = obstaculoDerMin - 8;
-              } else {
-                corridorX = haciaDerecha ? c1.right + 8 : c1.left - 8;
-              }
-            }
-            // --------------------------------------------------------
-
-        verticalSegments.push({ x: corridorX, yMin: midY, yMax: preEntryY, owner: `${fromId}->${d.id}` });
-        verticalSegments.push({ x: d.x2, yMin: preEntryY, yMax: d.y2, owner: `${fromId}->${d.id}` });
-
-        linesData.push({
-          type: "branch-gutter",
-          x1, 
-          midY,
-          corridorX,
-          preEntryY,
-          x2: d.x2,
-          y2: d.y2 - ALTURA_FLECHA,
-          puntaY: d.y2,
-          from: fromId,
-          to: d.id
-        });
-      }
-    });
-  });
-
-  const R = 5;
-
-  linesData.forEach(item => {
-    const path = docContext.createElementNS("http://www.w3.org/2000/svg", "path");
-
-    if (item.type === "direct") {
-      path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
-      path.setAttribute("class", `circuit-line from-${item.from} to-${item.to}`);
-      path.setAttribute("data-from", item.from);
-      path.setAttribute("data-to", item.to);
-      svg.appendChild(path);
-
-      // Triángulo dibujado de forma explícita
-      const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
-      arrow.setAttribute("points", `${item.x - ANCHO_FLECHA},${item.y2} ${item.x + ANCHO_FLECHA},${item.y2} ${item.x},${item.puntaY}`);
-      arrow.setAttribute("class", `circuit-arrow from-${item.from} to-${item.to}`);
-      arrow.setAttribute("data-from", item.from);
-      arrow.setAttribute("data-to", item.to);
-      svg.appendChild(arrow);
-
-    } else if (item.type === "stem") {
-      path.setAttribute("d", `M ${item.x} ${item.y1} L ${item.x} ${item.y2}`);
-      path.setAttribute("class", `circuit-line stem from-${item.from}`);
-      path.setAttribute("data-from", item.from);
-      svg.appendChild(path);
-
-    } else if (item.type === "branch-standard") {
-      const { x1, midY, x2, y2, puntaY, from, to } = item;
-      const minX = Math.min(x1, x2);
-      const maxX = Math.max(x1, x2);
-
+      const currentConn = `${currentFrom}->${currentTo}`;
       const collisions = [];
+
       verticalSegments.forEach(v => {
-        if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
-        if (v.x > minX + 12 && v.x < maxX - 12) {
-          if (midY >= v.yMin + 2 && midY <= v.yMax - 2) {
+        if (v.connId === currentConn) return;
+        if (v.connId.startsWith(currentFrom + "->")) return;
+
+        if (v.x > minX + R + 2 && v.x < maxX - R - 2) {
+          if (y >= v.yMin + 2 && y <= v.yMax - 2) {
             collisions.push(v.x);
           }
         }
       });
 
-      if (x1 < x2) collisions.sort((a, b) => a - b);
-      else collisions.sort((a, b) => b - a);
+      if (collisions.length === 0) {
+        return ` L ${xEnd} ${y}`;
+      }
 
-      let d = `M ${x1} ${midY}`;
-      const dir = x2 > x1 ? 1 : -1;
-
+      collisions.sort((a, b) => a - b);
+      const uniqueCollisions = [];
       collisions.forEach(cx => {
-        const startX = cx - dir * R;
-        const endX = cx + dir * R;
-        d += ` L ${startX} ${midY}`;
-        d += ` A ${R} ${R} 0 0 ${dir > 0 ? 1 : 0} ${endX} ${midY}`;
-      });
-
-      d += ` L ${x2} ${midY} L ${x2} ${y2}`;
-      path.setAttribute("d", d);
-      path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
-      path.setAttribute("data-from", from);
-      path.setAttribute("data-to", to);
-      svg.appendChild(path);
-
-      // Triángulo dibujado de forma explícita
-      const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
-      arrow.setAttribute("points", `${x2 - ANCHO_FLECHA},${y2} ${x2 + ANCHO_FLECHA},${y2} ${x2},${puntaY}`);
-      arrow.setAttribute("class", `circuit-arrow from-${from} to-${to}`);
-      arrow.setAttribute("data-from", from);
-      arrow.setAttribute("data-to", to);
-      svg.appendChild(arrow);
-
-    } else if (item.type === "branch-gutter") {
-      const { x1, midY, corridorX, preEntryY, x2, y2, puntaY, from, to } = item;
-
-      let d = `M ${x1} ${midY}`;
-      const minX1 = Math.min(x1, corridorX);
-      const maxX1 = Math.max(x1, corridorX);
-      const coll1 = [];
-
-      verticalSegments.forEach(v => {
-        if (v.owner === `${from}-stem` || v.owner === `${from}->${to}`) return;
-        if (v.x > minX1 + 12 && v.x < maxX1 - 12) {
-          if (midY >= v.yMin + 2 && midY <= v.yMax - 2) coll1.push(v.x);
+        if (uniqueCollisions.length === 0 || Math.abs(cx - uniqueCollisions[uniqueCollisions.length - 1]) >= R * 2 + 2) {
+          uniqueCollisions.push(cx);
         }
       });
 
-      if (x1 < corridorX) coll1.sort((a, b) => a - b);
-      else coll1.sort((a, b) => b - a);
+      const isLtoR = xEnd > xStart;
+      if (!isLtoR) {
+        uniqueCollisions.reverse();
+      }
 
-      const dir1 = corridorX > x1 ? 1 : -1;
-      coll1.forEach(cx => {
-        d += ` L ${cx - dir1 * R} ${midY} A ${R} ${R} 0 0 ${dir1 > 0 ? 1 : 0} ${cx + dir1 * R} ${midY}`;
-      });
-
-      d += ` L ${corridorX} ${midY} L ${corridorX} ${preEntryY}`;
-
-      const minX2 = Math.min(corridorX, x2);
-      const maxX2 = Math.max(corridorX, x2);
-      const coll2 = [];
-
-      verticalSegments.forEach(v => {
-        if (v.owner === `${from}->${to}`) return;
-        if (v.x > minX2 + 12 && v.x < maxX2 - 12) {
-          if (preEntryY >= v.yMin + 2 && preEntryY <= v.yMax - 2) coll2.push(v.x);
+      let seg = "";
+      uniqueCollisions.forEach(cx => {
+        if (isLtoR) {
+          const startHop = cx - R;
+          const endHop = cx + R;
+          seg += ` L ${startHop} ${y} A ${R} ${R} 0 0 1 ${endHop} ${y}`;
+        } else {
+          const startHop = cx + R;
+          const endHop = cx - R;
+          seg += ` L ${startHop} ${y} A ${R} ${R} 0 0 0 ${endHop} ${y}`;
         }
       });
 
-      if (corridorX < x2) coll2.sort((a, b) => a - b);
-      else coll2.sort((a, b) => b - a);
+      seg += ` L ${xEnd} ${y}`;
+      return seg;
+    }
 
-      const dir2 = x2 > corridorX ? 1 : -1;
-      coll2.forEach(cx => {
-        d += ` L ${cx - dir2 * R} ${preEntryY} A ${R} ${R} 0 0 ${dir2 > 0 ? 1 : 0} ${cx + dir2 * R} ${preEntryY}`;
+    function drawTreeLinesWithGutterRouting(customSvg = null, customGrid = null) {
+      const svg = customSvg || document.getElementById("svg-connections");
+      const gridContainer = customGrid || document.getElementById("grid-container");
+      if (!svg || !gridContainer) return;
+
+      const docContext = svg.ownerDocument || document;
+      svg.innerHTML = "";
+
+      const outgoing = {};
+      const incoming = {};
+
+      datosActivos.conexiones.forEach(c => {
+        if (!outgoing[c.from]) outgoing[c.from] = [];
+        outgoing[c.from].push(c);
+
+        if (!incoming[c.to]) incoming[c.to] = [];
+        incoming[c.to].push(c.from);
       });
 
-      d += ` L ${x2} ${preEntryY} L ${x2} ${y2}`;
+      const ALTURA_FLECHA = 8;
+      const ANCHO_FLECHA = 5;
 
-      path.setAttribute("d", d);
-      path.setAttribute("class", `circuit-line branch from-${from} to-${to}`);
-      path.setAttribute("data-from", from);
-      path.setAttribute("data-to", to);
-      svg.appendChild(path);
+      // PASO 1: Calcular geometría inicial y clasificar tipo de conexión
+      const preparedConns = [];
+      const gapGroups = {};
 
-      // Triángulo dibujado de forma explícita
-      const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
-      arrow.setAttribute("points", `${x2 - ANCHO_FLECHA},${y2} ${x2 + ANCHO_FLECHA},${y2} ${x2},${puntaY}`);
-      arrow.setAttribute("class", `circuit-arrow from-${from} to-${to}`);
-      arrow.setAttribute("data-from", from);
-      arrow.setAttribute("data-to", to);
-      svg.appendChild(arrow);
+      datosActivos.conexiones.forEach((c, connIndex) => {
+        const elFrom = docContext.getElementById(`mat-${c.from}`);
+        const elTo = docContext.getElementById(`mat-${c.to}`);
+        if (!elFrom || !elTo) return;
+
+        const c1 = getBoxCoords(elFrom, gridContainer);
+        const c2 = getBoxCoords(elTo, gridContainer);
+
+        let x1 = c1.centerX;
+        let y1 = c1.bottom;
+
+        if (c.side === "left") {
+          x1 = c1.left + 16;
+        } else if (c.side === "right") {
+          x1 = c1.right - 16;
+        }
+
+        const totalIn = incoming[c.to].length;
+        const inIdx = incoming[c.to].indexOf(c.from);
+        let portOffset = c.targetOffset || 0;
+        if (totalIn > 1 && portOffset === 0) {
+          portOffset = (inIdx - (totalIn - 1) / 2) * 24;
+        }
+
+        const x2 = c2.centerX + portOffset;
+        const y2 = c2.top;
+
+        const isDirect = Math.abs(x1 - x2) < 4 && !isBoxObstructing(x1, y1, y2, gridContainer, docContext) && !c.side;
+        const isSameColumn = !isDirect && Math.abs(c1.centerX - c2.centerX) < 10 && !isBoxObstructing(c1.centerX, y1, y2, gridContainer, docContext) && !c.side;
+
+        const connData = {
+          c,
+          connIndex,
+          c1,
+          c2,
+          x1,
+          y1,
+          x2,
+          y2,
+          isDirect,
+          isSameColumn
+        };
+
+        preparedConns.push(connData);
+
+        if (!isDirect && !isSameColumn) {
+          const gapKey = Math.round(y1 / 40);
+          if (!gapGroups[gapKey]) gapGroups[gapKey] = [];
+          gapGroups[gapKey].push(connData);
+        }
+      });
+
+      // PASO 1.5: Asignar carriles (midY) agrupando por materia origen para compartir tronco y carril
+      Object.keys(gapGroups).forEach(gapKey => {
+        const group = gapGroups[gapKey];
+
+        const fromMap = {};
+        group.forEach(item => {
+          if (!fromMap[item.c.from]) fromMap[item.c.from] = [];
+          fromMap[item.c.from].push(item);
+        });
+
+        const fromKeys = Object.keys(fromMap);
+        fromKeys.sort((a, b) => {
+          const maxSpanA = Math.max(...fromMap[a].map(it => Math.abs(it.x2 - it.x1)));
+          const maxSpanB = Math.max(...fromMap[b].map(it => Math.abs(it.x2 - it.x1)));
+          return maxSpanA - maxSpanB;
+        });
+
+        fromKeys.forEach((fromKey, cardIdx) => {
+          const laneOffset = (cardIdx % 5) * 8;
+          fromMap[fromKey].forEach(item => {
+            const gapY = item.y2 - item.y1;
+            item.midY = item.y1 + Math.max(16, Math.min(18 + laneOffset, gapY - 26));
+          });
+        });
+      });
+
+      // PASO 2: Recopilar todos los segmentos verticales reales
+      const verticalSegments = [];
+
+      preparedConns.forEach(item => {
+        const { c, x1, y1, x2, y2, isDirect, isSameColumn, midY, c1 } = item;
+        const connId = `${c.from}->${c.to}`;
+
+        if (isDirect) {
+          verticalSegments.push({ x: x1, yMin: y1, yMax: y2, connId });
+          return;
+        }
+
+        if (isSameColumn) {
+          const preEntryY = y2 - 28;
+          item.preEntryY = preEntryY;
+          verticalSegments.push({ x: x1, yMin: y1, yMax: preEntryY, connId });
+          verticalSegments.push({ x: x2, yMin: preEntryY, yMax: y2, connId });
+          return;
+        }
+
+        const isBlocked = isBoxObstructing(x2, midY, y2, gridContainer, docContext);
+        item.isBlocked = isBlocked;
+
+        if (!isBlocked && !c.side) {
+          verticalSegments.push({ x: x1, yMin: y1, yMax: midY, connId });
+          verticalSegments.push({ x: x2, yMin: midY, yMax: y2, connId });
+        } else {
+          const preEntryY = y2 - 20;
+          item.preEntryY = preEntryY;
+          let corridorX;
+
+          if (c.side === "left") {
+            corridorX = c1.left - 12;
+          } else if (c.side === "right") {
+            corridorX = c1.right + 12;
+          } else {
+            const haciaDerecha = x2 >= x1;
+            const xReferencia = haciaDerecha ? c1.right : c1.left;
+            let obstaculoIzqMax = -Infinity;
+            let obstaculoDerMin = Infinity;
+
+            const allBoxes = gridContainer.querySelectorAll(".materia-box");
+            allBoxes.forEach(b => {
+              const bCoords = getBoxCoords(b, gridContainer);
+              if (Math.max(midY, bCoords.top) < Math.min(preEntryY, bCoords.bottom)) {
+                if (bCoords.right <= xReferencia + 8 && bCoords.right > obstaculoIzqMax) {
+                  obstaculoIzqMax = bCoords.right;
+                }
+                if (bCoords.left >= xReferencia - 8 && bCoords.left < obstaculoDerMin) {
+                  obstaculoDerMin = bCoords.left;
+                }
+              }
+            });
+
+            if (obstaculoIzqMax !== -Infinity && obstaculoDerMin !== Infinity && obstaculoDerMin > obstaculoIzqMax) {
+              corridorX = (obstaculoIzqMax + obstaculoDerMin) / 2;
+            } else if (haciaDerecha && obstaculoIzqMax !== -Infinity) {
+              corridorX = obstaculoIzqMax + 8;
+            } else if (!haciaDerecha && obstaculoDerMin !== Infinity) {
+              corridorX = obstaculoDerMin - 8;
+            } else {
+              corridorX = haciaDerecha ? c1.right + 8 : c1.left - 8;
+            }
+          }
+
+          item.corridorX = corridorX;
+          verticalSegments.push({ x: x1, yMin: y1, yMax: midY, connId });
+          verticalSegments.push({ x: corridorX, yMin: midY, yMax: preEntryY, connId });
+          verticalSegments.push({ x: x2, yMin: preEntryY, yMax: y2, connId });
+        }
+      });
+
+      // PASO 3: Dibujar cada trazado continuo con saltos de cruce limpios
+      preparedConns.forEach(item => {
+        const { c, x1, y1, x2, y2, isDirect, isSameColumn, midY, isBlocked, corridorX, preEntryY } = item;
+
+        let d = "";
+
+        if (isDirect) {
+          d = `M ${x1} ${y1} L ${x1} ${y2 - ALTURA_FLECHA + 1}`;
+        } else if (isSameColumn) {
+          d = `M ${x1} ${y1} L ${x1} ${preEntryY}`;
+          d += buildHorizontalSegmentWithHops(x1, x2, preEntryY, verticalSegments, c.from, c.to);
+          d += ` L ${x2} ${y2 - ALTURA_FLECHA + 1}`;
+        } else if (!isBlocked && !c.side) {
+          d = `M ${x1} ${y1} L ${x1} ${midY}`;
+          d += buildHorizontalSegmentWithHops(x1, x2, midY, verticalSegments, c.from, c.to);
+          d += ` L ${x2} ${y2 - ALTURA_FLECHA + 1}`;
+        } else {
+          d = `M ${x1} ${y1} L ${x1} ${midY}`;
+          d += buildHorizontalSegmentWithHops(x1, corridorX, midY, verticalSegments, c.from, c.to);
+          d += ` L ${corridorX} ${preEntryY}`;
+          d += buildHorizontalSegmentWithHops(corridorX, x2, preEntryY, verticalSegments, c.from, c.to);
+          d += ` L ${x2} ${y2 - ALTURA_FLECHA + 1}`;
+        }
+
+        const path = docContext.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("class", `circuit-line from-${c.from} to-${c.to}`);
+        path.setAttribute("data-from", c.from);
+        path.setAttribute("data-to", c.to);
+        svg.appendChild(path);
+
+        const arrow = docContext.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        arrow.setAttribute("points", `${x2 - ANCHO_FLECHA},${y2 - ALTURA_FLECHA} ${x2 + ANCHO_FLECHA},${y2 - ALTURA_FLECHA} ${x2},${y2}`);
+        arrow.setAttribute("class", `circuit-arrow from-${c.from} to-${c.to}`);
+        arrow.setAttribute("data-from", c.from);
+        arrow.setAttribute("data-to", c.to);
+        svg.appendChild(arrow);
+      });
     }
-  });
-}
 
-function highlightDependencies(id) {
-  const boxes = document.querySelectorAll(".materia-box");
-  const lines = document.querySelectorAll("path.circuit-line");
-  const arrows = document.querySelectorAll("polygon.circuit-arrow");
+    function highlightDependencies(id) {
+      const boxes = document.querySelectorAll(".materia-box");
+      const lines = document.querySelectorAll("path.circuit-line");
+      const arrows = document.querySelectorAll("polygon.circuit-arrow");
 
-  boxes.forEach(b => b.classList.add("dimmed"));
-  lines.forEach(l => l.classList.add("dimmed"));
-  arrows.forEach(a => a.classList.add("dimmed"));
+      boxes.forEach(b => b.classList.add("dimmed"));
+      lines.forEach(l => l.classList.add("dimmed"));
+      arrows.forEach(a => a.classList.add("dimmed"));
 
-  const target = document.getElementById(`mat-${id}`);
-  if (target) target.classList.remove("dimmed");
+      const target = document.getElementById(`mat-${id}`);
+      if (target) target.classList.remove("dimmed");
 
-  const directPreSources = new Set();
-  document.querySelectorAll(`path.to-${id}`).forEach(line => {
-    line.classList.remove("dimmed");
-    line.classList.add("highlight-pre");
+      document.querySelectorAll(`path.to-${id}`).forEach(line => {
+        line.classList.remove("dimmed");
+        line.classList.add("highlight-pre");
+        if (line.parentNode) line.parentNode.appendChild(line);
 
-    const preId = line.getAttribute("data-from");
-    if (preId) {
-      directPreSources.add(preId);
-      const preBox = document.getElementById(`mat-${preId}`);
-      if (preBox) preBox.classList.remove("dimmed");
+        const preId = line.getAttribute("data-from");
+        if (preId) {
+          const preBox = document.getElementById(`mat-${preId}`);
+          if (preBox) preBox.classList.remove("dimmed");
+        }
+      });
+
+      document.querySelectorAll(`polygon.to-${id}`).forEach(arrow => {
+        arrow.classList.remove("dimmed");
+        arrow.classList.add("highlight-pre");
+        if (arrow.parentNode) arrow.parentNode.appendChild(arrow);
+      });
+
+      document.querySelectorAll(`path.from-${id}`).forEach(line => {
+        line.classList.remove("dimmed");
+        line.classList.add("highlight-post");
+        if (line.parentNode) line.parentNode.appendChild(line);
+
+        const toId = line.getAttribute("data-to");
+        if (toId) {
+          const postBox = document.getElementById(`mat-${toId}`);
+          if (postBox) postBox.classList.remove("dimmed");
+        }
+      });
+
+      document.querySelectorAll(`polygon.from-${id}`).forEach(arrow => {
+        arrow.classList.remove("dimmed");
+        arrow.classList.add("highlight-post");
+        if (arrow.parentNode) arrow.parentNode.appendChild(arrow);
+      });
     }
-  });
 
-  document.querySelectorAll(`polygon.to-${id}`).forEach(arrow => {
-    arrow.classList.remove("dimmed");
-    arrow.classList.add("highlight-pre");
-  });
-
-  directPreSources.forEach(preId => {
-    document.querySelectorAll(`path.stem.from-${preId}`).forEach(stemLine => {
-      stemLine.classList.remove("dimmed");
-      stemLine.classList.add("highlight-pre");
-    });
-  });
-
-  document.querySelectorAll(`path.from-${id}`).forEach(line => {
-    line.classList.remove("dimmed");
-    line.classList.add("highlight-post");
-
-    const toId = line.getAttribute("data-to");
-    if (toId) {
-      const postBox = document.getElementById(`mat-${toId}`);
-      if (postBox) postBox.classList.remove("dimmed");
+    function resetDependencies() {
+      document.querySelectorAll(".materia-box").forEach(b => b.classList.remove("dimmed"));
+      document.querySelectorAll("path.circuit-line").forEach(l => {
+        l.classList.remove("dimmed", "highlight-pre", "highlight-post");
+      });
+      document.querySelectorAll("polygon.circuit-arrow").forEach(a => {
+        a.classList.remove("dimmed", "highlight-pre", "highlight-post");
+      });
     }
-  });
-
-  document.querySelectorAll(`polygon.from-${id}`).forEach(arrow => {
-    arrow.classList.remove("dimmed");
-    arrow.classList.add("highlight-post");
-  });
-}
-
-function resetDependencies() {
-  document.querySelectorAll(".materia-box").forEach(b => b.classList.remove("dimmed"));
-  document.querySelectorAll("path.circuit-line").forEach(l => {
-    l.classList.remove("dimmed", "highlight-pre", "highlight-post");
-  });
-  document.querySelectorAll("polygon.circuit-arrow").forEach(a => {
-    a.classList.remove("dimmed", "highlight-pre", "highlight-post");
-  });
-}
 
     function reiniciarProgreso() {
       if (confirm(`¿Deseas restablecer el estado de las asignaturas para ${datosActivos.nombre}?`)) {
