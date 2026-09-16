@@ -4,7 +4,7 @@
 <head>
 
   <!-- ================= SEO BÁSICO ================= -->
-  <title>Planificador Académico | UCSG</title>
+  <title>Malla Curricular Interactiva & Planificador de Horarios | UCSG</title>
   <meta name="description"
     content="Malla curricular interactiva, planificador de horarios de clases descargable en HD y calculadora de calificaciones para estudiantes de Ingeniería de la UCSG.">
   <meta name="keywords"
@@ -1411,19 +1411,18 @@
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 8px;
       width: 100%;
-      align-items: end;
+      align-items: center;
     }
 
     .horario-field {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 0;
+      width: 100%;
     }
 
     .horario-field label {
-      font-size: 0.70rem;
-      font-weight: 700;
-      color: #475569;
+      display: none;
     }
 
     .horario-field select,
@@ -1512,6 +1511,7 @@
       letter-spacing: 0.5px;
     }
 
+    .horario-input-group,
     .paralelo-input-group {
       display: flex;
       align-items: center;
@@ -1520,12 +1520,22 @@
       background: #ffffff;
       overflow: hidden;
       height: 33px;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
+    .horario-input-group:focus-within,
+    .paralelo-input-group:focus-within {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+    }
+
+    .horario-prefix,
     .paralelo-prefix {
       background: #f1f5f9;
       color: #475569;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
       padding: 0 8px;
       height: 100%;
@@ -1534,16 +1544,47 @@
       border-right: 1px solid #cbd5e1;
       user-select: none;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
+    .horario-input-group select,
+    .horario-input-group input,
     .paralelo-input-field {
       border: none !important;
       border-radius: 0 !important;
-      height: 100%;
-      width: 100%;
+      height: 100% !important;
+      width: 100% !important;
+      min-width: 0 !important;
       padding: 0 8px !important;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-size: 0.78rem !important;
+      font-weight: 600 !important;
+      color: #0f172a !important;
+      background: transparent !important;
+      outline: none !important;
+      box-shadow: none !important;
+      box-sizing: border-box !important;
+    }
+
+    .horario-input-group select {
+      cursor: pointer;
+    }
+
+    #horario-paralelo-letra {
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+    }
+
+    .horario-custom-input {
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+      background: #ffffff;
+      color: #0f172a;
+      width: 100%;
+      box-sizing: border-box;
+      height: 33px;
     }
 
     .horario-table-wrap {
@@ -2259,46 +2300,55 @@
         <div class="horario-toolbar">
           <div class="horario-form">
             <div class="horario-field" style="grid-column: span 2;">
-              <label for="horario-materia-sel">Materia:</label>
-              <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
-              <input type="text" id="horario-materia-custom" placeholder="Nombre de materia"
+              <div class="horario-input-group">
+                <span class="horario-prefix">Materia</span>
+                <select id="horario-materia-sel" onchange="verificarMateriaCustom()"></select>
+              </div>
+              <input type="text" id="horario-materia-custom" class="horario-custom-input" placeholder="Nombre de materia"
                 style="display:none; margin-top:4px;">
             </div>
 
             <div class="horario-field">
-              <label>Paralelo:</label>
-              <div class="paralelo-input-group">
-                <span class="paralelo-prefix">Paralelo</span>
-                <input type="text" id="horario-paralelo-letra" class="paralelo-input-field" maxlength="4" value="A"
+              <div class="horario-input-group">
+                <span class="horario-prefix">Paralelo</span>
+                <input type="text" id="horario-paralelo-letra" maxlength="4" value=""
                   placeholder="A, B...">
               </div>
             </div>
 
             <div class="horario-field">
-              <label for="horario-aula">Aula / Lab:</label>
-              <input type="text" id="horario-aula" placeholder="Ej: LAB 203" value="LAB 203">
+              <div class="horario-input-group">
+                <span class="horario-prefix">Aula</span>
+                <input type="text" id="horario-aula" placeholder="Ej: LAB 203" value="">
+              </div>
             </div>
 
             <div class="horario-field">
-              <label for="horario-dia">Día:</label>
-              <select id="horario-dia">
-                <option value="1">Lunes</option>
-                <option value="2">Martes</option>
-                <option value="3">Miércoles</option>
-                <option value="4">Jueves</option>
-                <option value="5">Viernes</option>
-                <option value="6">Sábado</option>
-              </select>
+              <div class="horario-input-group">
+                <span class="horario-prefix">Día</span>
+                <select id="horario-dia">
+                  <option value="1">Lunes</option>
+                  <option value="2">Martes</option>
+                  <option value="3">Miércoles</option>
+                  <option value="4">Jueves</option>
+                  <option value="5">Viernes</option>
+                  <option value="6">Sábado</option>
+                </select>
+              </div>
             </div>
 
             <div class="horario-field">
-              <label for="horario-inicio">Inicio:</label>
-              <select id="horario-inicio" onchange="actualizarHoraFinAutomatica()"></select>
+              <div class="horario-input-group">
+                <span class="horario-prefix">Inicio</span>
+                <select id="horario-inicio" onchange="actualizarHoraFinAutomatica()"></select>
+              </div>
             </div>
 
             <div class="horario-field">
-              <label for="horario-fin">Fin:</label>
-              <select id="horario-fin"></select>
+              <div class="horario-input-group">
+                <span class="horario-prefix">Fin</span>
+                <select id="horario-fin"></select>
+              </div>
             </div>
 
             <div class="horario-field">
@@ -4024,23 +4074,52 @@
 
     const ANIO_ACTUAL = new Date().getFullYear();
 
+    function obtenerPeriodoAutomatico() {
+      const mes = new Date().getMonth();
+      // Febrero (mes 1) a Agosto (mes 7) -> Semestre A; Septiembre (mes 8) a Enero (mes 0) -> Semestre B
+      return (mes >= 1 && mes <= 7) ? "Semestre A" : "Semestre B";
+    }
+
     function inicializarPeriodoHorario() {
       const selPeriodo = document.getElementById("horario-semestre-periodo");
       if (!selPeriodo) return;
 
-      const guardado = localStorage.getItem("horario_periodo_seleccionado");
-      if (guardado) {
-        selPeriodo.value = guardado;
-      } else {
-        const mes = new Date().getMonth();
-        selPeriodo.value = (mes >= 4 && mes <= 8) ? "Semestre A" : "Semestre B";
+      const periodoAuto = obtenerPeriodoAutomatico();
+      const anioActual = new Date().getFullYear();
+
+      // Limpiar clave obsoleta previa para evitar que quede atascado en Semestre A de sesiones anteriores
+      if (localStorage.getItem("horario_periodo_seleccionado")) {
+        localStorage.removeItem("horario_periodo_seleccionado");
       }
+
+      // Revisar si el usuario modificó manualmente el período dentro del ciclo académico actual
+      const guardadoV2 = localStorage.getItem("horario_periodo_seleccionado_v2");
+      if (guardadoV2) {
+        try {
+          const config = JSON.parse(guardadoV2);
+          if (config && config.cicloAuto === periodoAuto && config.anio === anioActual && config.periodo) {
+            selPeriodo.value = config.periodo;
+            return;
+          }
+        } catch (e) {
+          localStorage.removeItem("horario_periodo_seleccionado_v2");
+        }
+      }
+
+      // Por defecto según la fecha del sistema (en septiembre -> Semestre B)
+      selPeriodo.value = periodoAuto;
     }
 
     function guardarPeriodoSeleccionado() {
       const selPeriodo = document.getElementById("horario-semestre-periodo");
       if (selPeriodo) {
-        localStorage.setItem("horario_periodo_seleccionado", selPeriodo.value);
+        const periodoAuto = obtenerPeriodoAutomatico();
+        const anioActual = new Date().getFullYear();
+        localStorage.setItem("horario_periodo_seleccionado_v2", JSON.stringify({
+          periodo: selPeriodo.value,
+          cicloAuto: periodoAuto,
+          anio: anioActual
+        }));
       }
     }
 
@@ -4169,8 +4248,8 @@
       const customMateria = document.getElementById("horario-materia-custom");
       const materia = selMateria.value === "__custom__" ? customMateria.value.trim() : selMateria.value;
 
-      const letraParalelo = document.getElementById("horario-paralelo-letra").value.trim().toUpperCase() || "A";
-      const paralelo = `Paralelo ${letraParalelo}`;
+      const letraParalelo = document.getElementById("horario-paralelo-letra").value.trim().toUpperCase();
+      const paralelo = letraParalelo ? `Paralelo ${letraParalelo}` : "";
       const aula = document.getElementById("horario-aula").value.trim();
       const dia = parseInt(document.getElementById("horario-dia").value);
       const inicio = document.getElementById("horario-inicio").value;
@@ -4316,7 +4395,7 @@
       }
 
       const selPeriodo = document.getElementById("horario-semestre-periodo");
-      const periodoTexto = selPeriodo ? selPeriodo.value : "Semestre A";
+      const periodoTexto = selPeriodo ? selPeriodo.value : obtenerPeriodoAutomatico();
       const anioActual = new Date().getFullYear();
       const membretePeriodo = `HORARIO DE CLASES • ${periodoTexto.toUpperCase()} ${anioActual}`;
 
@@ -4434,6 +4513,7 @@
     document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
     indexarMallaActiva();
     renderMalla();
+    inicializarPeriodoHorario();
   </script>
 </body>
 
