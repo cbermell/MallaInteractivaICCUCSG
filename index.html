@@ -2291,6 +2291,7 @@
             <select class="split-btn-select" id="formato-export-horario" aria-label="Elegir formato de horario">
               <option value="png">PNG</option>
               <option value="pdf">PDF</option>
+              <option value="ics">ICS</option>
             </select>
           </div>
         </div>
@@ -4375,6 +4376,147 @@
       }
     }
 
+    function escapeIcsText(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/\\/g, "\\\\")
+        .replace(/;/g, "\\;")
+        .replace(/,/g, "\\,")
+        .replace(/\r?\n/g, "\\n");
+    }
+
+    function formatIcsDateTime(d, horaStr) {
+      const parts = horaStr.split(":");
+      const h = parseInt(parts[0], 10) || 0;
+      const m = parseInt(parts[1], 10) || 0;
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const hours = String(h).padStart(2, "0");
+      const mins = String(m).padStart(2, "0");
+      return `${year}${month}${day}T${hours}${mins}00`;
+    }
+
+    function getUtcStamp() {
+      const now = new Date();
+      const y = now.getUTCFullYear();
+      const mo = String(now.getUTCMonth() + 1).padStart(2, "0");
+      const d = String(now.getUTCDate()).padStart(2, "0");
+      const h = String(now.getUTCHours()).padStart(2, "0");
+      const mi = String(now.getUTCMinutes()).padStart(2, "0");
+      const s = String(now.getUTCSeconds()).padStart(2, "0");
+      return `${y}${mo}${d}T${h}${mi}${s}Z`;
+    }
+
+    function obtenerFechaBaseSemestre(periodoTexto) {
+      const ahora = new Date();
+      const anio = ahora.getFullYear();
+      const mes = ahora.getMonth();
+      const esCicloA = periodoTexto.includes("A");
+
+      if (esCicloA) {
+        // Ciclo Ordinario A: Mayo a Septiembre (primer lunes de Mayo)
+        const d = new Date(anio, 4, 1);
+        const diaSem = d.getDay();
+        const diff = (diaSem === 1) ? 0 : (diaSem === 0 ? 1 : 8 - diaSem);
+        d.setDate(d.getDate() + diff);
+        return d;
+      } else {
+        // Ciclo Ordinario B: Septiembre a Febrero
+        const anioB = (mes <= 1) ? anio - 1 : anio;
+        const d = new Date(anioB, 8, 1);
+        const diaSem = d.getDay();
+        const diff = (diaSem === 1) ? 0 : (diaSem === 0 ? 1 : 8 - diaSem);
+        d.setDate(d.getDate() + diff + 7); // Segundo lunes de Septiembre
+        return d;
+      }
+    }
+
+    function generarIcsHorario(nombreBase, periodoTexto, anioActual) {
+      const stamp = getUtcStamp();
+      const baseLunes = obtenerFechaBaseSemestre(periodoTexto);
+      const MAPA_BYDAY = { 1: "MO", 2: "TU", 3: "WE", 4: "TH", 5: "FR", 6: "SA" };
+
+      const lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//UCSG//Horario Universitario UCSG//ES",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        `X-WR-CALNAME:${escapeIcsText(`Horario UCSG - ${datosActivos.nombre}`)}`,
+        "X-WR-TIMEZONE:America/Guayaquil",
+        "BEGIN:VTIMEZONE",
+        "TZID:America/Guayaquil",
+        "X-LIC-LOCATION:America/Guayaquil",
+        "BEGIN:STANDARD",
+        "TZOFFSETFROM:-0500",
+        "TZOFFSETTO:-0500",
+        "TZNAME:-05",
+        "DTSTART:19700101T000000",
+        "END:STANDARD",
+        "END:VTIMEZONE"
+      ];
+
+      horarioBloques.forEach((b, idx) => {
+        const diaOffset = (b.dia >= 1 && b.dia <= 6) ? b.dia - 1 : 0;
+        const fechaClase = new Date(baseLunes);
+        fechaClase.setDate(baseLunes.getDate() + diaOffset);
+
+        const dtStart = formatIcsDateTime(fechaClase, b.inicio);
+        const dtEnd = formatIcsDateTime(fechaClase, b.fin);
+        const byDay = MAPA_BYDAY[b.dia] || "MO";
+
+        let summary = b.materia;
+        if (b.paralelo) {
+          summary += ` (${b.paralelo})`;
+        }
+
+        const location = b.aula ? `${b.aula} - Campus UCSG` : "Campus UCSG";
+
+        let desc = `Asignatura: ${b.materia}\n`;
+        if (b.paralelo) desc += `${b.paralelo}\n`;
+        if (b.aula) desc += `Aula / Laboratorio: ${b.aula}\n`;
+        desc += `Carrera: ${datosActivos.nombre}\nPeríodo: ${periodoTexto} ${anioActual}\nUniversidad Católica de Santiago de Guayaquil`;
+
+        const uid = `horario-ucsg-${b.id || idx}-${dtStart}@ucsg.edu.ec`;
+
+        lines.push(
+          "BEGIN:VEVENT",
+          `UID:${uid}`,
+          `DTSTAMP:${stamp}`,
+          `SUMMARY:${escapeIcsText(summary)}`,
+          `DESCRIPTION:${escapeIcsText(desc)}`,
+          `LOCATION:${escapeIcsText(location)}`,
+          `DTSTART;TZID=America/Guayaquil:${dtStart}`,
+          `DTEND;TZID=America/Guayaquil:${dtEnd}`,
+          `RRULE:FREQ=WEEKLY;BYDAY=${byDay};COUNT=18`,
+          "STATUS:CONFIRMED",
+          "BEGIN:VALARM",
+          "TRIGGER:-PT15M",
+          "ACTION:DISPLAY",
+          `DESCRIPTION:Recordatorio de clase: ${escapeIcsText(b.materia)}`,
+          "END:VALARM",
+          "END:VEVENT"
+        );
+      });
+
+      lines.push("END:VCALENDAR");
+      return lines.join("\r\n") + "\r\n";
+    }
+
+    function descargarIcsHorario(nombreArchivo, icsContent) {
+      const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = nombreArchivo;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      }, 200);
+    }
+
     async function descargarFotoHorario() {
       const contenedor = document.getElementById("contenedor-captura-horario");
       if (!contenedor) return;
@@ -4388,15 +4530,30 @@
       const formato = selFormato ? selFormato.value : "png";
       const btn = document.getElementById("btn-exportar-horario");
       const lbl = document.getElementById("lbl-btn-horario");
+
+      const selPeriodo = document.getElementById("horario-semestre-periodo");
+      const periodoTexto = selPeriodo ? selPeriodo.value : obtenerPeriodoAutomatico();
+      const anioActual = new Date().getFullYear();
+      const nombreBase = `Horario_${datosActivos.id.toUpperCase()}_${periodoTexto.replace(/\s+/g, "_")}_${anioActual}`;
+
+      // Exportación directa a formato de calendario iCalendar (.ics) para Google Calendar, Apple Calendar y Outlook
+      if (formato === "ics") {
+        try {
+          const icsString = generarIcsHorario(nombreBase, periodoTexto, anioActual);
+          descargarIcsHorario(`${nombreBase}.ics`, icsString);
+        } catch (err) {
+          console.error("Error al generar archivo ICS:", err);
+          alert("Hubo un problema al generar el archivo para calendario.");
+        }
+        return;
+      }
+
       if (lbl) lbl.textContent = "Generando...";
       if (btn) {
         btn.style.opacity = "0.7";
         btn.disabled = true;
       }
 
-      const selPeriodo = document.getElementById("horario-semestre-periodo");
-      const periodoTexto = selPeriodo ? selPeriodo.value : obtenerPeriodoAutomatico();
-      const anioActual = new Date().getFullYear();
       const membretePeriodo = `HORARIO DE CLASES • ${periodoTexto.toUpperCase()} ${anioActual}`;
 
       let horaCorte = "15:00";
