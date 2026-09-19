@@ -2067,11 +2067,11 @@
           </div>
           <div class="stat-item">
             <span class="stat-lbl">Créditos Aprobados</span>
-            <span class="stat-num"><span id="lbl-creditos">0</span> / 120</span>
+            <span class="stat-num"><span id="lbl-creditos">0</span> / <span id="lbl-total-creditos">120</span></span>
           </div>
           <div class="stat-item">
             <span class="stat-lbl">Horas Académicas</span>
-            <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
+            <span class="stat-num"><span id="lbl-horas">0</span> / <span id="lbl-total-horas">5760</span></span>
           </div>
           <div class="stat-item">
             <span class="stat-lbl" id="lbl-title-comunitaria">Práctica Comunitaria (*)</span>
@@ -3140,6 +3140,8 @@
       let totalMaterias = 0;
       let totalCreditos = 0;
       let totalHoras = 0;
+      let maxCreditosCarrera = 0;
+      let maxHorasCarrera = 0;
       let fundamentosCompletos = true;
 
       datosActivos.estructura.forEach((sem, idx) => {
@@ -3148,6 +3150,8 @@
 
         todas.filter(Boolean).forEach(mat => {
           totalMaterias++;
+          maxCreditosCarrera += mat.cr;
+          maxHorasCarrera += mat.hr;
           if (aprobadas.has(mat.id)) {
             totalCreditos += mat.cr;
             totalHoras += mat.hr;
@@ -3157,12 +3161,18 @@
         });
       });
 
-      const pct = Math.min(100, Math.round((totalCreditos / 120) * 100));
+      const pct = maxCreditosCarrera > 0 ? Math.min(100, Math.round((totalCreditos / maxCreditosCarrera) * 100)) : 0;
 
       document.getElementById("lbl-aprobadas").textContent = aprobadas.size;
       document.getElementById("lbl-total").textContent = totalMaterias;
       document.getElementById("lbl-creditos").textContent = totalCreditos;
       document.getElementById("lbl-horas").textContent = totalHoras;
+
+      const elMaxCreditos = document.getElementById("lbl-total-creditos");
+      if (elMaxCreditos) elMaxCreditos.textContent = maxCreditosCarrera;
+
+      const elMaxHoras = document.getElementById("lbl-total-horas");
+      if (elMaxHoras) elMaxHoras.textContent = maxHorasCarrera;
 
       const lblPct = document.getElementById("lbl-porcentaje");
       if (lblPct) lblPct.textContent = `${pct}%`;
