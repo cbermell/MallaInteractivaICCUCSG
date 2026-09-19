@@ -1500,6 +1500,7 @@
       color: #0f172a;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
     .horario-export-info p {
@@ -2073,7 +2074,7 @@
             <span class="stat-num"><span id="lbl-horas">0</span> / 5760</span>
           </div>
           <div class="stat-item">
-            <span class="stat-lbl">Práctica Comunitaria (*)</span>
+            <span class="stat-lbl" id="lbl-title-comunitaria">Práctica Comunitaria (*)</span>
             <span class="stat-num" id="lbl-comunitaria" style="font-size: 0.95rem; color: #dc2626;">Fundamentos
               Pendientes</span>
           </div>
@@ -2105,7 +2106,7 @@
       </div>
 
       <div class="malla-footer-notes" id="malla-footer-notes">
-        <div><strong>(*) Para tomar las "Prácticas Comunitarias"</strong> es necesario haber aprobado las asignaturas de
+        <div id="txt-nota-comunitarias"><strong>(*) Para tomar las "Prácticas Comunitarias"</strong> es necesario haber aprobado las asignaturas de
           la organización curricular de "Fundamentos" (Ciclos I, II y III).</div>
         <div id="txt-resolucion-requisitos"><strong>Requisitos para la graduación:</strong> Certificado B1 en idioma
           inglés (Cambridge, U. Michigan) • Certificado de Ofimática emitido por la UCSG.</div>
@@ -2729,7 +2730,7 @@
               { id: "civ_met_inv", nombre: "Metodología de la Investigación", cr: 2, hr: 96, tipo: "fundamentos" },
               { id: "civ_sig", nombre: "Sistemas de Información Geográfica", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
               { id: "civ_hum_soc", nombre: "Humanismo y Sociedad", cr: 2, hr: 96, tipo: "fundamentos", enLinea: true },
-              { id: "civ_prac_com", nombre: "Prácticas Comunitarias (*)", cr: 2, hr: 96, tipo: "fundamentos", esPractica: true }
+              { id: "civ_prac_com", nombre: "Prácticas Comunitarias", cr: 2, hr: 96, tipo: "fundamentos", esPractica: true }
             ],
             practica: null
           },
@@ -2800,39 +2801,55 @@
           }
         ],
         conexiones: [
-          // Ciclo I -> Ciclo II
+          // Ciclo I -> Ciclo II / III / IV / V
           { from: "civ_leng1", to: "civ_leng2" },
+          { from: "civ_leng1", to: "civ_hum_pers" },
           { from: "civ_calc1", to: "civ_calc2" },
+          { from: "civ_calc1", to: "civ_estatica" },
           { from: "civ_fisica", to: "civ_estatica" },
-          { from: "civ_planos", to: "civ_topografia" },
+          { from: "civ_fisica", to: "civ_hidraulica1" },
+          { from: "civ_planos", to: "civ_instalaciones" },
+          { from: "civ_quimica", to: "civ_mat_const" },
+          { from: "civ_prog", to: "civ_met_num" },
 
-          // Ciclo II -> Ciclo III / IV
+          // Ciclo II -> Ciclo III / IV / V
           { from: "civ_calc2", to: "civ_edo_alg" },
           { from: "civ_estatica", to: "civ_res_mat1" },
           { from: "civ_estatica", to: "civ_mat_const" },
           { from: "civ_estadistica", to: "civ_mat_const" },
+          { from: "civ_estadistica", to: "civ_met_inv" },
+          { from: "civ_estadistica", to: "civ_trafico" },
           { from: "civ_hum_pers", to: "civ_hum_soc" },
           { from: "civ_topografia", to: "civ_sig" },
-          { from: "civ_estadistica", to: "civ_met_inv" },
+          { from: "civ_topografia", to: "civ_prac_com" },
           { from: "civ_leng2", to: "civ_cult_cont" },
 
           // Ciclo III -> Ciclo IV / V / VI
           { from: "civ_res_mat1", to: "civ_res_mat2" },
           { from: "civ_res_mat1", to: "civ_suelos1" },
           { from: "civ_res_mat1", to: "civ_tec_hormigon" },
+          { from: "civ_res_mat1", to: "civ_hidraulica1" },
           { from: "civ_edo_alg", to: "civ_met_num" },
           { from: "civ_mat_const", to: "civ_tec_hormigon" },
           { from: "civ_mat_const", to: "civ_acero" },
           { from: "civ_sig", to: "civ_trafico" },
+          { from: "civ_sig", to: "civ_ctrl_proy1" },
+          { from: "civ_prac_com", to: "civ_prac_lab1" },
 
-          // Ciclo IV -> Ciclo V / VII
+          // Ciclo IV -> Ciclo V / VI / VII / VIII
           { from: "civ_met_num", to: "civ_estructuras" },
           { from: "civ_res_mat2", to: "civ_estructuras" },
           { from: "civ_suelos1", to: "civ_suelos2" },
+          { from: "civ_suelos1", to: "civ_prac_lab1" },
           { from: "civ_hidraulica1", to: "civ_hidraulica2" },
           { from: "civ_hidraulica1", to: "civ_hidrologia" },
           { from: "civ_hidraulica1", to: "civ_instalaciones" },
+          { from: "civ_hidraulica1", to: "civ_prac_lab1" },
+          { from: "civ_tec_hormigon", to: "civ_prac_lab1" },
+          { from: "civ_tec_hormigon", to: "civ_hormigon1" },
+          { from: "civ_ctrl_proy1", to: "civ_prac_lab1" },
           { from: "civ_ctrl_proy1", to: "civ_ctrl_proy2" },
+          { from: "civ_ctrl_proy1", to: "civ_prac_lab2" },
 
           // Ciclo V -> Ciclo VI / VII
           { from: "civ_estructuras", to: "civ_sismo" },
@@ -2845,10 +2862,12 @@
           { from: "civ_suelos2", to: "civ_vial" },
           { from: "civ_trafico", to: "civ_costos" },
           { from: "civ_trafico", to: "civ_pavimentos" },
+          { from: "civ_trafico", to: "civ_vial" },
 
-          // Ciclo VI -> Ciclo VII
+          // Ciclo VI -> Ciclo VII / VIII
           { from: "civ_abastecimiento", to: "civ_alcantarillado" },
           { from: "civ_costos", to: "civ_prog_obras" },
+          { from: "civ_costos", to: "civ_prac_lab2" },
           { from: "civ_sismo", to: "civ_ing_estructural" },
           { from: "civ_acero", to: "civ_ing_estructural" },
           { from: "civ_hormigon1", to: "civ_hormigon2" },
@@ -2909,7 +2928,7 @@
     }
 
     function estanRequisitosCompletos(id) {
-      if (id === "prac_com" || id === "ia_prac_com" || id === "civ_prac_com") {
+      if (id === "prac_com" || id === "ia_prac_com") {
         let fundamentosCompletos = true;
         datosActivos.estructura.slice(0, 3).forEach(sem => {
           [...sem.materias, sem.practica].filter(Boolean).forEach(m => {
@@ -2921,8 +2940,6 @@
 
       if (id === "prac_prof") return aprobadas.has("prac_com");
       if (id === "ia_prac_prof") return aprobadas.has("ia_prac_com");
-      if (id === "civ_prac_lab1") return aprobadas.has("civ_prac_com");
-      if (id === "civ_prac_lab2") return aprobadas.has("civ_prac_lab1");
 
       const reqs = prerequisitosMap[id] || [];
       if (reqs.length === 0) {
@@ -2942,11 +2959,6 @@
 
       if (id === "prac_com" && aprobadas.has("prac_prof")) aprobadas.delete("prac_prof");
       if (id === "ia_prac_com" && aprobadas.has("ia_prac_prof")) aprobadas.delete("ia_prac_prof");
-      if (id === "civ_prac_com") {
-        if (aprobadas.has("civ_prac_lab1")) aprobadas.delete("civ_prac_lab1");
-        if (aprobadas.has("civ_prac_lab2")) aprobadas.delete("civ_prac_lab2");
-      }
-      if (id === "civ_prac_lab1" && aprobadas.has("civ_prac_lab2")) aprobadas.delete("civ_prac_lab2");
 
       const mat = materiasMap[id];
       if (mat) {
@@ -2974,7 +2986,7 @@
           esDeFundamentos = true;
         }
       });
-      if (esDeFundamentos) {
+      if (esDeFundamentos && datosActivos.id !== "civil") {
         if (aprobadas.has("prac_com")) {
           aprobadas.delete("prac_com");
           if (aprobadas.has("prac_prof")) aprobadas.delete("prac_prof");
@@ -2982,11 +2994,6 @@
         if (aprobadas.has("ia_prac_com")) {
           aprobadas.delete("ia_prac_com");
           if (aprobadas.has("ia_prac_prof")) aprobadas.delete("ia_prac_prof");
-        }
-        if (aprobadas.has("civ_prac_com")) {
-          aprobadas.delete("civ_prac_com");
-          if (aprobadas.has("civ_prac_lab1")) aprobadas.delete("civ_prac_lab1");
-          if (aprobadas.has("civ_prac_lab2")) aprobadas.delete("civ_prac_lab2");
         }
       }
     }
@@ -3190,17 +3197,36 @@
       }
 
       const comBadge = document.getElementById("lbl-comunitaria");
-      const tieneComunitaria = aprobadas.has("prac_com") || aprobadas.has("ia_prac_com");
+      const titleBadge = document.getElementById("lbl-title-comunitaria");
+      if (titleBadge) {
+        titleBadge.textContent = datosActivos.id === "civil" ? "Práctica Comunitaria" : "Práctica Comunitaria (*)";
+      }
 
-      if (tieneComunitaria) {
-        comBadge.textContent = "Finalizada con éxito ✓";
-        comBadge.style.color = "#10b981";
-      } else if (fundamentosCompletos) {
-        comBadge.textContent = "Habilitada ✓";
-        comBadge.style.color = "#10b981";
+      if (datosActivos.id === "civil") {
+        const tieneComCivil = aprobadas.has("civ_prac_com");
+        const habilitadaCivil = estanRequisitosCompletos("civ_prac_com");
+        if (tieneComCivil) {
+          comBadge.textContent = "Finalizada con éxito ✓";
+          comBadge.style.color = "#10b981";
+        } else if (habilitadaCivil) {
+          comBadge.textContent = "Habilitada ✓";
+          comBadge.style.color = "#10b981";
+        } else {
+          comBadge.textContent = "Topografía Pendiente";
+          comBadge.style.color = "#dc2626";
+        }
       } else {
-        comBadge.textContent = "Fundamentos Pendientes";
-        comBadge.style.color = "#dc2626";
+        const tieneComunitaria = aprobadas.has("prac_com") || aprobadas.has("ia_prac_com");
+        if (tieneComunitaria) {
+          comBadge.textContent = "Finalizada con éxito ✓";
+          comBadge.style.color = "#10b981";
+        } else if (fundamentosCompletos) {
+          comBadge.textContent = "Habilitada ✓";
+          comBadge.style.color = "#10b981";
+        } else {
+          comBadge.textContent = "Fundamentos Pendientes";
+          comBadge.style.color = "#dc2626";
+        }
       }
     }
 
@@ -3212,6 +3238,10 @@
 
       aprobadas = new Set(JSON.parse(localStorage.getItem(datosActivos.storageKey) || "[]"));
       document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
+      const notaComunitarias = document.getElementById("txt-nota-comunitarias");
+      if (notaComunitarias) {
+        notaComunitarias.style.display = datosActivos.id === "civil" ? "none" : "";
+      }
 
       indexarMallaActiva();
       renderMalla();
@@ -3636,12 +3666,10 @@
       const practicaNoticeEl = document.getElementById("modal-practica-notice");
       const footerContainer = document.getElementById("modal-footer-container");
 
-      if (id === "prac_com" || id === "ia_prac_com" || id === "civ_prac_com") {
+      if (id === "prac_com" || id === "ia_prac_com") {
         prereqsEl.textContent = "Aprobación completa de la organización curricular de Fundamentos (Ciclos I, II y III).";
-      } else if (id === "prac_prof" || id === "ia_prac_prof" || id === "civ_prac_lab1") {
+      } else if (id === "prac_prof" || id === "ia_prac_prof") {
         prereqsEl.textContent = "Aprobación previa de las Prácticas Comunitarias (*).";
-      } else if (id === "civ_prac_lab2") {
-        prereqsEl.textContent = "Aprobación previa de las Prácticas Laborales I.";
       } else if (reqs.length === 0) {
         if (mat.cicloIndex > 0) {
           const cicloAnteriorNombre = datosActivos.estructura[mat.cicloIndex - 1].ciclo;
@@ -4437,6 +4465,9 @@
       const stamp = getUtcStamp();
       const baseLunes = obtenerFechaBaseSemestre(periodoTexto);
       const MAPA_BYDAY = { 1: "MO", 2: "TU", 3: "WE", 4: "TH", 5: "FR", 6: "SA" };
+      const nombreCarreraHorario = (datosActivos.id === "datos_ia")
+        ? "Ingeniería en Ciencia de Datos e IA"
+        : datosActivos.nombre;
 
       const lines = [
         "BEGIN:VCALENDAR",
@@ -4444,7 +4475,7 @@
         "PRODID:-//UCSG//Horario Universitario UCSG//ES",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        `X-WR-CALNAME:${escapeIcsText(`Horario UCSG - ${datosActivos.nombre}`)}`,
+        `X-WR-CALNAME:${escapeIcsText(`Horario UCSG - ${nombreCarreraHorario}`)}`,
         "X-WR-TIMEZONE:America/Guayaquil",
         "BEGIN:VTIMEZONE",
         "TZID:America/Guayaquil",
@@ -4477,7 +4508,7 @@
         let desc = `Asignatura: ${b.materia}\n`;
         if (b.paralelo) desc += `${b.paralelo}\n`;
         if (b.aula) desc += `Aula / Laboratorio: ${b.aula}\n`;
-        desc += `Carrera: ${datosActivos.nombre}\nPeríodo: ${periodoTexto} ${anioActual}\nUniversidad Católica de Santiago de Guayaquil`;
+        desc += `Carrera: ${nombreCarreraHorario}\nPeríodo: ${periodoTexto} ${anioActual}\nUniversidad Católica de Santiago de Guayaquil`;
 
         const uid = `horario-ucsg-${b.id || idx}-${dtStart}@ucsg.edu.ec`;
 
@@ -4603,6 +4634,10 @@
               clonedContenedor.style.minWidth = `${anchoTotalReal}px`;
               clonedContenedor.style.overflow = "visible";
 
+              const nombreCarreraHorario = (datosActivos.id === "datos_ia")
+                ? "Ingeniería en Ciencia de Datos e IA"
+                : datosActivos.nombre;
+
               const headerExport = clonedDoc.createElement("div");
               headerExport.className = "horario-export-header";
               headerExport.style.marginBottom = "0px";
@@ -4610,7 +4645,7 @@
                 <div class="horario-export-brand">
                   <img src="logo_ucsg_fi.svg" onerror="this.onerror=null; this.src='logo_ucsg_fi.png';" alt="Facultad de Ingeniería UCSG" class="horario-export-logo" draggable="false" oncontextmenu="return false;" />
                   <div class="horario-export-info">
-                    <h3>${datosActivos.nombre}</h3>
+                    <h3>${nombreCarreraHorario}</h3>
                     <p>${membretePeriodo}</p>
                   </div>
                 </div>
@@ -4669,6 +4704,10 @@
 
     document.getElementById("select-carrera").value = carreraActualId;
     document.getElementById("txt-resolucion-requisitos").innerHTML = `<strong>Requisitos para la graduación:</strong> ${datosActivos.resolucion}`;
+    const notaComunitariasInit = document.getElementById("txt-nota-comunitarias");
+    if (notaComunitariasInit) {
+      notaComunitariasInit.style.display = datosActivos.id === "civil" ? "none" : "";
+    }
     indexarMallaActiva();
     renderMalla();
     inicializarPeriodoHorario();
